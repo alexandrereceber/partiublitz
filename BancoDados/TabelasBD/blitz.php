@@ -1659,14 +1659,14 @@ class evento extends ModeloTabelas{
                "CodNome"        => "IPerfil",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
-               "Key"            => [true, true],                       //Chave primária (boolean)
+               "Key"            => [true, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
                                         "TExt" => true,
                                         "Tabela"=> "perfil",
                                         "IdxCampoVinculado"=> 0, 
-                                        "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
                                         "NomeBotao"=> "",
-                                        "CamposTblExtrangeira"=>[0,1] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                        "CamposTblExtrangeira"=>[0,1,1] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
@@ -1763,14 +1763,18 @@ class evento extends ModeloTabelas{
                "CodNome"        => "Lista",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
-               "Key"            => [false, false],                       //Chave primária (boolean)
+               "Key"            => [true, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
                                         "TExt" => true,
                                         "Tabela"=> "lista",
                                         "IdxCampoVinculado"=> 2, 
-                                        "Funcao"=> null,  //se não houve uma função, atribuir null. Executa uma função antes de apresentar os valores na lista do componente select
+                                        "Funcao"=> false,  //se não houve uma função, atribuir null. Executa uma função antes de apresentar os valores na lista do componente select
                                         "NomeBotao"=> "",
-                                        "CamposTblExtrangeira"=>[0,1] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                        /*O primeiro é o campo da chave estrangeira que receberá o valor
+                                         * O segundo é o campo que será apresentado no componente select ou outro
+                                         * o terceiro é o campo que será apresentado que como rótulo da chave estrangeira na própria tabela
+                                         */
+                                        "CamposTblExtrangeira"=>[0,1,3] // Importante! o primeiro  -- Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
@@ -1828,7 +1832,7 @@ class evento extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"inputbox", 
                                         "TypeConteudo"=> ["text"], 
@@ -2169,7 +2173,7 @@ class evento extends ModeloTabelas{
     }
 
     public function validarConteudoCampoRegex(&$Dados) {
-
+        return true;
     }
 
     public function NormalizarFiltro($Tipo) {
@@ -2210,7 +2214,7 @@ class perfil extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"select", 
                                         "TypeConteudo"=> ["text"], 
@@ -2262,11 +2266,11 @@ class perfil extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> false,
+                                        "Exibir"=> true,
                                         "Placeholder"=> "", 
-                                        "TypeComponente"=>"select", 
-                                        "TypeConteudo"=> null, 
-                                        "Name" => "perfiles", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "Nomes", 
                                         "Patterns"=> "", 
                                         "Titles" => "",
                                         "Required" => "",
@@ -2398,9 +2402,13 @@ class perfil extends ModeloTabelas{
     public function getTotalPageVisible() {
        return 20;
     }
-
+    /**Campo importante
+     * Tem que haver o retorno, mesmo que nenhuma ação aconteça, para não impedir de 
+     * @param type $Dados
+     * @return boolean
+     */
     public function validarConteudoCampoRegex(&$Dados) {
-
+        return true;
     }
 
     public function NormalizarFiltro($Tipo) {

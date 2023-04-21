@@ -62,11 +62,11 @@ class ConfigSystema {
         return true;
     }
     /**
-     * atribui o tempo máximo de cada sessão sem modificações. Passado esse tempo será efetuado o logoff.
+     * atribui o tempo máximo de cada sessão sem modificações. Passado esse tempo será efetuado o logoff em minutos.
      * @return int
      */
     public static function get_TempoSessao() {
-        return 60;
+        return 120;
     }
     /**
      * Marca o início do processamento.

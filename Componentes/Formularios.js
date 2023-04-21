@@ -8,11 +8,6 @@ class FormHTML extends JSController{
     constructor(Caminho){
         
         super(Caminho);
-        /* Modo de busca
-         * 0 - Modo por chave primária absoluta, isso quer dizer é a chave e na posição informada
-         * 1 - Localizar a chave primária do registro pelo número absoluto da linha, removendo -1 .
-         * */
-        this.ModoBUSCA = 0; 
         this.Registro = -1;
         this.Nome_Submit = null; //Rótulo do botão de envio do formulário.
         this.Recipiente = null; //Nome do recipiente que receberá o componente com os dados.
@@ -48,6 +43,20 @@ class FormHTML extends JSController{
             }
         };
     }
+    /**
+     * Quebra as chaves em modo texto para modo array
+     * @param {string} Chp
+     * @returns {Array|TabelaHTML.getBreakChaves.ChavesArray}
+     */
+    getBreakChaves(Chp){
+        var Quebrar = Chp.substring(0, Chp.length - 1), ChavesArray = [], temp = null;
+        Quebrar = Quebrar.split(";");
+        for(var i in Quebrar){
+            temp = Quebrar[i].split("@");
+            ChavesArray.push(temp);
+        }
+        return ChavesArray;
+    }
     
     getValorChave(Linha){
         var CHValores = "", Count = 0, Total = 0;
@@ -71,11 +80,7 @@ class FormHTML extends JSController{
         }
         return CHValores;
     }
-    
-    set Modo_Busca(n){
-        this.ModoBUSCA = n; 
-    }
-    
+
     set Modo_Operacao(n){
         if(n == "I"){
             this.DadosEnvio.sendModoOperacao = "5a59ffc82a16fc2b17daa935c1aed3e9";
@@ -218,7 +223,7 @@ class FormHTML extends JSController{
         
         for(let i of CAMPOS){
             let Keys          = i[3]
-            , Label           = i[2]
+            , Label           = i[1]
             , Placeholder     = i[8].Placeholder
             , FNome           = i[8].Name
             , Componente      = i[8].TypeComponente
@@ -294,22 +299,7 @@ class FormHTML extends JSController{
     set setRegistro(n){
         this.Registro = n - 1;
     }
-    
-    /*
-     * 
-     * @param {type} n
-     * @returns {unresolved}
-     */
-    getChavePrimaria(n){
-        let RESULT = this.ResultSet.ResultDados;
         
-        for(let i in RESULT){
-            if(i == n){
-                return RESULT[i][0];
-            }
-        }
-    }
-    
     async update(F, o){
        let rsp = await o.Enviar_Update(F);
        if(rsp){
@@ -395,11 +385,8 @@ class FormHTML extends JSController{
         this.DadosEnvio.sendCamposAndValores = Campos;
         this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6"
         ;
-        if(this.ModoBUSCA == 0){
-            this.DadosEnvio.sendChavesPrimarias = [[0,(this.Registro)]]; // menos um pois o registro absoluto não leva em conta o zero.
-        }else{
-            this.DadosEnvio.sendChavesPrimarias = [[0,this.getChavePrimaria(this.Registro)]];
-        }
+        this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias);
+        
         TratarResposta = await this.Atualizar();
         
         if(TratarResposta.Error != false){
@@ -501,7 +488,7 @@ class FormHTML extends JSController{
                                     }                           
                                }else{
                                    let idx = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[0]];
-                                   let valor = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[1]];
+                                   let valor = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[2]];
                                    
                                    var data = {
                                         id: idx,
@@ -555,7 +542,7 @@ class FormHTML extends JSController{
            
         _TERM = options.data.search == null ? true : options.data.search;
         _FUNC = Config_FOREGIN.Funcao;
-        if(_FUNC !== null){
+        if(_FUNC !== false){
             this.FUNCOES_FOREIGN[_FUNC](options);
         }
         let Tabela_Original = null, ModoOperacao_Original = null;

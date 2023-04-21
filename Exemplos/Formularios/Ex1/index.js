@@ -46,7 +46,6 @@ t.Configuracoes.form_group.For_by_Form[0]= "display: grid";
 //t.Configuracoes.form_group.Campos[5]= "display: inline-block; margin-left: 10px";
 
 t.setRegistro = 1; //cuidado, sempre é subtraído em 1 dentro do método.
-t.Modo_Busca = 0;
 t.Modo_Operacao = "E";
 
 t.show();
