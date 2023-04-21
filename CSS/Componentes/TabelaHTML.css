@@ -1,0 +1,74 @@
+.TabelaHTMLSelect{
+    background-color: red;
+}
+.modal{
+    overflow: auto !important;
+}
+.CabtheadModelHoriz{
+    display: table-cell;
+}
+
+.LaguraTotal{
+    width: 100%;
+}
+
+.CabthModelHoriz{
+    display: inline-grid;
+    width: 100%;
+}
+.bodytheadModelHoriz{
+    display: inline-grid;
+    width: 100%;
+}
+
+.bodytrModelHoriz{
+    display: inline-grid;
+}
+.bodytdModelHoriz{
+    
+}
+.bodytrModelHoriz {
+    
+}
+
+.black--2XLNv{
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+.red--nFMDg{
+    background-color: red;
+    color: white;
+    text-align: center;
+}
+
+.green--3t5Bw{
+    background-color: greenyellow;
+    color: white;
+    text-align: center;
+}
+
+.red--nFMDg, .green--3t5Bw, .black--2XLNv{
+    border: solid 1px;
+    border-color: black;
+    padding: 2px;
+    margin: 2px;
+    width: 30px
+}
+
+.numbers--2XuwX{
+    display: table;
+    width: 100%;
+}
+
+.number-container--2fA8h{
+    display: inline-flex;
+}
+
+.PaginacaoU{
+    display: inline-flex;
+}
+
+.TabelaOver{
+    overflow-y: auto;
+}

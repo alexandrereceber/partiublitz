@@ -1,0 +1,67 @@
+<IfModule mod_rewrite.c>
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /blitz
+
+#Redireciona qualquer pedido de pasta raiz para páginas WEB
+#RewriteCond %{REQUEST_URI} ^/blitz/$
+#RewriteRule (.*) pgweb/table-vs-div-o-bom [R]
+#
+
+RewriteCond %{REQUEST_URI} ^/blitz/Logar$
+RewriteRule (.*) Login/login.php?D=%{REQUEST_URI}&URL=%{QUERY_STRING} [L]
+
+RewriteCond %{REQUEST_URI} ^/blitz/Registrar$
+RewriteRule (.*) Login/registrar.php?D=%{REQUEST_URI}&URL=%{QUERY_STRING} [L]
+
+RewriteCond %{REQUEST_URI} /ControladorTabelas/$
+RewriteRule (.*) Controller/TBL/Tabelas.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} /ControladorProcedures/$
+RewriteRule (.*) Controller/PCD/Procedures.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+#Realiza a verificação sobre a validade do login do usuário.
+RewriteCond %{REQUEST_URI} /ValidarLogin/$
+RewriteRule (.*) Credencial/ValidarLogin.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} /API/__.*/p=.*/$
+RewriteRule (.*) BancoDados/API/functions.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+#----------------------------------------------------------
+#Redireciona página para o perfil de sistema gerente.
+RewriteCond %{REQUEST_URI} /Administrador
+RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
+RewriteRule (.*) TiposUsuarios/Administrador/Admin.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
+
+#Redireciona página para o perfil de sistema gerente.
+RewriteCond %{REQUEST_URI} /Gerente
+RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
+RewriteRule (.*) TiposUsuarios/Gerente/Gerente.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
+
+#Redireciona página para o perfil de sistema comum.
+RewriteCond %{REQUEST_URI} /Usuario
+RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
+RewriteRule (.*) TiposUsuarios/Comum/Comum.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
+
+RewriteCond %{REQUEST_URI} /Teste
+RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
+RewriteRule (.*) TiposUsuarios/Comum/Comum_1.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
+
+#----------------------------------------------------------
+
+RewriteCond %{REQUEST_URI} /Validar/$
+RewriteRule (.*) Login/verify.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} /ValidarPlugin/$
+RewriteRule (.*) Login/verify_Mob.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} /Logoff/$
+RewriteRule (.*) Login/logoff.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+RewriteCond %{REQUEST_URI} /Cadastrar/$
+RewriteRule (.*) CadastrarUsuario/cadastrar.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+</IfModule>
+
+
