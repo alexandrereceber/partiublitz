@@ -1,17 +1,17 @@
 .CaixaUploads{
-    width: 63vw;
-    border: solid 1px;
-    height: 21vw;
+    width: 30vw;
+    border: solid 1px #a59898;
+    height: 30vw;
     max-width: 69vw;
     max-height: 21vw;
     display: TABLE;
-    border-color: #a33da521;
-    box-shadow: 1px 2px 5px 0px;
+    box-shadow: 5px 7px 9px 0px;
     border-radius: 7px;
     /* border-style: dashed; */
     /* left: 51px; */
     position: relative;
-
+    margin: auto;
+    margin-bottom: 10px;
 }
 
 
@@ -20,10 +20,13 @@
     display: table-cell;
     text-align: -webkit-center;
     height: 100%;
+    background-image: linear-gradient(#a600fb, #002bff);
+    border-radius: 7px;
+    margin-bottom: 10px
 }
 .icoUp{
     font-size: 6vw;
-    color: #0d7cdc73;
+    color: #ffffffe0;
 }
 
 .setaManuscrita{
@@ -42,13 +45,14 @@
     border-radius: 7px;
     display: flex;
     overflow-x: overlay;
+    box-shadow: 1px 4px 7px 0px;
 }
 
 .img_prev{
     border: solid 1px #ced4da;
     width: 139px;
     height: 127px;
-    margin: 12px;
+    margin: auto;
     border-radius: 6px;
     border-color: #00000030;
     /* display: table-cell; */
@@ -61,7 +65,7 @@
 }
 
 .ig_prev{
-    width: inherit;
+
     max-width: 100%;
     max-height: 82%;
     border-radius: inherit;
@@ -70,9 +74,11 @@
 }
 
 #CIMG{
-    display: table-cell;
+    display: flex;
     height: 86%;
-    border-radius: 13px
+    border-radius: 13px;
+    width: 20%;
+    margin: auto;
 }
 
 #CIMG:hover{
@@ -153,8 +159,13 @@
     border-radius: inherit;
     font-family: monospace;
     color: #767676;
+    
 }
 
-#prev_status{
+#uploadzz{
+    display: flex;
+}
+
+#UPLOADS_CAIXA{
     
 }

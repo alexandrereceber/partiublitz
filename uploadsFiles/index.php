@@ -1,3 +1,8 @@
+<?php  
+
+echo '<script>var Chave = "eyJBY3RpdmUiOnRydWUsIkNsaWVudGVfUmVtb3RvIjoiMTkyLjE2OC4xNS4xMCIsIklEVXNlcm5hbWUiOiIyIiwiVXNlcm5hbWUiOiJhbGV4YW5kcmVyZWNlYmVyQGdtYWlsLmNvbSIsIlBhc3N3b3JkIjoiY2RiNTU5MDE2MjNlZGI5MTA5YmRkM2U5ODBlYTQwNTQiLCJUdXN1YXJpbyI6IkFkbWluaXN0cmFkb3IiLCJUZW1wbyI6MTY4MjE2OTE0MywiVGVudGF0aXZhcyI6IjAiLCJJRCI6IjllNDhlYTgxNmVhMWZjOTQ1NjNiMzM2OWUyMjMxYWI4In0="</script>'
+
+?>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -17,7 +22,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
 
 
-        <link rel="stylesheet" href="../uploadsFiles/css/uploadsCSS.css?4d"> 
+        <link rel="stylesheet" href="../uploadsFiles/css/uploadsCSS.css?4saadd"> 
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -25,10 +30,10 @@ and open the template in the editor.
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
         
-        <script  src="../Scripts/bootbox/bootbox.js?5" defer="defer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
         <script  src="../Scripts/jsControlador/jsConstroller.js?dssdd2sd" defer="defer"></script>     
-        <script  src="../Componentes/Componentes.js?dddssF" defer="defer"></script>  
-        <script  src="../uploadsFiles/js/tratarFiles.js?ds" defer="dfer"></script> 
+        <script  src="../Componentes/Componentes.js?ddd1ssF" defer="defer"></script>  
+        <script  src="../uploadsFiles/js/tratarFiles.js?d1bs" defer="dfer"></script> 
 
         <link rel="stylesheet" href="css/prettyPhoto.css?" type="text/css" media="screen" charset="utf-8" />
 

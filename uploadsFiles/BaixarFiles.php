@@ -12,14 +12,10 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/uploadsFiles/phpUpfiles/
 }
 try{
     /**
-     * Verifica se existe uma sessão ativa ou não
-     */
-    $Session = ConfigSystema::get_Sessao();
-    /**
      * Caso a sessão esteja ativada, será buscado o nome de usuário logado no sistema para gravações em 
      * pastas separadas.
      */
-    $User = $Session == true ? $SD->getUsernameChave() : false ;
+    $User = "Blitz" ;
     /**
      * Busca o caminho onde serão armazenado os arquivos.
      */

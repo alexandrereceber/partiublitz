@@ -1,16 +1,56 @@
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 5000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  }
+})
+
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
+});
 
 class ReceberEnviar extends JSController{
     constructor(objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela){
         super (CaminhoEnvio);
         this.TipoConteudo = false;
         this.ProcessarDados = false;
+        this.MapaNome = new Map();
         
         var obj = objetoRecipiente || false,
            Modo = ModoCaixaUpload || false;
         
-        if(!obj) {bootbox.alert("Objeto recipiente necessário"); return false};
-        if(!Modo) {bootbox.alert("Tipo de caixa de upload está faltando!"); return false};
-        if(!CaminhoEnvio) {bootbox.alert("URL para upload é necessário."); return false};
+        if(!obj) {
+            Toast.fire({
+                icon: 'success',
+                title: "Objeto recipiente necessário"
+              }); 
+            return false
+        };
+        if(!Modo) {
+            Toast.fire({
+                icon: 'success',
+                title: "Tipo de caixa de upload está faltando!"
+              });
+              
+            return false
+        };
+        if(!CaminhoEnvio) {
+            Toast.fire({
+                icon: 'success',
+                title: "URL para upload é necessário."
+              });
+              
+            return false
+        };
         
         /**
          * Objeto que receberá o componente.
@@ -41,7 +81,7 @@ class ReceberEnviar extends JSController{
         /**
          * Caminho onde se localiza a imagem que fica aparecendo ao passar o mouse em cima do componente.
          */
-        this.URLUploads = "./uploadsFiles/";
+        this.URLUploads = "./";
         
         this.Forms = new FormData();
 
@@ -66,8 +106,8 @@ class ReceberEnviar extends JSController{
         return /image/.test(Tipo);
     }
     loadImagens(n, tOriginal, Titulo){
-        var T = (document.querySelector("#img_prev_titulo"))
-        T.innerHTML =  "Nº " + n + " - " + Titulo;
+        var T = (document.querySelector("#img_prev_titulo"));
+        //T.innerHTML =  "Nº " + n + " - " + Titulo;
         (document.querySelector("#preview_Width_Real")).src = tOriginal;
     }
     
@@ -266,8 +306,8 @@ class ReceberEnviar extends JSController{
                     
                         let percentual = parseInt(parseFloat(e.loaded / e.total) * 100);
                         let imgProgress = document.querySelector("#progress_img_" + idx_prevView);
-                        imgProgress.attributes[4].value = percentual
-                        imgProgress.style.width = percentual + "%"
+                        imgProgress.attributes[4].value = percentual;
+                        imgProgress.style.width = percentual + "%";
                         console.log(percentual);
                     
                 };
@@ -275,7 +315,7 @@ class ReceberEnviar extends JSController{
                     let imagem = new Image(), Caminho;
                     imagem.className = "ig_prev";
                     imagem.dataset.numberPrev = idx_prevView;
-                    imagem.name = file.name
+                    imagem.name = file.name;
                     Caminho = this.result;
                     imagem.src = Caminho;
                     imagem.style.cursor = "pointer";
@@ -283,9 +323,14 @@ class ReceberEnviar extends JSController{
                     imagem.onclick = function(){
                         objeto.exibirImagem_tamanho_real(idx_prevView, Caminho);
                     }                    
-                    $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;margin-right: 10px;'>Nº "+ (idx_prevView + 1) +"</div><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div></div>");
-                    $("#img_prev_" + idx_prevView).append(imagem);
-
+                    $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div><div style='display: inline-block; width:100%' id='Nome_Imagem'><input  id='ID_NOMEIMAGEM_"+ idx_prevView + "' style='display: inline-block; width:100%' type='text' data-nomeimagem='"+ file.name +"'></div></div>");
+                    $("#IMG_CARREGADA_" + idx_prevView).append(imagem);
+                    $("#ID_NOMEIMAGEM_" + idx_prevView).keyup(function(e){
+                        let Nome_Img = e.currentTarget.dataset.nomeimagem;
+                        objeto.MapaNome.set(Nome_Img, $(e.currentTarget).val())
+                    });
+                    objeto.MapaNome.set(file.name,"");
+                    
                     $(".MatarFoto").unbind();
                     $(".MatarFoto").click(function(e){
                         var index = e.currentTarget.dataset.number,
@@ -312,6 +357,47 @@ class ReceberEnviar extends JSController{
             })        
     }
     
+     TratarErros(Erros){
+        switch(Erros.Codigo){
+            case 12006:
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: Erros.Mensagem,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+                //window.location = Erros.Dominio;
+                break;
+            case 7000:
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Não foi definido, na tabela, o campo de referência da chave estrangeira!",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+                //window.location = Erros.Dominio;
+                break;
+            
+            case 0:
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Usuário existente no sistema.",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+                //window.location = Erros.Dominio;
+                break;
+            default:
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: Erros.Mensagem,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+                break;
+        }
+    }
+    
     async verificarArquivos(fl){
         this.conteudoFl = [];
         var objeto = this, Count = 0;
@@ -323,6 +409,7 @@ class ReceberEnviar extends JSController{
         $("#prev_status").html("");
         $("#prev_Botoes").html("<center><div><button id='EnviarFls' class='btn btn-primary'>Uploads</button></div><div id='Progress_Uploads_files'></div></center>");
         $("#prev_Botoes").unbind();
+        
         $("#EnviarFls").click(async function(){
             let progress = '<div class="progress " style="margin-top: 5px;">'+
                                 '<div id="progress_Uploads" class="progress-bar" role="progressbar" style="background-color: red;width: 0%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>'+
@@ -335,8 +422,16 @@ class ReceberEnviar extends JSController{
             
             
             for(var i in objeto.conteudoFl){
-                objeto.Forms.append("Imagens" + i, objeto.conteudoFl[i][1], objeto.conteudoFl[i][1].name);
-            }
+                objeto.Forms.append("Imagens[]", objeto.conteudoFl[i][1], objeto.conteudoFl[i][1].name);
+                
+              }
+              
+              let NomesArray = [];
+              for(let i of objeto.MapaNome){
+                  NomesArray.unshift(i);
+              }
+              
+              objeto.Forms.append("NomesImagens[]", NomesArray);
             /**
              * Envia o tipo de operação que o controlador deverá buscar.
              */
@@ -350,28 +445,23 @@ class ReceberEnviar extends JSController{
             
             $("#Progress_Uploads_files").html(progress);
             
-            let saida = await objeto.Atualizar();
-            objeto.DadosEnvio = null;
-            objeto.conteudoFl = null
-            
-            $("#Progress_Uploads_files").html("");
-            
-                if(saida[0] == true){
-                if(saida[1] == 35200){
-                    bootbox.alert("<h3>"+ saida[2] +"</h3>")
-                }else{
-                    bootbox.alert("<h3>"+ saida[2] +"</h3>")
-                }
+            let TratarResposta = await objeto.Atualizar();
+            if(TratarResposta.Error !== false){
+                objeto.TratarErros(TratarResposta);
             }else{
-                bootbox.alert("<h3>Imagens enviada com sucesso.</h3>")
+                $("#Progress_Uploads_files").html("");
+                objeto.DadosEnvio = null;
+                objeto.conteudoFl = null
             }
+        
+
         });
         
         for (var i = 0, file; file = fl.files[i]; i++) {
             let Tipo = this.allowTipo(file),
                 Tamanho = this.allowTamanho(file);
             if(false){
-                //bootbox.alert("<h3>Arquivo: "+ file.name +" <br> Tamanho: "+ parseInt(file.size / (1024*1024)) + "MB <br> <span style='color: blue'>Permitido 2MB</span> <br> Tipo: "+ file.type +" <br> <span style='color: blue'>Tipos de arquivos válidos (jpeg/png/gif)</span>.</h3>");
+                
                 if(Tamanho)
                     $("#prev_status").append("<br><b>Nome</b>: " + file.name + " <b>Tamanho</b>: <span style='color: red'>" + parseInt(file.size / (1024*1024)) +"MB</span> => permitido 2MB")
                 
@@ -406,17 +496,40 @@ class ReceberEnviar extends JSController{
         let Obj = this
 
         
-        let CaixaDIV =  '<div>\n\
+        let CaixaDIV =  '<div id="UPLOADS_CAIXA">\n\
                                 <div id="CUp" class="CaixaUploads" ondragover="return false" >'+
                                     '<div class="CaixaUploadInterna" >\n\
                                         <i class="fa fa-upload icoUp" ></i>\n\
                                     </div>'+
-                                    '<img class="setaManuscrita" src="'+ this.URLUploads +'img/seta.png">\n\
-                                </div>'+(this.Modo == 2 ? '<div class="preview_fts"></div>' : '' )+
+                                '</div>'+
+                                '<div class="input-group mb-3">'+
+                            '<div class="input-group-prepend">'+
+                              '<div class="input-group-prepend">'+
+                                '<div class="dropdown-menu" id="ObterNamFiles">'+
+                                  '<div role="separator" class="dropdown-divider"></div>'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>'+
+                            '<div class="custom-file">'+
+                                '<input type="file" class="custom-file-input" id="SelecFiles" multiple="" >'+
+                                '<label class="custom-file-label" for="inputGroupFile01">Selecionar arquivos</label>'+
+                            '</div>'+
+                                '</div>' +(this.Modo == 2 ? '<div class="preview_fts"></div>' : '' )+
                                 '<div id="prev_Botoes" style="width: 63vw;top: 5px;position: relative;"></div>'+
                                 '<div id="prev_status"></div>'+
                             '</div>';
+                    
             $(this.objRecipient).html(CaixaDIV);
+                $("#SelecFiles").on("change", function(e){
+                    var Arquivos = e.target.files
+                    $("#ObterNamFiles").html("")
+                    for(var i=0; i < Arquivos.length; i++){
+                        $("#ObterNamFiles").append('<a class="dropdown-item" href="#">'+Arquivos[i].name+'</a>');
+                    }
+                    Obj.verificarArquivos(e.target);            
+
+
+                })
             $("#CUp").on("drop", function(e){
                 e.stopPropagation();
                 e.preventDefault();
@@ -425,16 +538,10 @@ class ReceberEnviar extends JSController{
             }).on("dragover", 
             
                 function(e){
-                    $(e.currentTarget).css("background","#ff000040").css("border","solid 4px #ff00003b").css("border-style","dashed")
-                }).on("mouseover", 
+                    $(e.currentTarget).css("background","#f5efef40").css("border","solid 4px #f5efef40").css("border-style","dashed")
+                }).on("dragleave",
                 function(e){
-                    $(".setaManuscrita").fadeIn('slow')
-            }).on("mouseout", 
-                function(e){
-                    $(".setaManuscrita").fadeOut('slow')
-            }).on("dragleave",
-                function(e){
-                    $(e.currentTarget).css("background","white").css("border","solid 0px #ff00003b").css("border-style","dashed")
+                    $(e.currentTarget).css("background","#f5efef40").css("border","solid 0px #f5efef40").css("border-style","dashed")
             }).on("dragend", 
             function(e){
                 debugger;
@@ -495,4 +602,4 @@ class ReceberEnviar extends JSController{
  * @param {string} Tabela, no banco de dados, onde será armazenado as imagens
  * @type ReceberEnviar
  */
-var InstanciarUpload = new ReceberEnviar("#uploadzz",3,"http://"+ Padrao.getHostServer() +"/blitz/Controlador/", "a868a1388d958fb560eb17f2d71cbb9e");
+var InstanciarUpload = new ReceberEnviar("#uploadzz",2,Padrao.getHostServer() +"/blitz/ControladorTabelas/", "83849cf629549fgtrdeb555e00f4c711");

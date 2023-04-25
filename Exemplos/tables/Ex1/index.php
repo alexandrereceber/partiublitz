@@ -1,6 +1,6 @@
 <?php  
 
-echo '<script>var Chave = "eyJBY3RpdmUiOnRydWUsIkNsaWVudGVfUmVtb3RvIjoiMTkyLjE2OC4xNS4xMCIsIklEVXNlcm5hbWUiOiIyIiwiVXNlcm5hbWUiOiJhbGV4YW5kcmVyZWNlYmVyQGdtYWlsLmNvbSIsIlBhc3N3b3JkIjoiY2RiNTU5MDE2MjNlZGI5MTA5YmRkM2U5ODBlYTQwNTQiLCJUdXN1YXJpbyI6IkFkbWluaXN0cmFkb3IiLCJUZW1wbyI6MTY4MjEwNDE3NywiVGVudGF0aXZhcyI6IjAiLCJJRCI6IjllNDhlYTgxNmVhMWZjOTQ1NjNiMzM2OWUyMjMxYWI4In0="</script>'
+echo '<script>var Chave = "eyJBY3RpdmUiOnRydWUsIkNsaWVudGVfUmVtb3RvIjoiMTkyLjE2OC4xNS4xMCIsIklEVXNlcm5hbWUiOiIyIiwiVXNlcm5hbWUiOiJhbGV4YW5kcmVyZWNlYmVyQGdtYWlsLmNvbSIsIlBhc3N3b3JkIjoiY2RiNTU5MDE2MjNlZGI5MTA5YmRkM2U5ODBlYTQwNTQiLCJUdXN1YXJpbyI6IkFkbWluaXN0cmFkb3IiLCJUZW1wbyI6MTY4MjE2MDcxNCwiVGVudGF0aXZhcyI6IjAiLCJJRCI6IjllNDhlYTgxNmVhMWZjOTQ1NjNiMzM2OWUyMjMxYWI4In0="</script>'
 
 ?>
 <!DOCTYPE html>
@@ -26,8 +26,8 @@ and open the template in the editor.
 
         <script  src="../../../Scripts/bootbox/bootbox.js?5aa" defer="defer"></script>
         <script  src="../../../Scripts/jsControlador/jsConstroller.js?ddfa443ss3" defer="defer"></script>     
-        <script  src="../../../Componentes/Tabelas.js?q=367s35as7s" defer="defer"></script>  
-        <script  src="index.js?q=sasd" defer="defer"></script>  
+        <script  src="../../../Componentes/Tabelas.js?q=367s35saas7s" defer="defer"></script>  
+        <script  src="index.js?q=saasd" defer="defer"></script>  
         
     </head>
     <body>

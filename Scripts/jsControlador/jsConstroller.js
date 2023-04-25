@@ -72,16 +72,39 @@ class JSController{
          * Background async - sisnifica que o carregamento não serão precedido de uma tela e não haverá bloqueio de outra funções ajax.
          */
         this.Config = {Load: true, Background: false};
-
+        
         /**
          * Verifica a existência de uma chave secreta. É um prototype
          */
         this.DadosEnvio.enviarChaves = this.Chaves();
-
+        this.Modo_enctype = "multipart/form-data";
+        this.Modo_Async = true;
+        this.Enviar_Dada = "";
+        this.TipoConteudo = "application/x-www-form-urlencoded";
+        this.data_Type = false;
+        
     }
     
+    set setProcessarDados(n){
+        this.ProcessarDados = n;
+    }
     set TipoEnvio(type){
         this.TypeEnvio = type;
+    }
+    set Modoenctype(n){
+        this.Modo_enctype = n;
+    }
+    set ModoAsync(n){
+        this.Modo_Async = n;
+    }
+    set EnviarDada(n){
+        this.Enviar_Dada = n;
+    }
+    set Tipo_Conteudo(n){
+        this.TipoConteudo = n;
+    }
+    set Tipo_dataType(n){
+        this.data_Type = n;
     }
     
     BuscarDados(F, E){
@@ -103,13 +126,14 @@ class JSController{
             }else{
                 this.Config.Load = false;
             }
-
+                       
             var op = $.ajax({
                         cache: false,
                         url: this.URL,
                         type: this.TypeEnvio,
-                        async: true,
-                        enctype: "multipart/form-data",
+                        async: this.Modo_Async,
+                        dataType: this.data_Type,
+                        enctype: this.Modo_enctype,
                         contentType: this.TipoConteudo,
                         processData: this.ProcessarDados,
                         Config: this.Config,
@@ -129,7 +153,7 @@ class JSController{
                             errors(E(xhr, status, error));
                         },
                         xhr: function() {
-                            let ConfigInfo = this.Config
+                            let ConfigInfo = this.Config;
                                 var myXhr = $.ajaxSettings.xhr();
                                 if(myXhr.upload){
                                     myXhr.upload.onprogress = function(e){
@@ -158,7 +182,11 @@ class JSController{
                 Saida[0] = e;
                 Saida[1] = status;
                 Saida[2] = xhr;            
-                bootbox.alert("<h4 style='color: red'>Status: "+ status +" - Connection.</h4>")
+                //bootbox.alert("<h4 style='color: red'>Status: "+ status +" - Connection.</h4>");
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Status: '+ status +' - Connection.'
+                  });
                 return Saida;
             });
         try {
@@ -177,8 +205,14 @@ class JSController{
                                          //pela variÃ¡vel glocal this.ResultSet
             }
         } catch (e) {
-            bootbox.alert("<h3 style='color: red'><i class='fas fa-exchange-alt'/> Ocorreu algum erro no servidor! Favor contatar o administrador.</h3>")
-            console.log(e, Dados[0]);
+            //bootbox.alert("<h3 style='color: red'><i class='fas fa-exchange-alt'/> Ocorreu algum erro no servidor! Favor contatar o administrador.</h3>")
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Ocorreu algum erro no servidor! Favor contatar o administrador.",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+                console.log(e, Dados[0]);
         }
     
     }

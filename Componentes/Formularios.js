@@ -8,7 +8,7 @@ class FormHTML extends JSController{
     constructor(Caminho){
         
         super(Caminho);
-        this.Registro = -1;
+        this.Registro = 0; // Sempre será 0, pois no formulário não tem como ver mais de 1 registro, usando apenas o índice 0
         this.Nome_Submit = null; //Rótulo do botão de envio do formulário.
         this.Recipiente = null; //Nome do recipiente que receberá o componente com os dados.
         this.NomeInstancia = null; //Nome do objeto instanciado na memória.
@@ -17,8 +17,24 @@ class FormHTML extends JSController{
         this.DadosEnvio.sendPagina = 1;
         this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6";
         this.ChavesPrimarias = [];
-        
-        //this.DadosEnvio.sendFiltros = [false, false, false];
+        this.Groups = {
+                        Groups: true,
+                        N_Grupos: 1,
+                        Columns:  1,
+                        Titulos: [], //Cada índice representa o nome de cada grupo
+                        Rodapes: [], //Cada índice representa o rodapé de cada grupo
+                        /*
+                         [
+                            {Style_card_header:"red", Style_card_body:"blue", Style_Rodape:"green"}, 
+                            {Style_card_header:"red", Style_card_body:"blue", Style_Rodape:"green"},
+                            {Style_card_header:"red", Style_card_body:"blue", Style_Rodape:"green"},
+                        ]
+                         * 
+                         */
+                        Styles: []
+        };
+         
+        this.DadosEnvio.sendFiltros = [false, false, false];
         
         /*Configuração das partes do formulário*/
         this.Configuracoes = {
@@ -42,7 +58,63 @@ class FormHTML extends JSController{
                 alert(9);
             }
         };
+        /**
+         * Funções executadas aopós carregar os dados;
+         * Select / Insert / Update
+         * Tem um tratador de erro para esses funções, dentro de cada operação
+         */
+        this.FUNCOES_ONLOAD = function(){
+            let FUNCs = new Map([
+                //Inserir as funcoes;
+            ]);
+            return {
+                __Exec: function(Params, MOMENT, OBJECT_INSTANCIA_FORMULARIO){  //Recebe um objeto {"Evento":..., ?}
+                    for(let i of FUNCs){
+                        i[1](Params, MOMENT, OBJECT_INSTANCIA_FORMULARIO);
+                    }
+                    
+                },
+                add: function(n,f){
+                    FUNCs.set(n,f);
+                }
+            };
+        }();
     }
+    
+    addFunctons_Eventos(Nome,F){
+        if(Nome !== null && Nome !== "" && Nome !== undefined && F !== undefined){
+            this.FUNCOES_ONLOAD.add(Nome, F);
+        }else{
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "É necessário um nome e uma função, método: addFunctons_Eventos",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+        }
+        
+    }
+  
+    /**
+     * {
+            N_Grupos: 1,
+            Columns:  1,
+            Titulos: [], //Cada índice representa o nome de cada grupo
+            Rodapes: [] //Cada índice representa o rodapé de cada grupo
+        }
+     * @type Objet
+     */
+    set setGrupos(n){
+        this.Groups = n;
+    }
+    
+   /**
+    * Atribui um array contendo os filtros de pesquisa.
+    * @type array Fts
+    */
+    set Filtros(Fts){
+        this.DadosEnvio.sendFiltros[0] = Fts;
+    }    
     /**
      * Quebra as chaves em modo texto para modo array
      * @param {string} Chp
@@ -92,7 +164,7 @@ class FormHTML extends JSController{
             Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: "Escolher uma operação!",
+                    text: "Escolher uma operação, método: Modo_Operacao!",
                     //footer: '<a href="">Why do I have this issue?</a>'
                   });
         }
@@ -168,24 +240,24 @@ class FormHTML extends JSController{
             this.TratarErros(TratarResposta);
             return false;
         }else{
-            this.ResultSet = TratarResposta;
-            this.CriarFormulario();
-            this.getValor_Campos(this.Registro);
-            
-            
+            try{
+                this.FUNCOES_ONLOAD.__Exec("SELECT","BEFORE", this);
+                this.ResultSet = TratarResposta;
+                this.CriarFormulario();
+                this.getValor_Campos(this.Registro);
+                this.FUNCOES_ONLOAD.__Exec("SELECT","AFTER", this);                
+            }catch(e){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+            }
+
         }
     }
-    
-    /* Gera os campos representados na classe Table no servidor.
-     * Cria os campos em forma de formulário para preenchimento.
-     * @returns {Generator|FormHTML.gerar_CAMPOSFormGrups.BaseGROUPS|String}
-     */
-    gerar_CAMPOSFormGrups(){
-        let CAMPOS = this.ResultSet.Campos;
-        /*
-         * Representa os campos da classe que tem como componente o inputbox
-         * @type String
-         */
+    get_BaseGoup_input(){
         let BaseGroup_input = '<div class="form-group" style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo}">'+
                                 '<label for="{ROTULO_id}">{ROTULO_Nome}</label>'+
                                 '<input \n\
@@ -203,10 +275,10 @@ class FormHTML extends JSController{
                                         id="INPUT_'+ this.ResultSet.Indexador +'_{ROTULO_id}" \n\
                                         placeholder="{ROLTULO_placeholder}">'+
                             '</div>';
-        /*
-         * Representa os campos da classe que tem como componente o select
-         * @type String
-         */      
+        return BaseGroup_input;
+    }
+    
+    get_BaseGroup_Select(){
         let BaseGroup_Select = '<div class="form-group"  style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo};">'+
                                       '<label for="{ROTULO_id}">{ROTULO_Nome}</label>'+
                                       '<select class="form-control {ROTULO_SELECTD2}" \n\
@@ -217,7 +289,56 @@ class FormHTML extends JSController{
                                             '{ROTULO_ITENS}'+
                                       '</select>'+
                                 '</div>';
+        return BaseGroup_Select;
+    }
+
+    get_BaseGroup_Imagem(){
+        this.Imagem = true;
+        let BaseGroup_Imagem = '<div class="form-group"  style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo};">'+
+                                    '<label for="{ROTULO_id}">{ROTULO_Nome}</label>'+
+                                    '<div class="input-group">'+
+                                      '<div class="custom-file">'+
+                                        '<input type="file" class="custom-file-input" \n\
+                                                style="{ROTULO_style}" \n\
+                                                size="{ROTULO_size}" \n\
+                                                max="{ROTULO_max}" \n\
+                                                min="{ROTULO_min}" \n\
+                                                maxlength="{ROTULO_maxlength}" \n\
+                                                " {ROTULO_leitura} " \n\
+                                                " {ROTULO_required} "  \n\
+                                                " {ROTULO_patterns} " \n\
+                                                type="{ROTULO_tipo}" \n\
+                                                name="{ROTULO_id}" \n\
+                                                class="form-control" \n\
+                                                id="IMAGEM_'+ this.ResultSet.Indexador +'_{ROTULO_id}" \n\
+                                                placeholder="{ROLTULO_placeholder}">'+
+                                        '<label class="custom-file-label" for="{ROTULO_id}">Choose file</label>'+
+                                      '</div>'+
+                                      '<div class="input-group-append">'+
+                                        '<span class="input-group-text">Upload</span>'+
+                                      '</div>'+
+                                    '</div>';
+
+        return BaseGroup_Imagem;
+    }
+    /* Gera os campos representados na classe Table no servidor.
+     * Cria os campos em forma de formulário para preenchimento.
+     * @returns {Generator|FormHTML.gerar_CAMPOSFormGrups.BaseGROUPS|String}
+     */
+    gerar_CAMPOSFormGrups(BLOCK = false, DIVIS = false){
+        let CAMPOS = this.ResultSet.Campos;
+        /*
+         * Representa os campos da classe que tem como componente o inputbox
+         * @type String
+         */
+        let BaseGroup_input = this.get_BaseGoup_input();
+        /*
+         * Representa os campos da classe que tem como componente o select
+         * @type String
+         */      
+        let BaseGroup_Select = this.get_BaseGroup_Select();
         
+        let BaseGroup_imagem = this.get_BaseGroup_Imagem();
         
         let BaseGROUPS = "", Count = 0;;
         
@@ -226,6 +347,7 @@ class FormHTML extends JSController{
             , Label           = i[1]
             , Placeholder     = i[8].Placeholder
             , FNome           = i[8].Name
+            , Groups          = i[8].Grupos
             , Componente      = i[8].TypeComponente
             , Tipo_Conteudo   = i[8].TypeConteudo
             , Required        = i[8].Required == true ? "required='true'" : ""
@@ -238,6 +360,16 @@ class FormHTML extends JSController{
             , Size            = i[8].size
             , Style           = i[8].style
             , Opcoes          = null;
+            
+            /**
+             * Camada usada, tanto para criação de componentes em grupos ou sem grupos
+             */
+            if(this.Groups.Groups === true){
+                if(BLOCK != Groups.N_Grupo || DIVIS != Groups.Divisao){
+                    continue;
+                }
+            }
+            //---------------------------------------------------------
             
             if(Componente === "inputbox"){
                     if(i[8].Exibir){
@@ -286,6 +418,27 @@ class FormHTML extends JSController{
                          }
                     }
                     
+            }else if(i[8].TypeComponente === "imagem"){
+                if(i[8].Exibir){
+                    BaseGROUPS += BaseGroup_imagem
+                                            .replace(/{ROTULO_Nome}/ig, Label)
+                                            .replace(/{ROLTULO_placeholder}/ig, Placeholder)
+                                            .replace(/{ROTULO_id}/ig, FNome)
+                                            .replace(/{ROTULO_tipo}/ig, Tipo_Conteudo[0])
+                                            .replace(/{ROTULO_required}/ig, Required)
+                                            .replace(/{ROTULO_patterns}/ig, Patterns)
+                                            .replace(/{ROTULO_leitura}/ig, Leitura)
+                                            .replace(/{ROTULO_maxlength}/ig, Maxlength)
+                                            .replace(/{ROTULO_Max}/ig, Max)
+                                            .replace(/{ROTULO_Min}/ig, Min)
+                                            .replace(/{ROTULO_size}/ig, Size)
+                                            .replace(/{ROTULO_style}/ig, Style)
+                                            .replace(/{ROTULO_style_por_campo}/ig, this.Configuracoes.form_group.Campos[Count]);
+                    
+                }
+                
+            }else{
+                throw "Não há campo correspondente a esse tipo de dados";
             }
         }
         
@@ -297,7 +450,7 @@ class FormHTML extends JSController{
      * Atributo que representa o registro a ser representado no formulário. 
      */
     set setRegistro(n){
-        this.Registro = n - 1;
+        this.Registro = n;
     }
         
     async update(F, o){
@@ -307,7 +460,7 @@ class FormHTML extends JSController{
             Toast.fire({
                 icon: 'success',
                 title: 'Os dados foram salvos.'
-              })
+              });
        }else{
            
        }
@@ -320,8 +473,8 @@ class FormHTML extends JSController{
             await this.show(); //Somente após a atualização de todas as linhas;
             Toast.fire({
                 icon: 'success',
-                title: 'Os dados foram salvos.'
-              })
+                title: 'Os dados foram inseridos com sucesso.'
+              });
        }else{
            
        }
@@ -393,9 +546,22 @@ class FormHTML extends JSController{
             this.TratarErros(TratarResposta);
             return false;
         }else{
-            return true;
+            try{
+                this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this);
+                return true;
+                this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this); 
+            }catch(e){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+            }
+            
         }
     }
+     
     async Enviar_Inserir(F){
         
         var TratarResposta = "";
@@ -412,7 +578,19 @@ class FormHTML extends JSController{
             this.TratarErros(TratarResposta);
             return false;
         }else{
-            return true;
+            try{
+                this.FUNCOES_ONLOAD.__Exec("INSERT","BEFORE", this);
+                return true;
+                this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this);               
+            }catch(e){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+            }
+            
         }
     }    
     async obter_FOREING(data){
@@ -429,17 +607,54 @@ class FormHTML extends JSController{
         
     }
     
-    async obter_Valor_RESULTADO(o){
-        let RESULT = this.ResultSet.ResultDados;
-        return RESULT[this.Registro][0];
-    }  
-    
+
+    /** INTEGRAÇÃO COM OUTROS COMPONENTES
+     * Informa, através de outro componente, as informações para editar ou inserir dados;
+     * @Dados type {"SOURCEDADOS": "", }
+     */
+    set set_SourceDados(Dados){
+        let SOURCEDADOS = null, CHAVEPRIMARIA = null, REGISTRO = null, TABELA = null, OPERACAO = null;
+        
+        SOURCEDADOS = Dados.SOURCEDADOS || null;
+        CHAVEPRIMARIA = Dados.CHAVEPRIMARIA || null;
+        REGISTRO = Dados.Dados || null;
+        TABELA = Dados.Tabela || null;
+        OPERACAO = Dados.Operacao || null;
+        
+        if(TABELA === null || OPERACAO === null){
+            throw "Tabela e Modo de Operação não foram informados!";
+        }else{
+            if(OPERACAO === "1b24931707c03902dad1ae4b42266fd6"){
+                if(SOURCEDADOS === null || CHAVEPRIMARIA === null || REGISTRO === null){
+                    throw "Base de dados, Chave Primária ou Registro não foram informados.";
+                }else{
+                    this.ResultSet = SOURCEDADOS;
+                    this.ChavePrimaria = CHAVEPRIMARIA;
+                    this.Registro = REGISTRO;
+                    this.DadosEnvio.sendTabelas = TABELA;
+                    this.DadosEnvio.sendModoOperacao = OPERACAO;
+                }
+                
+                
+            }else if(OPERACAO === "5a59ffc82a16fc2b17daa935c1aed3e9"){
+                this.DadosEnvio.sendTabelas = TABELA;
+                this.DadosEnvio.sendModoOperacao = OPERACAO;
+            }else{
+                throw "Nenhuma operação de CRUD informada.";
+            }
+            
+                
+        }
+        
+        
+        
+    }
     getValor_Campos(n){
         try{
             let CAMPOS = this.ResultSet.Campos,
                 RESULT = this.ResultSet.ResultDados,
-                Total  = RESULT.length,
-                o = this;
+                Total  = RESULT.length;
+                if(RESULT.length == 0 || this.Registro > RESULT.length) {throw "Não há registro para edição ou índice inválido.";}
             if(this.DadosEnvio.sendModoOperacao === "5a59ffc82a16fc2b17daa935c1aed3e9"){
                 for(let i in CAMPOS){
                     if(CAMPOS[i][8].Exibir){
@@ -487,8 +702,8 @@ class FormHTML extends JSController{
                                         }
                                     }                           
                                }else{
-                                   let idx = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[0]];
-                                   let valor = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[2]];
+                                   let idx = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[2]];
+                                   let valor = RESULT[n][CAMPOS[i][19].CamposTblExtrangeira[3]];
                                    
                                    var data = {
                                         id: idx,
@@ -508,7 +723,7 @@ class FormHTML extends JSController{
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: "O registro não foi encontrado",
+                        text: "O registro não foi encontrado, método: getValor_Campos",
                         //footer: '<a href="">Why do I have this issue?</a>'
                       });
                 }
@@ -555,10 +770,10 @@ class FormHTML extends JSController{
         this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
         
         
-        if(!_TERM){
-            this.DadosEnvio.Filtros  = [[Config_FOREGIN.IdxCampoVinculado,"=",_TERM]];            
+        if(_TERM !== true){
+            this.DadosEnvio.sendFiltros[0]  = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM]];            
         }else{
-            this.DadosEnvio.Filtros  = [false, false, false];
+            this.DadosEnvio.sendFiltros[0]  = false;
         }
 
         this.DadosEnvio.sendPagina = options.data.Prox_pagina;
@@ -580,9 +795,86 @@ class FormHTML extends JSController{
         }
     }
     
+    getBlocos_one(BLOCK, DIVIS){
+        
+    }
+    getBlocos_two(BLOCK, DIVIS){
+        
+    }
+    CriarBlocos_Groups(){
+        let GN = this.Groups.Titulos; //Goup Nome
+        let GR = this.Groups.Rodapes; //Goup Rodape
+        let TOTAL_GROUPS = this.Groups.N_Grupos;
+        let BLOCKS_GROUPS = "";
+        
+        if( TOTAL_GROUPS === 0) throw "A informação sobre grupos é 0.";
+        
+        let Bloks = '<div class="card card-default">'+
+                        '<div class="card-header" style="{CARD_HEARD}">'+
+                          '<h3 class="card-title">{TITULO_CARD}</h3>'+
+                          '<div class="card-tools">'+
+                            '<button type="button" class="btn btn-tool" data-card-widget="collapse">'+
+                              '<i class="fas fa-minus"></i>'+
+                            '</button>'+
+                          '</div>'+
+                        '</div>'+
+                       ' <!-- /.card-header -->'+
+                        '<div class="card-body" style="{CARD_BODY}">'+
+                         ' <div class="row">'+
+                            '<div class="col-md-6">'+
+                                "{BLOCKs_1}"+ //Block 1 do card_Default
+                            '</div>'+
+                            '<!-- /.col -->'+
+                            '<div class="col-md-6">'+
+                                "{BLOCKs_2}"+ //Block 2 do card_Default
+                           ' </div>'+
+                           ' <!-- /.col -->'+
+                          '</div>'+
+                          '<!-- /.row -->'+
+                        '</div>'+
+                        '<!-- /.card-body -->'+
+                        '<div class="card-footer"  style="{CARD_RODAPE}">'+
+                         "{RODAPE_CARD}"+
+                        '</div>'+
+                    '</div>';
+            
+        let TITULO_CARD = "";
+        let RODAPE_CARD = "";
+        let BLOCO1 = "";
+        let BLOCO2 = "";
+        let BLK = Bloks;
+        let CARD_HEARD = "";
+        let CARD_BODY = "";
+        let CARD_RODAPE = "";
+        
+        for(let i = 0; i <= TOTAL_GROUPS; i++){
+            TITULO_CARD = GN[i];
+            RODAPE_CARD = GR[i];
+            BLOCO1 = this.gerar_CAMPOSFormGrups(i,1);
+            BLOCO2 = this.gerar_CAMPOSFormGrups(i,2);
+            CARD_HEARD =  this.Groups.Styles[i].Style_card_header;
+            CARD_BODY =   this.Groups.Styles[i].Style_card_body;
+            CARD_RODAPE = this.Groups.Styles[i].Style_Rodape;
+            
+            BLK = Bloks.replace(/{TITULO_CARD}/,    TITULO_CARD);
+            BLK = BLK.replace(/{RODAPE_CARD}/,      RODAPE_CARD);
+            BLK = BLK.replace(/{BLOCKs_1}/,         BLOCO1);
+            BLK = BLK.replace(/{BLOCKs_2}/,         BLOCO2);
+            BLK = BLK.replace(/{CARD_HEARD}/,       CARD_HEARD);
+            BLK = BLK.replace(/{CARD_BODY}/,        CARD_BODY);
+            BLK = BLK.replace(/{CARD_RODAPE}/,      CARD_RODAPE);
+            
+            BLOCKS_GROUPS += BLK;
+            
+        }   
+
+        return BLOCKS_GROUPS;
+    }
     CriarFormulario(){
+        let BaseFormulario = null;
         let o = this;
-        let BaseFormulario =  '<section class="content">'+
+        if(this.Groups.Groups === false){
+            BaseFormulario =  '<section class="content">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
@@ -614,10 +906,65 @@ class FormHTML extends JSController{
                           '<!-- /.row -->'+
                         '</div><!-- /.container-fluid -->'+
                       '</section>';
+        }else{
+            BaseFormulario = '<section class="content">'+
+                        '<div class="container-fluid">'+
+                          '<div class="row">'+
+                            '<div class="col-md-12">'+
+                              '<!-- jquery validation -->'+
+                              '<div class="card card-primary">'+
+                                '<div class="card-header">'+
+                                  '<h3 class="card-title">'+ this.ResultSet.InfoPaginacao.TituloTabela +'</h3>'+
+                                '</div>'+
+                                    '<!-- /.card-header -->'+
+                                    '<!-- form start -->'+
+                                    '<form id="FORM_'+ this.ResultSet.Indexador +'">'+
+                                        '<div class="card-body" style="'+ this.Configuracoes.card_body.style +'">'+
+                                                      this.CriarBlocos_Groups() +
+                                        '</div>'+
+                                  '<!-- /.card-body -->'+
+                                  '<div class="card-footer">'+
+                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                  '</div>'+
+                                '</form>'+
+                              '</div>'+
+                              '<!-- /.card -->'+
+                              '</div>'+
+                            '<!--/.col (left) -->'+
+                            '<!-- right column -->'+
+                            '<div class="col-md-6">'+
+                            '</div>'+
+                            '<!--/.col (right) -->'+
+                         ' </div>'+
+                          '<!-- /.row -->'+
+                        '</div><!-- /.container-fluid -->'+
+                      '</section>';
               
+              
+        }
+        
+     
+        
         $("#" + this.Recipiente).html(BaseFormulario);
         
-        if(this.DadosEnvio.sendModoOperacao == "1b24931707c03902dad1ae4b42266fd6"){
+        $("[data-card-widget='collapse']").click(function(e){
+            let TARGET = $(e.target).attr("class");
+            if(TARGET === "fas fa-minus"){
+                $(e.target).attr("class","fas fa-plus");
+                let COMP = $(e.currentTarget).parent().parent().siblings();
+                
+                $(COMP[0]).slideUp(500);
+            }else{
+                $(e.target).attr("class","fas fa-minus");
+                let COMP = $(e.currentTarget).parent().parent().siblings();
+                
+                $(COMP[0]).slideDown(500);
+            }
+            
+            
+        }) 
+        
+        if(this.DadosEnvio.sendModoOperacao === "1b24931707c03902dad1ae4b42266fd6"){
             
             $("#FORM_" + this.ResultSet.Indexador).submit(function(e){
                 event.preventDefault();
@@ -631,7 +978,7 @@ class FormHTML extends JSController{
         }
 ;
         
-        this.selecForeingKey();
+      this.selecForeingKey();
         
     }
     
@@ -698,7 +1045,7 @@ class FormHTML extends JSController{
                         let result_objecto = {id:0,text:null};
                         let RST_DADOS = [];
                         
-                        if(Pagina_Atual <= Total_Pagina){
+                        if(Total_Pagina <= Pagina_Atual){
                             Mais_Pagina = false;
                         }else{
                             Mais_Pagina = true;
