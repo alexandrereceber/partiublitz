@@ -587,9 +587,8 @@ abstract class ModeloTabelas extends BDSQL{
         $OrdemBy = $this->getStringOrderBy();
         
         $SqlCampos = $this->gerarStringCamposSQL();
-        $this->TotalLinhasTabela = $this->getTotalLinhas(); //Obtém o total de linhas que será recuperado na consulta para que o delocamento ocorra de maneira correta.
         
-        if(($this->getLimite() == 0) || ($this->TotalLinhasTabela < $this->getLimite())){ //Não gera nenhuma página, todos os registros são retornados
+        if(($this->getLimite() == 0) || ($this->TotalLinhasTabela <= $this->getLimite())){ //Não gera nenhuma página, todos os registros são retornados
             $Limite = "";
         }else{
             $Limite = "limit " . $this->getLimite() . " offset $this->Deslocamento"; //Deslocamento ocorre em função da página.
@@ -601,8 +600,10 @@ abstract class ModeloTabelas extends BDSQL{
                                                                             $Limite; //Páginas e deslocamentos
         $this->stringSQLExecutar($StringSQL);
         $rst = $this->ExecutarSQL();
+        
         if($rst == false){
             $this->GerarError();
+            return false;
         }
         
         return true;
@@ -646,7 +647,10 @@ abstract class ModeloTabelas extends BDSQL{
      */
     public function getArrayDados() {
         $Dados = $this->getArrayResultado();
-        $this->Jobs(__FUNCTION__, $Dados, "AfterSelect", null);
+        $rst = $this->Jobs(__FUNCTION__, $Dados, "AfterSelect", null);
+        if(!$rst){
+            return false;
+        }
         return $Dados;
     }
     /**
@@ -675,10 +679,20 @@ abstract class ModeloTabelas extends BDSQL{
      * @param integer $Pagina
      */
     public function setPagina($Pagina) {
+
+        $this->TotalLinhasTabela = $this->getTotalLinhas(); //Obtém o total de linhas que será recuperado na consulta para que o delocamento ocorra de maneira correta.
+
         if($Pagina != 0){
             $this->PaginaAtual = $Pagina;
-            $Salto = ($Pagina - 1) * $this->getLimite();
-            $this->Deslocamento = $Salto;
+            $Limite = $this->getLimite();
+            $Salto = ($Pagina - 1) * $Limite;
+            if($this->TotalLinhasTabela == $Salto){
+                $this->PaginaAtual = 1;
+            }else{
+                $this->Deslocamento = $Salto;
+            }
+            
+            
         }
     }
     /**
@@ -832,7 +846,7 @@ abstract class ModeloTabelas extends BDSQL{
                     $this->TotaldePaginas = 1;
                     return $Limite;
                 }else{
-                    $this->TotaldePaginas = $Total % $Limite;
+                    $this->TotaldePaginas = $Total / $Limite;
                 }
             }
             
@@ -956,6 +970,7 @@ abstract class ModeloTabelas extends BDSQL{
         $cmp[2] = $ArrayCampos;
         return $cmp;
     }
+    
     /**
      * Método para inserir dados no banco de dados usando PDO. O array, através da página WEB, chega nesse formato pelo
      * uso da instrução de serialização do jquery um formulário
@@ -980,14 +995,17 @@ abstract class ModeloTabelas extends BDSQL{
         /**
          * Executa funções anônimas.
          */
-        $Saida = $this->Jobs(__FUNCTION__, $Dados, "BeforeInsert", null);
-       
+        $BeforeInsert = $this->Jobs(__FUNCTION__, $Dados, "BeforeInsert", null);
+        if(!$BeforeInsert){
+            return false;
+        }
+        
         if($Modo == 1){
             $SqlCampos = $this->gerarStringCamposSQLInsert($Dados);
 
             if($this->getVirtual()){
                 $this->NomeTabela = $this->getNomeReal();
-            };
+            }
 
             $StringSQL = "Insert into $this->NomeTabela($SqlCampos[0]) values ($SqlCampos[1])";
             $this->stringSQLExecutar($StringSQL);
@@ -995,21 +1013,28 @@ abstract class ModeloTabelas extends BDSQL{
              * Ocorrendo erro a instrução retornará false, com isso basta buscar o método getError herdado da classe BDSQL_PDO
              * para obter os detalhes dos erros.
              */
-            $rst = $this->ExecutarSQL($SqlCampos[2]);            
+            $rst = $this->ExecutarSQL($SqlCampos[2]); 
+            
+            if($rst == false){
+                $this->GerarError();
+                return false;
+            }
+
         }else{
             /*
              * IFA(Inserir por função anônima, é usada a mesma função que o BeforeInsert ou AfterInsert.
              */
-            $Saida = $this->Jobs(__FUNCTION__, $Dados, "IFA", null);
-            $rst = $Saida;
+            $IFA = $this->Jobs(__FUNCTION__, $Dados, "IFA", null);
+            if(!$IFA){
+                return false;
+            }
         }
 
-        $Saida = $this->Jobs(__FUNCTION__, $Dados, "AfterInsert", $rst);
-
-        if($rst == false){
-            $this->GerarError();
-        }    
-
+        $AfterInsert = $this->Jobs(__FUNCTION__, $Dados, "AfterInsert", $rst);
+        if(!$AfterInsert){
+            return false;
+        }
+        
         return true;
     }
     
@@ -1110,8 +1135,11 @@ abstract class ModeloTabelas extends BDSQL{
         /**
          * Executa funções anônimas.
          */
-        $Saida = $this->Jobs(__FUNCTION__, $Dados, "BeforeUpdate", null);
-
+        $BeforeUpdate = $this->Jobs(__FUNCTION__, $Dados, "BeforeUpdate", null);
+        if(!$BeforeUpdate){
+            return false;
+        }
+        
         if($Modo == 1){
             $SqlCampos = $this->gerarStringCamposSQLEditar($Dados);
             $Where = $this->gerarStringWhereCHPrimaria($ChavesPrimarias);
@@ -1119,27 +1147,32 @@ abstract class ModeloTabelas extends BDSQL{
 
             if($this->getVirtual()){
                 $this->NomeTabela = $this->getNomeReal();
-            };
+            }
 
             $StringSQL = "UPDATE $this->NomeTabela set $SqlCampos[0] where $Where[0]";
             $this->stringSQLExecutar($StringSQL);
             $rst = $this->ExecutarSQL($SqlArray);  
             
+            if($rst == false){
+                $this->GerarError();
+                return false;
+            }
+            
         }else{
             /*
              * IFA(Inserir por função anônima, é usada a mesma função que o BeforeInsert ou AfterInsert.
              */
-            $Saida = $this->Jobs(__FUNCTION__, $Dados, "UFA", null);
-            $rst = $Saida;
+            $UFA = $this->Jobs(__FUNCTION__, $Dados, "UFA", null);
+            if(!$UFA){
+                return false;
+            }
         }
-
         
-        $Saida = $this->Jobs(__FUNCTION__, $Dados, "AfterUpdate", $rst);
-
-        if($rst == false){
-            $this->GerarError();
+        $AfterUpdate = $this->Jobs(__FUNCTION__, $Dados, "AfterUpdate", $rst);
+        if(!$AfterUpdate){
+            return false;
         }
-
+        
         return true;
     }
 
@@ -1176,8 +1209,11 @@ abstract class ModeloTabelas extends BDSQL{
         /**
          * Executa funções anônimas.
          */
-        $Saida = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "BeforeDelete", null);
-            
+        $BeforeDelete = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "BeforeDelete", null);
+        if(!$BeforeDelete){
+            return false;
+        }
+        
         foreach ($ChavesPrimarias as $key => $value) {
             $Where = $this->gerarStringWhereCHPrimariaExcluir($value);
 
@@ -1189,16 +1225,23 @@ abstract class ModeloTabelas extends BDSQL{
             $this->stringSQLExecutar($StringSQL);
             
             $rst = $this->ExecutarSQL($Where[1]);  
-            $Saida = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "LoopDelete", $rst);
-
+            
             if($rst == false){
                 $this->GerarError();
+                return false;
             }
-
+            
+            $LoopDelete = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "LoopDelete", $rst);
+            if(!$LoopDelete){
+                return false;
+            }
         }
         
-        $Saida = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "AfterDelete", $rst);
-
+        $AfterDelete = $this->Jobs(__FUNCTION__, $ChavesPrimarias, "AfterDelete", $rst);
+        if(!$AfterDelete){
+            return false;
+        }
+        
         return true;
     }
     /**

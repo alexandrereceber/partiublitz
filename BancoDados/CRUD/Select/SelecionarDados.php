@@ -24,7 +24,20 @@ try{
     $SelecionarDados->setFiltros($FiltroCampos);
     $SelecionarDados->setOrderBy($Ordem);
     $SelecionarDados->setPagina($Pagina);
-    $SelecionarDados->Select();
+    /*
+     * Dá início a uma transação, apesar de select, somente, retornar dados, essa implementação pode executar várias
+     * funções anônimas para comprir alguma condição, caso alguma delas falhe, tudo é desfeito.
+     * OBS.: TODAS AS FUNÇÕES ANÔNIMOAS DEVEM RETORNAR ALGO. CASO CONTRÁRIO A MENSAGEM: A instrução SQL para selecionar dados retornou erros ou algum erro na transação."
+     * SERÁ VISUALIZADA.
+     */
+    $SelecionarDados->beginTransaction();
+    $Result = $SelecionarDados->Select();
+    
+    if($Result == false) {
+        $SelecionarDados->rollback();
+        throw new PDOException("A instrução SQL para selecionar dados retornou erros ou algum erro na transação.", 2001);
+    }   
+    
     $SelecionarDados->EndClock();
 
 
@@ -61,7 +74,19 @@ try{
             $ResultRequest["Modo"]             = "S";
             $ResultRequest["Error"]             = false;
             $ResultRequest["NomeTabela"]        = TabelaBancoDadosMD5::getTabelaForMD5($Tabela);
-            $ResultRequest["ResultDados"]       = $SelecionarDados->getArrayDados();
+            /*
+             * Como existe uma função anônima que é executada após a obtenção dos dados em array, existe essa instrução
+             * para garantir que todas as execuções de funções anônimas ocorram.
+             */
+            $DADOS = $SelecionarDados->getArrayDados();
+            $existDados = is_array($DADOS);
+            if($DADOS == false && !$existDados) {
+                $SelecionarDados->rollback();
+                throw new PDOException("A instrução SQL para selecionar dados retornou erros ou algum erro na transação.", 2002);
+            }else{
+                $SelecionarDados->commit();
+            }
+            $ResultRequest["ResultDados"]       = $DADOS;
             $ResultRequest["Campos"]            = $SelecionarDados->getInfoCampos();
             $ResultRequest["ChavesPrimarias"]   = $SelecionarDados->getChaves();
             $ResultRequest["Paginacao"]         = $SelecionarDados->getPaginacao();

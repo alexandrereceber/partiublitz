@@ -2507,15 +2507,25 @@ class perfil extends ModeloTabelas{
         
     }
 
+    /*
+     * Com as nova alterações é obrigatorio o retorno de true ou false para a manutenção do rollback;
+     */
     public function Jobs($Tipo, &$ConjuntoDados, $Action, $Resultado) {
         switch ($Action) {
+            case "BeforeUpdate":
+                
+                break;
+            case "IFA":
+                
+                break;
             case "AfterInsert":
                 
                 break;
-
             default:
                 break;
         }
+        
+        return true;
     }
 
     public function getTotalPageVisible() {

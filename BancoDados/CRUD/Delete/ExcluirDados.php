@@ -21,7 +21,25 @@
             $ExcluirDados = new $Tabela();
             $ExcluirDados->StartClock();
             $ExcluirDados->setUsuario("blitz");
-            $ExcluirDados->ExcluirDadosTabela($ChavesPrimarias);
+            
+            /*
+            * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
+            */
+            $ExcluirDados->beginTransaction();
+            $Result = $ExcluirDados->ExcluirDadosTabela($ChavesPrimarias);
+            
+            /*
+            * Verifica se ocorreu algum erro em alguma das funções anônimas.
+            */
+            if($Result == false) {
+                $ExcluirDados->rollback();
+                throw new PDOException("A instrução SQL para excluir dados retornou erros ou algum erro na transação.", 2001);
+            }
+            /*
+            * Caso não tenha ocorrido nenhuma falha ou erro o sistema será commitado.
+            */
+            $ExcluirDados->commit();
+            
             $ExcluirDados->EndClock();
             $ResultRequest["Modo"]             = "D";
             $ResultRequest["Error"] = false;

@@ -28,9 +28,22 @@ try{
      * da variável privilegios em cada classe que representa a tabela.
      */
     $InserirDados->setUsuario("blitz");
+    
+    /*
+     * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
+     */
+    $InserirDados->beginTransaction();
     $Result = $InserirDados->InserirDadosTabela($Dados, $NG);
     
-    if($Result == false) throw new PDOException("A instrução SQL para inserir dados retornou erros.", 2001);
+    if($Result == false) {
+        $InserirDados->rollback();
+        throw new PDOException("A instrução SQL para inserir dados retornou erros ou algum erro na transação.", 2001);
+        
+    }
+    /*
+     * Verifica se ocorreu algum erro em alguma das funções anônimas.
+     */
+    $InserirDados->commit();
     
     $InserirDados->EndClock();
     $ResultRequest["Modo"]             = "I";

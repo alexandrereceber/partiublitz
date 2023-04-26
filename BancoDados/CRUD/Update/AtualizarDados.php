@@ -22,7 +22,23 @@ try{
     $AtualizarDados = new $Tabela();
     $AtualizarDados->StartClock();
     $AtualizarDados->setUsuario("blitz");
-    $AtualizarDados->AtualizarDadosTabela($ChavesPrimarias, $Dados, $NG);
+    /*
+     * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
+     */
+    $AtualizarDados->beginTransaction();
+    $Result = $AtualizarDados->AtualizarDadosTabela($ChavesPrimarias, $Dados, $NG);
+    /*
+     * Verifica se ocorreu algum erro em alguma das funções anônimas.
+     */
+    if($Result == false) {
+        $AtualizarDados->rollback();
+        throw new PDOException("A instrução SQL para atualizar dados retornou erros ou algum erro na transação.", 2001);
+        
+    }
+    /*
+     * Caso não tenha ocorrido nenhuma falha ou erro o sistema será commitado.
+     */
+    $AtualizarDados->commit();
     
     $AtualizarDados->EndClock();
     $ResultRequest["Modo"]             = "U";
