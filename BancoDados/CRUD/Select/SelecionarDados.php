@@ -82,7 +82,7 @@ try{
             $existDados = is_array($DADOS);
             if($DADOS == false && !$existDados) {
                 $SelecionarDados->rollback();
-                throw new PDOException("A instrução SQL para selecionar dados retornou erros ou algum erro na transação.", 2002);
+                throw new PDOException("A instrução SQL para selecionar dados retornou erros ou algum erro na transação ou filtro null.", 2002);
             }else{
                 $SelecionarDados->commit();
             }

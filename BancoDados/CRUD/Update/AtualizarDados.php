@@ -10,6 +10,9 @@
 try{
     $ChavesPrimarias    = $_REQUEST["sendChavesPrimarias"];
     $Dados              = $_REQUEST["sendCamposAndValores"];
+    /*
+     * Informa que não será executado a instrução de inserir pré-construída e sim por uma função anônima
+     */
     $NG = $_REQUEST["sendAtualizar1N"] == "" ? 1 : "N";
 
     if(!is_array($ChavesPrimarias) || !is_array($Dados)){

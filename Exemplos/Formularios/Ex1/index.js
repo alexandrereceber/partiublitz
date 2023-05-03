@@ -61,7 +61,7 @@ t.addFunctons_Eventos("Nome", function(e,n,p){
     console.log(e,n,p)
 });
 //t.setRegistro = 0; //cuidado, sempre é subtraído em 1 dentro do método.
-t.Filtros = [[0,"=",5]]
+//t.Filtros = [[0,"=",1]]
 t.Modo_Operacao = "E";
 
 t.show();

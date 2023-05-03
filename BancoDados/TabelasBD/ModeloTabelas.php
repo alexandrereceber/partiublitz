@@ -212,16 +212,27 @@ abstract class ModeloTabelas extends BDSQL{
     private function gerarStringCamposSQL(){
 
         $this->TabelaCampos = $this->getCampos();
-        
+        $Chave = null;
         $Count = 0;
         foreach ($this->TabelaCampos as $Chave => $Valor) {
             if($Count == 0){
                 if(empty($Valor["Field"])) continue;
-                $SqlCampos = $Valor["Field"];
-                $Count = 1;
+                if(!$Valor["FieldFunc"][0]){
+                    $SqlCampos = $Valor["Field"];
+                    $Count = 1;
+                }else{
+                    $SqlCampos = $Valor["FieldFunc"][1];
+                    $Count = 1;
+                }
+                
             }else{
                 if(empty($Valor["Field"])) continue;
-                $SqlCampos .= ", ". $Valor["Field"] ." ";
+                if(!$Valor["FieldFunc"][0]){
+                    $SqlCampos .= ", ". $Valor["Field"] ." ";
+                }else{
+                    $SqlCampos .= ", ". $Valor["FieldFunc"][1] ." ";
+                }
+                
             }
         }
         
@@ -771,6 +782,7 @@ abstract class ModeloTabelas extends BDSQL{
                 $Cabecalho[$Chave][18] = $Valor["TypeConteudo"];
                 $Cabecalho[$Chave][19] = $this->getDadosTBLExtrangeira($Valor["ChvExt"]);
                 $Cabecalho[$Chave][20] = $Valor["Filter"];
+
                 
                 if($Valor["Key"][0] === true){
                     $this->ChavesPrimarias[] = $Valor["Index"];

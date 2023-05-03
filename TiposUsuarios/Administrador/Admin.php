@@ -47,22 +47,12 @@ echo "<script>var Chave='$sendChave'</script>"
   <link rel="stylesheet" href="/blitz/Recursos/plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/jqvmap/jqvmap.min.css">
-  <!-- Theme style -->
+  
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/daterangepicker/daterangepicker.css">
-  <!-- summernote -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/summernote/summernote-bs4.min.css">
-<style type="text/css">/* Chart.js */
-@keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style></head>
+  
+</head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
 <div class="wrapper">
 
@@ -276,41 +266,21 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="/blitz/Recursos/plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-  $.widget.bridge('uibutton', $.ui.button)
+  $.widget.bridge('uibutton', $.ui.button);
 </script>
-<!-- Bootstrap 4 -->
-<script src="/blitz/Recursos/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="/blitz/Recursos/plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="/blitz/Recursos/plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="/blitz/Recursos/plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="/blitz/Recursos/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="/blitz/Recursos/plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="/blitz/Recursos/plugins/moment/moment.min.js"></script>
-<script src="/blitz/Recursos/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="/blitz/Recursos/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="/blitz/Recursos/plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="/blitz/Recursos/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
 <!-- AdminLTE App -->
-<script src="/blitz/Recursos/dist/js/adminlte.js"></script>
+<script src="/blitz/Recursos/dist/js/adminlte.js?s=12"></script>
 
-<script src="/blitz/Recursos/dist/js/pages/dashboard.js"></script>
+<script src="/blitz/Componentes/viewPopover.js?1" defer=""></script>
+
+
+<script  src="/blitz/Scripts/bootbox/bootbox.js?1" defer="defer"></script>
+<script  src="/blitz/Scripts/jsControlador/jsConstroller.js?1" defer="defer"></script>     
+<script  src="/blitz/Componentes/Tabelas.js?q=10" defer="defer"></script>  
+<script  src="/blitz/Login/Sair.js?q=9" defer="defer"></script>
+
 <!-- Ações personalizadas para o administrador -->
-<script src="/blitz/Recursos/dist/js/Administrador.js"></script>
+<script src="/blitz/Recursos/dist/js/Administrador.js?s=112"></script>
 
-        <script src="/blitz/Componentes/viewPopover.js?1" defer=""></script>
-
-
-        <script  src="/blitz/Scripts/bootbox/bootbox.js?1" defer="defer"></script>
-        <script  src="/blitz/Scripts/jsControlador/jsConstroller.js?1" defer="defer"></script>     
-        <script  src="/blitz/Componentes/Tabelas.js?q=10" defer="defer"></script>  
-        <script  src="/blitz/Login/Sair.js?q=9" defer="defer"></script>
-        
 </body></html>

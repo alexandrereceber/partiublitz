@@ -22,7 +22,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> 
 
 
-        <link rel="stylesheet" href="../uploadsFiles/css/uploadsCSS.css?4saadd"> 
+        <link rel="stylesheet" href="../uploadsFiles/css/uploadsCSS.css?112aaasq"> 
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -33,7 +33,7 @@ and open the template in the editor.
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
         <script  src="../Scripts/jsControlador/jsConstroller.js?dssdd2sd" defer="defer"></script>     
         <script  src="../Componentes/Componentes.js?ddd1ssF" defer="defer"></script>  
-        <script  src="../uploadsFiles/js/tratarFiles.js?d1bs" defer="dfer"></script> 
+        <script  src="../uploadsFiles/js/tratarFiles.js?21" defer="dfer"></script> 
 
         <link rel="stylesheet" href="css/prettyPhoto.css?" type="text/css" media="screen" charset="utf-8" />
 

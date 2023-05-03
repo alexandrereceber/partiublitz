@@ -15,7 +15,7 @@ try{
      * Caso a sessão esteja ativada, será buscado o nome de usuário logado no sistema para gravações em 
      * pastas separadas.
      */
-    $User = "Blitz" ;
+    $User = "04953988612" ;
     /**
      * Busca o caminho onde serão armazenado os arquivos.
      */
@@ -24,7 +24,7 @@ try{
     $Count = 0;
     foreach ($_FILES as $key => $value) {
         
-        $upFiles = new uploadsImg($value, $Session, $User);
+        $upFiles = new uploadsImg($value, $Sessao, $User);
         /**
          * Verifica a forma de armazenamento da imagem. Retorno true storeg(HD), false BD.
          */
@@ -35,18 +35,35 @@ try{
             if($Cm){
                 $Saida = $upFiles->moverImagens(); //Move os arquivos da pasta temporária para a pasta permanente.
                 if($Saida[0]){
-                    $CaminhoHTML = $Saida[1];
+                    $CaminhoHTML = $Saida[2];
                     if(!$upFiles->get_Storeg_tabela()) continue;
                     /**
                      * Verifica se o array $Saida já vem com dados.
                      */
                     if(!is_array($Dados)){
-                        $Dados = [["name"=>"Destino", "value"=>"$CaminhoHTML"]];  
+                        $nomeImagem = $_POST["NomesImagens"];
+                        $NII = null;
+                        if($nomeImagem !== null){
+                            $NI = preg_split("/,/", $nomeImagem);
+                        }
+                        $NII = null;
+                        foreach ($NI as $IKey => $IValue) {
+                            if($IValue === $value["name"]){
+                                $NII = $NI[$IKey + 1];
+                                break;
+                            }
+                        }
+                        
+                        $Dados = [
+                                    ["name"=>"destino", "value"=>"$CaminhoHTML"],
+                                    ["name"=>"idUser", "value"=>"1"],
+                                    ["name"=>"Nome", "value"=>$NII],
+                                ];  
                     }else{
                         /**
                          * Existindo um array, que provavelmente será de outros campos, será acrescentado um outro array.
                          */
-                        $Dados[0][1] = ["name"=>"Destino", "value"=>"$CaminhoHTML"];  
+                        $Dados[0][1] = ["name"=>2, "value"=>"$CaminhoHTML"];  
                     }
         
                     if(empty($Tabela)) throw new Exception("Nenhuma tabela foi definida, favor entrar em contato com o administrador.");
@@ -59,7 +76,7 @@ try{
                      * Se a sessão for anônima deverá ser devinido um usuario e privilégios de acesso na tabela através
                      * da variável privilegios em cada classe que representa a tabela.
                      */
-                    $InserirDados->setUsuario("Alexandre");
+                    $InserirDados->setUsuario("Blitz");
                     $Result = $InserirDados->InserirDadosTabela($Dados);
                     $Dados = NULL;
                     
@@ -82,7 +99,7 @@ try{
         }else{
             
         }
-        
+        $Count++;
     }
 
     

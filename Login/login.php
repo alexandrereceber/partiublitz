@@ -15,8 +15,8 @@
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte_login.min.css">
 </head>
-<body class="hold-transition login-page" style="background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%">
-<div class="wrapper" style="width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8)">
+<body class="hold-transition login-page" style="background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
+<div class="wrapper" style="width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8); ">
     <div class="login-box" style=" margin: auto;">
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">

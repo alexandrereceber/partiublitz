@@ -13,3 +13,8 @@ $("#__EDITAT_PERFIL").click(function(){
 $("#__SAIR_PERFIL").click(function(){
     Efetuar_Logoff();
 });
+
+$("#sidebar-overlay").click(function(e){
+
+    $('[data-widget="pushmenu"]').PushMenu('collapse');
+})

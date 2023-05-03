@@ -24,7 +24,9 @@ class TabelaHTML extends JSController{
                             Linhas: false, 
                             Celulas: false, 
                             Conteudo: false,
-                            Style: false
+                            Style: false,
+                            ShowIcons: false,
+                            Numerador: false
                         };
 
         /*
@@ -34,15 +36,54 @@ class TabelaHTML extends JSController{
         this.FuncoesIcones = []; //Armazena as funções, criadas manualmente, para a execução dos ícones da tabela HTML, a função recebe os parâmetros Instância da tabela e o próprio objeto 
         this.FuncoesChvExt = []; //Armazena as funções para as chaves extrangeiras. São identificadas pelo numero da função. Esse número vem do ModeloTabela.php que fica no campo.
         this.StatusGeral = [];   //Amazena informações gerais como por exemplo se ja foi buscado os dados no banco. É a variável de estado do objeto.
+        //---------------DISPOSITIVO----------------
+        var Instancia = this;
+        
+        let Dispositivo = window.matchMedia("(max-width: 700px)");
+        this.__isPhone = Dispositivo.matches;
+        Dispositivo.onchange = function(e){
+            if(e.matches){
+                Instancia.__isPhone = true;
+                Instancia.CSSTableGeral.GeralThClass = "THCLASS_NONE_CELL";
+                Instancia.CSSTableGeral.GeralTbodyClass = "TBODY_TABLE_CELL";
+                Instancia.CSSTableGeral.GeralTrClass = "TR_TABLE_CELL";
+                Instancia.CSSTableGeral.GeralTdClass = "TD_TABLE_CELL";
+                Instancia.Refresh();
+            }else{
+                Instancia.__isPhone = false;
+                Instancia.CSSTableGeral.GeralThClass = "THCLASS_VISIBLE_CELL";
+                Instancia.CSSTableGeral.GeralTbodyClass = "TBODY_TABLE_PC";
+                Instancia.CSSTableGeral.GeralTrClass = "TR_TABLE_PC";
+                Instancia.CSSTableGeral.GeralTdClass = "TD_TABLE_PC";
+                Instancia.Refresh();
+            }
+        };
+        
         //-----------Tabela Geral--------------------
+        let GeralThClass = "",
+            GeralTbodyClass = "",
+            GeralTrClass = "",
+            GeralTdClass = "";
+            
+        if(this.__isPhone){
+            GeralThClass = "THCLASS_NONE_CELL";
+            GeralTbodyClass = "TBODY_TABLE_CELL";
+            GeralTrClass = "TR_TABLE_CELL";
+            GeralTdClass = "TD_TABLE_CELL";
+        }else{
+            GeralThClass = "THCLASS_VISIBLE_PC";
+            GeralTbodyClass = "TBODY_TABLE_PC";
+            GeralTrClass = "TR_TABLE_PC";
+            GeralTdClass = "TD_TABLE_PC";
+        }
         this.CSSTableGeral = {
                                 "GeralDivClass":"",
                                 "GeralTableClass":"table",
                                 "GeralTheadClass":"",
-                                "GeralThClass":"",
-                                "GeralTbodyClass":"",
-                                "GeralTrClass":"",
-                                "GeralTdClass":"",
+                                "GeralThClass":GeralThClass,
+                                "GeralTbodyClass":GeralTbodyClass,
+                                "GeralTrClass":GeralTrClass,
+                                "GeralTdClass":GeralTdClass,
                                 "GeralLiClass":"page-item",
                                 "GeralAClass":"page-link",
                                 "GeralUClass":"pagination",
@@ -80,9 +121,10 @@ class TabelaHTML extends JSController{
             },
             
         };
+       
         
         this.PageModel = {Inicial: 0, Final: 0};
-        var Instancia = this;
+        
         /**
          * 
          */
@@ -93,16 +135,119 @@ class TabelaHTML extends JSController{
             Celulas: function(){
                 Instancia.Funcoes.Celulas(Instancia, this);
             }, 
-            Conteudo: function(Index, VConteudo){
-                return Instancia.Funcoes.Conteudo(Instancia, Index, VConteudo);
+            Conteudo: function(Index, VConteudo, Linha){
+                return Instancia.Funcoes.Conteudo(Instancia, Index, VConteudo, Linha);
             },
-            Style:function(Index, VConteudo){
-                return Instancia.Funcoes.Style(Instancia, Index, VConteudo);
+            Style:function(Index, VConteudo, Linha){
+                return Instancia.Funcoes.Style(Instancia, Index, VConteudo, Linha);
 
+            }, 
+            ShowIcons: function(LInha, Icone){
+                return Instancia.Funcoes.Conteudo(Instancia, Linha, Icone);
+            }, 
+            Numerador: function(Linha, Num){
+                return Instancia.Funcoes.Conteudo(Instancia, Linha, Num);
             }
         };
+         /**
+         * Funções executadas aopós carregar os dados;
+         * Select / Insert / Update
+         * Tem um tratador de erro para esses funções, dentro de cada operação
+         */
+        this.FUNCOES_ONLOAD = function(){
+            let FUNCs = new Map([
+                //Inserir as funcoes;
+            ]);
+            return {
+                __Exec: async function(CONJUNTO,OBJECT_INSTANCIA_FORMULARIO,OTHER){  //Recebe um objeto {"Evento":..., ?}
+                    let isArray = Array.isArray(CONJUNTO);
+                    if(isArray){
+                        for(let i of CONJUNTO){
+                            let isFunc = FUNCs.has(i);
+                            if(isFunc){
+                                await FUNCs.get(i)(OBJECT_INSTANCIA_FORMULARIO,OTHER);
+                            }
+                        }
+                    }else{
+                        for(let i of FUNCs){
+                            await i[1](OBJECT_INSTANCIA_FORMULARIO);
+                        }
+                    }
+                    
+                    
+                },
+                add: function(n,f){
+                    FUNCs.set(n,f);
+                }
+            };
+        }();
+        
+        /**
+         * Eventos que ocorreram durante as fases de envio dos dados
+         */
+        this.FUNCOES_EVENT = function(){
+            let FUNCs = new Map([
+                //Inserir as funcoes;
+            ]);
+            return {
+                __Exec: async function(ACTION, MOMENT, OBJECT_INSTANCIA_FORMULARIO, VALUE){  //Recebe um objeto {"Evento":..., ?}
+                    try{
+                        let isExist = FUNCs.has(ACTION + "_"+ MOMENT);
+                        if(isExist){
+                            let fnc = FUNCs.get(ACTION + "_"+ MOMENT);
+                            return await fnc(ACTION, MOMENT, OBJECT_INSTANCIA_FORMULARIO, VALUE);
+                        }else{
+                            return true;
+                        }
+                    }catch(e){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: e,
+                            //footer: '<a href="">Why do I have this issue?</a>'
+                          });
+                    }
+                    
+                     
+                },
+                add: function(n,f){
+                    FUNCs.set(n,f);
+                }
+            };
+        }();
+        
+    }
+    addFunctons_Eventos(Nome,F){
+        if(Nome !== null && Nome !== "" && Nome !== undefined && F !== undefined){
+            this.FUNCOES_EVENT.add(Nome, F);
+        }else{
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "É necessário um nome e uma função, método: addFunctons_Eventos",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+        }
+        
     }
     
+    addFunctons_LOAD(Nome,F){
+        if(Nome !== null && Nome !== "" && Nome !== undefined && F !== undefined){
+            this.FUNCOES_ONLOAD.add(Nome, F);
+        }else{
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "É necessário um nome e uma função, método: addFunctons_Eventos",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
+        }
+        
+    }
+    
+    get isPhone(){
+        return this.__isPhone;
+    }
    /**
     * Atribui um array contendo os filtros de pesquisa.
     * @type array Fts
@@ -254,16 +399,24 @@ class TabelaHTML extends JSController{
              * Caso o usuário tenha permissão para editar a tabela será apresentada a caixa de seleção
              */
             if(Edit){
-               Check = "<td  class='"+ this.CSSTableGeral.GeralThClass + " " + this.CSSEspefTableBD[1].Corpo.td +"'  style='text-align: center; vertical-align: inherit;'><input style='cursor: pointer' type='checkbox'  value='' data-chavePrimaria='" + ChavePrimaria +"' onclick='" + this.NomeInstancia +".setSelecionarLinhas(this)'></td>";
+               Check = "<td  class='"+ this.CSSTableGeral.GeralTdClass + " " + this.CSSEspefTableBD[1].Corpo.td +"'  style='text-align: center; vertical-align: inherit;'><input style='cursor: pointer' type='checkbox'  value='' data-chavePrimaria='" + ChavePrimaria +"' onclick='" + this.NomeInstancia +".setSelecionarLinhas(this)'></td>";
             }
             
             if(DadosLinhas.ContadorLinha){
                 var NLinha = parseInt(DadosLinhas.InfoPaginacao.Deslocamento) + parseInt(indx1) + 1;
-                Numerador = "<td class='"+ this.CSSTableGeral.GeralThClass + " " + this.CSSEspefTableBD[1].Corpo.td +"'  style='text-align: center;vertical-align: inherit;'>"+ NLinha +"</td>";
+                //uso para o componente que será visualizado em celular;
+                if(this.Funcoes.Numerador != false){
+                    NLinha = this.FAnonimas.Numerador(indx1, NLinha);
+                }
+                Numerador = "<td class='"+ this.CSSTableGeral.GeralTdClass + " " + this.CSSEspefTableBD[1].Corpo.td +"'  style='text-align: center;vertical-align: inherit;'>"+ NLinha +"</td>";
             }
             
             if(DadosLinhas.ShowColumnsIcones[0]){
                 ShowIcons = this.gerarLinhasIcones(DadosLinhas.ShowColumnsIcones[1], ChavePrimaria);
+                //uso para o componente que será visualizado em celular;
+                if(this.Funcoes.ShowIcons != false){
+                    ShowIcons = this.FAnonimas.ShowIcons(indx1, ShowIcons);
+                }
             }            
             for(indx2 in DadosLinhas.Campos){
 
@@ -277,12 +430,12 @@ class TabelaHTML extends JSController{
                 Conteudo = DadosLinhas.ResultDados[indx1][DadosLinhas.Campos[indx2][0]];
                 
                 if(this.Funcoes.Conteudo != false){
-                    Valor = this.FAnonimas.Conteudo(indx2, Conteudo);
+                    Valor = this.FAnonimas.Conteudo(indx2, Conteudo, indx1);
                 }else{
-                    Valor = this.getTipoConteudo(indx2, Conteudo);
+                    Valor = this.getTipoConteudo(indx2, Conteudo, indx1);
                 }
                 if(this.Funcoes.Style != false){
-                    STYLE = this.FAnonimas.Style(indx2, Conteudo);
+                    STYLE = this.FAnonimas.Style(indx2, Conteudo, indx1);
                 }
                 
                 LinhasHTML += "<td class=' "+ this.CSSTableGeral.GeralTdClass+ " " + this.CSSEspefTableBD[1].Corpo.td +" td_"+ DadosLinhas.Indexador+"' style='" + STYLE + "' data-chavePrimaria='" + ChavePrimaria +"' data-Valor='" + Conteudo +"'>"+ Valor +"</td>";
@@ -513,7 +666,7 @@ class TabelaHTML extends JSController{
             Bt += "<td><center><button id='ButtonExcluir_"+ GetBotoes.Indexador + "' class='"+ this.BTIEE[2].Excluir.Class +"' onclick='"+ this.NomeInstancia + ".JanelaExcluirDados()' disabled='true'>Excluir</button></center></td>";
         }
         
-        Bt = "<table class='"+ this.CSSTableGeral.GeralTableClass +"' ><tr class='"+ this.CSSTableGeral.GeralTrClass +"' >"+ Bt +"</tr></table>";
+        Bt = "<table class='"+ this.CSSTableGeral.GeralTableClass +"' ><tr class='' >"+ Bt +"</tr></table>";
         
         return Bt;
     }
@@ -1056,7 +1209,7 @@ class TabelaHTML extends JSController{
         
         return Template;
     }
-    /**
+       /**
      * 
      * @param {array} Erros
      * @returns {void}
@@ -1068,6 +1221,7 @@ class TabelaHTML extends JSController{
                 window.location = Erros.Dominio;
                 break;
             default:
+                
                 bootbox.alert("<h3>"+ Erros.Mensagem +"</h3>");
                 break;
         }
@@ -1085,17 +1239,35 @@ class TabelaHTML extends JSController{
         event.preventDefault();
         var Campos = [];
         Campos = $(F).serializeArray();
-        this.DadosEnvio.sendCamposAndValores = Campos;
-        TratarResposta = await this.inserir();
+        let rst = await this.FUNCOES_EVENT.__Exec("INSERIR","BEFORE", this, Campos) || true;
+        
+        if(rst === true){
+            this.DadosEnvio.sendCamposAndValores = Campos;
+        
+            TratarResposta = await this.inserir();
 
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta, "Inserir");
-            return false;
+            if(TratarResposta.Error !== false){
+                this.TratarErros(TratarResposta, "Inserir");
+                return false;
+            }else{
+                F.reset();
+            }
+
+            await this.show();
+
+            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, null);
+            
+            Toast.fire({
+                icon: 'success',
+                title: 'Os dados foram inseridos.'
+              });
+              
         }else{
-            F.reset();
+            await this.show();
+
+            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, null);
         }
         
-        await this.show();
     }
     /**
      * Obtém os campos que comporão o formulário para envio dos dados.
@@ -1135,43 +1307,66 @@ class TabelaHTML extends JSController{
      * @returns {TabelaHTML@call;Atualizar}
      */
     async inserir(){
+        
         this.DadosEnvio.sendModoOperacao = "5a59ffc82a16fc2b17daa935c1aed3e9";
         return await this.Atualizar();
+        
     }
     
 //####################FIM MÓDULO INSERIR###########################    
 //
 //####################MÓDULO ATUALIZAR###########################    
     async EnviarFormularioEditar(F){
-        var TratarResposta = "";
+        try{
+            var TratarResposta = "";
         
-        event.preventDefault();
-        var Campos = [];
-        Campos = $(F).serializeArray();
-        this.DadosEnvio.sendCamposAndValores = Campos;
-        this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias[0]);
-        TratarResposta = await this.atualizar();
-        
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta);
-            return false;
-        }else{
-            let Diferenca = this._TotalRegistroUpdate - this.ChavesPrimarias.length + 1;
-            $("#ContadorRegistro").html(Diferenca)
-            
-            this.ChavesPrimarias.splice(0,1);
-            if(this.ChavesPrimarias.length > 0){
-                var FormsCampos = await this.getCamposAtualizar();
-                $(".modal-body").html(FormsCampos);
+            event.preventDefault();
+            var Campos = [];
+            Campos = $(F).serializeArray();
+            let rst = await this.FUNCOES_EVENT.__Exec("UPDATE","BEFORE", this, Campos) || true;
+
+            if(rst === true){
+                this.DadosEnvio.sendCamposAndValores = Campos;
+                this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias[0]);
+
+                TratarResposta =  await this.atualizar();
+
+                if(TratarResposta.Error !== false){
+                    this.TratarErros(TratarResposta);
+                    return false;
+                }else{
+                    let Diferenca = this._TotalRegistroUpdate - this.ChavesPrimarias.length + 1;
+                    $("#ContadorRegistro").html(Diferenca);
+
+                    this.ChavesPrimarias.splice(0,1);
+                    if(this.ChavesPrimarias.length > 0){
+                        var FormsCampos = await this.getCamposAtualizar();
+                        $(".modal-body").html(FormsCampos);
+                    }else{
+                        $("#ButtonEditar_" + this.ResultSet.Indexador).prop("disabled","true");
+                        $("#ButtonExcluir_" + this.ResultSet.Indexador).prop("disabled","true");
+
+                        $("#myJanelas").modal('hide');
+
+                        await this.show(); //Somente após a atualização de todas as linhas;
+
+                        await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, null);
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Os dados foram atualizados.'
+                          });
+                    }
+                }
             }else{
-                $("#ButtonEditar_" + this.ResultSet.Indexador).prop("disabled","true");
-                $("#ButtonExcluir_" + this.ResultSet.Indexador).prop("disabled","true");
-                
-                $("#myJanelas").modal('hide');
-        
                 await this.show(); //Somente após a atualização de todas as linhas;
+
+                await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, null);
             }
+        }catch(e){
+            
         }
+        
+        
     }
     
     async getCamposAtualizar(){
@@ -1234,9 +1429,11 @@ class TabelaHTML extends JSController{
     async show(){
         var TratarResposta = null;
         this.DadosEnvio.sendModoOperacao = "ab58b01839a6d92154c615db22ea4b8f";
+        
+        await this.FUNCOES_EVENT.__Exec("SELECT","BEFORE", this, null);
         TratarResposta = await this.Atualizar();
         
-        if(TratarResposta.Error != false){
+        if(TratarResposta.Error !== false){
             this.TratarErros(TratarResposta);
             return false;
         }
@@ -1274,7 +1471,7 @@ class TabelaHTML extends JSController{
                     </table>                                                                            \n\
                 </div>                                                                                  \n\
                 <div class=' "+ this.CSSTableGeral.GeralDivClass +" ' id='Botoes_" + Indexador + "'>"+ Botoes + "</div>" 
-                     + Paginacao 
+                     + Paginacao ;
         $("#" + this.Recipiente).html(ComponentCompleto);
         //$("*").popover('hide');
         //$("*").tooltip();
@@ -1282,29 +1479,33 @@ class TabelaHTML extends JSController{
         if(this.Funcoes.Linhas != false){
             $(".tr_" + this.ResultSet.Indexador).click(this.FAnonimas.Linha).css("cursor","pointer");
             $(".tr_" + this.ResultSet.Indexador).hover(function(){
-                $(this).css("background-color","#557775")
+                $(this).css("background-color","#557775");
             }, function(){
-                $(this).css("background-color","initial")
+                $(this).css("background-color","initial");
             })
         }
         if(this.Funcoes.Celulas != false){
             $(".td_" + this.ResultSet.Indexador).click(this.FAnonimas.Celulas).css("cursor","pointer");
             $(".td_" + this.ResultSet.Indexador).hover(function(){
-                $(this).css("background-color","#557775")
+                $(this).css("background-color","#557775");
             }, function(){
-                $(this).css("background-color","initial")
+                $(this).css("background-color","initial");
             })
         }
         
         if(this.ResultSet.ShowColumnsIcones[0]){
             this.ResultSet.ShowColumnsIcones[1].forEach(function(v, i, p){
-                var o = v
+                var o = v;
                 $("." + v.NomeBotao + "_" + InstanciaTabela.ResultSet.Indexador).click(function(){
-                     InstanciaTabela.FuncoesIcones[v.Func](InstanciaTabela, this)
+                     InstanciaTabela.FuncoesIcones[v.Func](InstanciaTabela, this);
                 });
             });
         }
         
+        
+        await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, null);
+        
+        //this.FUNCOES_ONLOAD.__Exec(["NOMEQUALQER2", "NOMEQUALQER1"],this);
     }
     
     /**
@@ -1322,13 +1523,27 @@ class TabelaHTML extends JSController{
         }
         this.DadosEnvio.sendModoOperacao = "1570ef32c1a283e79add799228203571";
         this.DadosEnvio.sendChavesPrimarias = Quebradas;
-        TratarResposta = await this.Atualizar();
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta, "Excluir");
-            return false;
+        
+        let rst = await this.FUNCOES_EVENT.__Exec("DELETE","BEFORE", this);
+        if(rst === true){
+            TratarResposta = await this.Atualizar();
+        
+            if(TratarResposta.Error != false){
+                this.TratarErros(TratarResposta, "Excluir");
+                return false;
+            }else{
+                this.show();
+                await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this);
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Os dados foram excluídos.'
+                  });
+            }
         }else{
             this.show();
+            await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this);
         }
+        
     }
     /**
      * Exclui as linhas selecionadas na tabela HTML
@@ -1345,7 +1560,7 @@ class TabelaHTML extends JSController{
                                     Footer: {
                                                 Cancelar: {Nome: "Não", classe: "btn-success" , Color: "white" ,Visible: "block", Funcao: function(){var o}}, 
                                                 Aceitar: {Nome: "Excluir", classe: "btn-danger" , Color:"white", Visible: "block", Funcao: function(){o.excluir();$("#myJanelas").modal('hide');}},
-                                                Status: {Display: false, Conteudo: ""}
+                                                Status: {Display: true, Conteudo: ""}
                                             },
                                     Modal: {keyboard: false}
                                 };
@@ -1396,10 +1611,10 @@ class TabelaHTML extends JSController{
         $(".modal-body").html(Componentes.Body.Conteudo);
 
         if(Componentes.Footer.Status.Display == false){
-            $(".status-footer").css("display","none")
+            $(".modal-footer").css("display","none");
         }else{
-            $(".status-footer").css("display","initial")
-            $(".status-footer").html(Componentes.Footer.Status.Conteudo)
+            $(".modal-footer").css("display","inherit");
+            //$(".modal-footer").html(Componentes.Footer.Status.Conteudo);
         }
         
         $(".cancelar").css("display", Componentes.Footer.Cancelar.Visible);
@@ -1424,7 +1639,7 @@ class TabelaHTML extends JSController{
             $("#myJanelas").modal('hide');
         });
         $(".btn-success").click(function(){
-            $("#myJanelas").modal('hide');
+            //$("#myJanelas").modal('hide');
         }); 
         
         $(".ok").addClass(Componentes.Footer.Aceitar.classe);
@@ -1449,11 +1664,7 @@ class TabelaHTML extends JSController{
          * Obs.: Conteudo é a variável que armazena a função anônima que é executada durante a apresentação da tabela HTML. Está
          * variável esta na função .getLinhas();
          */
-        this.Funcoes = {
-                            Linhas: false, 
-                            Celulas: false, 
-                            Conteudo: false
-                        };
+        this.Funcoes = null;
 
         /*
          * Ao ser chamada, a função recebe esses paramentros.
@@ -1463,55 +1674,19 @@ class TabelaHTML extends JSController{
         this.FuncoesChvExt = []; //Armazena as funções para as chaves extrangeiras. São identificadas pelo numero da função. Esse número vem do ModeloTabela.php que fica no campo.
         this.StatusGeral = [];   //Amazena informações gerais como por exemplo se ja foi buscado os dados no banco. É a variável de estado do objeto.
         
-        this.CSSTableGeral = {
-                                "GeralDivClass":"table",
-                                "GeralTableClass":"",
-                                "GeralTheadClass":"",
-                                "GeralThClass":"",
-                                "GeralTbodyClass":"",
-                                "GeralTrClass":"",
-                                "GeralTdClass":"",
-                                "GeralLiClass":"page-item",
-                                "GeralAClass":"page-link",
-                                "GeralUClass":"pagination",
-                                "GeralButtonClass":"btn btn-primary",
-                            }
+        this.CSSTableGeral = null;
 
         this.visibleChavePrimaria = false,
         this.VisibleDetalhesUpdate = true;
 
-        this.Configuracao = {
-            Tabela: {
-                Linha: {
-                    Color: "",
-                    Fonte: "",
-                    Select_Color: "red",
-                    Unselect_Color: "blue"
-                },
-                Celula: {
-                    Color: "",
-                    Fonte: ""
-                }
-            },
-            
-        }
+        this.Configuracao = null;
         
-        this.PageModel = {Inicial: 0, Final: 0}
+        this.PageModel = {Inicial: 0, Final: 0};
         var Instancia = this;
         /**
          * 
          */
-        this.FAnonimas = {
-            Linha: function(){
-                Instancia.Funcoes.Linhas(Instancia, this);
-            }, 
-            Celulas: function(){
-                Instancia.Funcoes.Celulas(Instancia, this);
-            }, 
-            Conteudo: function(Index, VConteudo){
-                return Instancia.Funcoes.Conteudo(Instancia, Index, VConteudo);
-            }
-        }
+        this.FAnonimas = null;
     }
 }
 

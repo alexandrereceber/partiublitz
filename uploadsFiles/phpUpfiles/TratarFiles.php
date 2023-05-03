@@ -105,6 +105,7 @@ class uploadsImg {
 
         $Inf[0] = $retorno;
         $Inf[1] = $this->File["name"];
+        $Inf[2] = $Destino;
         return $Inf;
         //$resize = new ResizeImage($Destino);
         

@@ -15,19 +15,23 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../../../CSS/Componentes/TabelaHTML.css?d2s1">
+        <link rel="stylesheet" href="../../../CSS/Componentes/TabelaHTML.css?21134">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+         
+        <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css"> 
+        <link rel="stylesheet" href="/blitz/Recursos/plugins/bootstrap-switch/css/bootstrap2/bootstrap-switch.min.css"> 
         
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <script src="../../../Scripts/jquery/jquery-3.3.1.js"></script>
         
         <script src="../../../Componentes/viewPopover.js?ddsd" defer=""></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+         
+        <script src="/blitz/Recursos/plugins/bootstrap-switch/js/bootstrap-switch.min.js" ></script>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
         <script  src="../../../Scripts/bootbox/bootbox.js?5aa" defer="defer"></script>
-        <script  src="../../../Scripts/jsControlador/jsConstroller.js?ddfa443ss3" defer="defer"></script>     
-        <script  src="../../../Componentes/Tabelas.js?q=367s35saas7s" defer="defer"></script>  
-        <script  src="index.js?q=saasd" defer="defer"></script>  
+        <script  src="../../../Scripts/jsControlador/jsConstroller.js?ddfa44s3ss3" defer="defer"></script>     
+        <script  src="../../../Componentes/Tabelas.js?q=7111" defer="defer"></script>  
+        <script  src="index.js?q=t1" defer="defer"></script>  
         
     </head>
     <body>

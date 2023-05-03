@@ -72,3 +72,38 @@
 .TabelaOver{
     overflow-y: auto;
 }
+
+/*-------------------*/
+
+.THCLASS_NONE_CELL{
+    display: none;
+}
+
+.THCLASS_VISIBLE_PC{
+    display: table-cell;
+}
+
+.TBODY_TABLE_PC{
+    display: table-row-group;
+}
+
+.TR_TABLE_PC{
+    display: table-row;
+}
+
+.TD_TABLE_PC{
+    display: table-cell;
+}
+
+.TBODY_TABLE_CELL{
+    display: grid;
+}
+
+.TR_TABLE_CELL{
+    display: inline-grid;
+}
+
+.TD_TABLE_CELL{
+    display: inline-block;
+    
+}

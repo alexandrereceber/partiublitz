@@ -53,6 +53,8 @@ class login extends ModeloTabelas{
                 * SQL de CRUD.
                 */
                "Field"          => "idLogin",
+                
+                "FieldFunc"=>[false,null],
                /**
                 * É o nome que será utilizado no sistema como label ou sejá o nome que será exibido dentro da página.
                 * Muito utilizado na formação dos campos de insersão e edição HTML.
@@ -641,6 +643,8 @@ class login extends ModeloTabelas{
             default:
                 break;
         }
+        
+        return true;
     }
     /*
      * Controla a visibilidade da quantidade de paginas por tabela HTML. Os quadrinho para selecionar página.
@@ -1656,6 +1660,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 0,                                   //Ordem dos campos
                "Field"          => "idCompra",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "idCompra",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1709,6 +1714,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 1,                                   //Ordem dos campos
                "Field"          => "idPerfil",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "IPerfil",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1767,6 +1773,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 2,                                   //Ordem dos campos
                "Field"          => "perfiles",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
                "CodNome"        => "Perfil",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1820,6 +1827,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 3,                                   //Ordem dos campos
                "Field"          => "idLista",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Lista",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1878,6 +1886,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 4,                                   //Ordem dos campos
                "Field"          => "NomeLista",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Nome Lista",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1930,6 +1939,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 5,                                   //Ordem dos campos
                "Field"          => "Valor",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Valor",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -1982,6 +1992,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 6,                                   //Ordem dos campos
                "Field"          => "data",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Data",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2034,6 +2045,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 7,                                   //Ordem dos campos
                "Field"          => "Beneficio",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Benefícios",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2086,6 +2098,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 8,                                   //Ordem dos campos
                "Field"          => "checkin",                       //Nome original do campo (String)
+               "FieldFunc"=>[false,null],
                "CodNome"        => "Chek-in",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2138,6 +2151,7 @@ class evento extends ModeloTabelas{
             [
                "Index"          => 9,                                   //Ordem dos campos
                "Field"          => "imagem",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
                "CodNome"        => "imagem",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["imagem"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2285,6 +2299,8 @@ class evento extends ModeloTabelas{
             default:
                 break;
         }
+        
+        return true;
     }
 
     public function getTotalPageVisible() {
@@ -2316,6 +2332,7 @@ class perfil extends ModeloTabelas{
             [
                "Index"          => 0,                                   //Ordem dos campos
                "Field"          => "idPerfil",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
                "CodNome"        => "IPerfil",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2368,6 +2385,7 @@ class perfil extends ModeloTabelas{
             [
                "Index"          => 1,                                   //Ordem dos campos
                "Field"          => "nome",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,"(select login.usuario from login where idLogin='15') as nome"],
                "CodNome"        => "Nome",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -2417,7 +2435,59 @@ class perfil extends ModeloTabelas{
                                     ],                                  //Informa se o campo fará parte do formulários
                "OrdemBY"        => true
            ],
-
+            [
+               "Index"          => 2,                                   //Ordem dos campos
+               "Field"          => "chekin",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "chekin",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> null,
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> true,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "chekins", 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => "",
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>"width:50%"
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
        
         ];
 
@@ -2865,7 +2935,111 @@ class BancoImagens extends ModeloTabelas{
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"select", 
                                         "TypeConteudo"=> null, 
-                                        "Name" => "perfiles", 
+                                        "Name" => "Nome", 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => "",
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>"width:50%"
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 1,                                   //Ordem dos campos
+               "Field"          => "idUser",                       //Nome original do campo (String)
+               "CodNome"        => "idUser",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> null,
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"select", 
+                                        "TypeConteudo"=> null, 
+                                        "Name" => "idUser", 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => "",
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>"width:50%"
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 2,                                   //Ordem dos campos
+               "Field"          => "destino",                       //Nome original do campo (String)
+               "CodNome"        => "destino",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> null,
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"select", 
+                                        "TypeConteudo"=> null, 
+                                        "Name" => "destino", 
                                         "Patterns"=> "", 
                                         "Titles" => "",
                                         "Required" => "",
@@ -2992,6 +3166,8 @@ class BancoImagens extends ModeloTabelas{
             default:
                 break;
         }
+        
+        return true;
     }
 
     public function getTotalPageVisible() {
@@ -2999,7 +3175,7 @@ class BancoImagens extends ModeloTabelas{
     }
 
     public function validarConteudoCampoRegex(&$Dados) {
-
+        return true;
     }
 
     public function NormalizarFiltro($Tipo) {

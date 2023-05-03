@@ -11,6 +11,9 @@
 
 try{
     $Dados = $_REQUEST["sendCamposAndValores"];  
+    /*
+     * Informa que não será executado a instrução de inserir pré-construída e sim por uma função anônima
+     */
     $NG = $_REQUEST["sendInserir1N"] == "" ? 1 : "N";  
     
     if(!is_array($Dados)){
