@@ -93,7 +93,22 @@ t.addFunctons_Eventos("SELECT_AFTER",function(n,m,p,q){
    return true;
 });
 
-
+    t.addFunctons_LOAD("INSERIR","MUDAR_SELECT2",async function(){console.log("INSERIR1")});
+    t.addFunctons_LOAD("INSERIR","MUDAR_SELECT3",async function(){console.log("INSERIR2")});
+    t.addFunctons_LOAD("INSERIR","MUDAR_SELECT4",async function(){console.log("INSERIR3")});
+    
+    t.addFunctons_LOAD("ATUALIZAR","MUDAR_SELECT5",async function(){console.log("ATUALIZAR1")});
+    t.addFunctons_LOAD("ATUALIZAR","MUDAR_SELECT6",async function(){console.log("ATUALIZAR2")});
+    t.addFunctons_LOAD("ATUALIZAR","MUDAR_SELECT7",async function(){console.log("ATUALIZAR3")});
+    
+    t.addFunctons_LOAD("EXCLUIR","MUDAR_SELECT8",async function(){console.log("EXCLUIR1")});
+    t.addFunctons_LOAD("EXCLUIR","MUDAR_SELECT9",async function(){console.log("EXCLUIR2")});
+    t.addFunctons_LOAD("EXCLUIR","MUDAR_SELECT10",async function(){console.log("EXCLUIR3")});
+    
+    t.addFunctons_LOAD("SHOW","MUDAR_SELECT11",async function(){console.log("SHOW1")});
+    t.addFunctons_LOAD("SHOW","MUDAR_SELECT12",async function(){console.log("SHOW2")});
+    t.addFunctons_LOAD("SHOW","MUDAR_SELECT13",async function(){console.log("SHOW3")});
+    
 /**
  * O array deve ser feito no local da chamada, caso não coloque, não havera busca por um a sim executar todas
  */

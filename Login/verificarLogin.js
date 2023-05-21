@@ -26,13 +26,23 @@ async function EnviarDados(obj){
     sendSenha         = obj[1].value == "" ? true : false;
 
         
-    if(sendUsuario){
-        obj[0].focus();
-        //data.message = "Usuário necessário."
-        Toast.fire({
-            icon: 'error',
-            title: 'Usuário necessário.'
-          })          
+    if(sendUsuario || (obj[0].value.length !== 11)){
+        if(obj[0].value.length !== 11){
+            obj[0].focus();
+            //data.message = "Usuário necessário."
+            Toast.fire({
+                icon: 'error',
+                title: 'É necessário 11 posições.'
+              });
+        }else{
+            obj[0].focus();
+            //data.message = "Usuário necessário."
+            Toast.fire({
+                icon: 'error',
+                title: 'Usuário necessário.'
+              });
+        }
+             
         return false;
     }
     if(sendSenha){

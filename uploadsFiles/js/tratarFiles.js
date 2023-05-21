@@ -1,22 +1,4 @@
-const Toast = Swal.mixin({
-  toast: true,
-  position: 'top-end',
-  showConfirmButton: false,
-  timer: 5000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener('mouseenter', Swal.stopTimer);
-    toast.addEventListener('mouseleave', Swal.resumeTimer);
-  }
-})
 
-const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-  },
-  buttonsStyling: false
-});
 
 class ReceberEnviar extends JSController{
     constructor(objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela, MultFILES = true){
@@ -545,7 +527,7 @@ class ReceberEnviar extends JSController{
                                 '<label class="custom-file-label" for="inputGroupFile01">Selecionar arquivos</label>'+
                             '</div>'+
                                 '</div>' +(this.Modo == 2 ? '<div class="preview_fts"></div>' : '' )+
-                                '<div id="prev_Botoes" style="width: 100vw;top: 5px;position: relative;"></div>'+
+                                '<div id="prev_Botoes" style="width: 100%;top: 5px;position: relative;"></div>'+
                                 '<div id="prev_status"></div>'+
                             '</div>';
                     
@@ -639,4 +621,4 @@ class ReceberEnviar extends JSController{
  * @param {string} Tabela, no banco de dados, onde será armazenado as imagens
  * @type ReceberEnviar
  */
-var InstanciarUpload = new ReceberEnviar("#uploadzz",2,Padrao.getHostServer() +"/blitz/ControladorTabelas/", "83849cf629549fgtrdeb555e00f4c711", false);
+//var InstanciarUpload = new ReceberEnviar("#uploadzz",2,Padrao.getHostServer() +"/blitz/ControladorTabelas/", "83849cf629549fgtrdeb555e00f4c711", false);

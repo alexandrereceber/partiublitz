@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Log in (v2)</title>
+  <title>Blitz | Login </title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,9 +14,12 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte_login.min.css">
+    <!-- Logo da blitz -->
+  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
+  
 </head>
-<body class="hold-transition login-page" style="background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
-<div class="wrapper" style="width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8); ">
+<body class="hold-transition login-page" style="display: block;background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
+<div class="wrapper" style="position: absolute;width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8); ">
     <div class="login-box" style=" margin: auto;">
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
@@ -28,10 +31,10 @@
 
             <form onsubmit="EnviarDados(this)">
               <div class="input-group mb-3">
-                <input type="email" class="form-control" placeholder="Email">
+                <input  type="number" maxlength="11" pattern="[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}" class="form-control" placeholder="CPF">
                 <div class="input-group-append">
                   <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
+                    <span class="fas fa-hashtag"></span>
                   </div>
                 </div>
               </div>
@@ -50,7 +53,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-4">
-                  <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                  <button type="submit" class="btn btn-primary btn-block">Logar</button>
                 </div>
                 <!-- /.col -->
               </div>

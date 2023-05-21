@@ -93,6 +93,12 @@
 
 .TD_TABLE_PC{
     display: table-cell;
+    vertical-align: middle!important;;
+    text-align: center;
+}
+
+.FIXA_BARRA_BOTOES_PC{
+
 }
 
 .TBODY_TABLE_CELL{
@@ -101,9 +107,21 @@
 
 .TR_TABLE_CELL{
     display: inline-grid;
+    border-top: solid 2px;
+    border-top-color: #e1e8ef;
+    margin-top: 27px;
 }
 
 .TD_TABLE_CELL{
     display: inline-block;
-    
+    vertical-align: middle!important;
+    text-align: left;
+}
+
+.FIXA_BARRA_BOTOES_CELL{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: white;
 }

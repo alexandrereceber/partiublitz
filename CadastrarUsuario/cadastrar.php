@@ -57,16 +57,18 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/BancoDados/TabelasBD/'. 
  */
 ConfigSystema::getStartTimeTotal();
 
-$URL            = $_REQUEST["URL"];
-$Requisicao     = $_REQUEST["Req"];
-$Metodo         = $_REQUEST["Metodo"];
-$SSL            = $_REQUEST["SSL"];
-$Usuario        = $_POST["sendUsuario"];
-$Senha          = md5($_POST["sendSenha"]);
-$ContraSenha    = md5($_POST["sendContraSenha"]);
-$Dispositivo    = $_REQUEST["sendDispositivo"];
+$URL            = filter_input(INPUT_GET, "URL");
+$Requisicao     = filter_input(INPUT_GET, "Req");
+$Metodo         = filter_input(INPUT_GET, "URL");
+$SSL            = filter_input(INPUT_GET, "Metodo");
+$Usuario        = filter_input(INPUT_POST, "sendUsuario");
+$Senha          = md5(filter_input(INPUT_POST, "sendSenha"));
+$ContraSenha    = md5(filter_input(INPUT_POST, "sendContraSenha"));
+$Dispositivo    = filter_input(INPUT_POST, "sendDispositivo");
 
 
+
+$InserirDados = null;
 
 try {
     if(!($Senha === $ContraSenha)) {
@@ -88,21 +90,17 @@ try {
     }
 
     $InserirDados = new login();
-
+    
     $InserirDados->setUsuario("blitz");
     
     $Dados = [
                 [name=>"username",value=> $Usuario],
                 [name=>"password",value=> $Senha]
             ];
-    try{
-        $Result = $InserirDados->InserirDadosTabela($Dados);
-    } catch (Exception $ex) {
-        $Numero = $InserirDados->getErros()[1];
-        $Mensagem = $InserirDados->getErros()[3];   
-        
-        throw new PDOException($Mensagem, $Numero);
-    }
+
+    $InserirDados->beginTransaction();
+    $Result = $InserirDados->InserirDadosTabela($Dados);
+    $InserirDados->commit();
     
     if($Result == false) 
         throw new PDOException("Ocorreram erros ao cadastrar usuário. Favor entrar em contato com o administrador!", 8005);
@@ -125,6 +123,8 @@ try {
    
 
 } catch (Exception $ex) {
+    $InserirDados->rollback();
+    
     $ResultRequest["Modo"]      = "Cadastro";
     $ResultRequest["Error"]     = true;
     $ResultRequest["Codigo"]    = $ex->getCode();

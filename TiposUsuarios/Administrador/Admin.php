@@ -45,10 +45,14 @@ echo "<script>var Chave='$sendChave'</script>"
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
+  
+  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?39">
+  
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   
@@ -56,22 +60,16 @@ echo "<script>var Chave='$sendChave'</script>"
 <body class="sidebar-mini layout-fixed" style="height: auto;">
 <div class="wrapper">
 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center" style="height: 0px;">
-    <img class="animation__shake" src="/blitz/Recursos/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" style="display: none;">
-  </div>
-
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+            <i class="fas fa-bars"></i>
+        </a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link" id="__INICIO">Início</a>
-      </li>
-
+      
     </ul>
 
     <!-- Right navbar links -->
@@ -82,11 +80,11 @@ echo "<script>var Chave='$sendChave'</script>"
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button" >
           <i class="fas fa-th-large"></i>
         </a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" id="__CONTROL_SIDERBAR">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
           <i class="far fa-user-circle" style="font-size: +17px"></i>
         </a>
@@ -128,7 +126,7 @@ echo "<script>var Chave='$sendChave'</script>"
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="info">
-              <a href="#" class="d-block">Alexander José</a>
+              <a href="#" class="d-block"><?php echo $SystemUsuario; ?></a>
             </div>
           </div>
 
@@ -138,14 +136,62 @@ echo "<script>var Chave='$sendChave'</script>"
               <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
 
-              <li class="nav-item">
-                <a href="" class="nav-link">
-                    <i class="far fa-calendar-plus" style="font-size: +16;"></i>
-                  <p style="margin-left: 8px">
-                      Widgets
-                  </p>
-                </a>
-              </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon far fa-user"></i>
+                      <p>
+                        Membros
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                      <li class="nav-item" >
+                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_CADASTRO">
+                          <i class="fas fa-user-plus"></i>
+                          <p style="margin-left: 5px">Cadastro</p>
+                        </a>
+                      </li>
+                      <li class="nav-item" >
+                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_PERFIL">
+                          <i class="fas fa-user-edit"></i>
+                          <p  style="margin-left: 5px">Perfil</p>
+                        </a>
+                      </li>
+                      <!-- SubMENU -->
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            <i class="fa-regular fa-image"></i>
+                            <p style="margin-left: 5px">
+                              Imagens
+                              <i class="fas fa-angle-left right"></i>
+                            </p>
+                          </a>
+                          <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_VIEW">
+                              <a href="#" class="nav-link">
+                                <i class="fa-solid fa-eye"></i>
+                                <p style="margin-left: 5px">Visualizar</p>
+                              </a>
+                            </li>
+                            <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD">
+                              <a href="#" class="nav-link">
+                                <i class="fa-solid fa-upload"></i>
+                                <p  style="margin-left: 5px">Upload</p>
+                              </a>
+                            </li>
+                          </ul>
+                        </li>
+                    </ul>
+                  </li>
+              
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_EVENTOS">
+                      <i class="far fa-calendar-plus" style="font-size: +16;"></i>
+                      <p style="margin-left: 8px">
+                          Eventos
+                      </p>
+                  </a>
+                </li>
 
             </ul>
           </nav>
@@ -157,10 +203,10 @@ echo "<script>var Chave='$sendChave'</script>"
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper" style="min-height: 511px;">
+  <div class="content-wrapper" style="min-height: 511px;" id="CONTENT_WRAPPER">
     <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
+    <div class="content-header" id="__CONTENT_WRAPPER_HEADER">
+      <div class="container-fluid" idCONTENT_WRAPPER_HEADER="__CONTENT_WRAPPER_HEADER_FLUID">
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Dashboard</h1>
@@ -172,10 +218,10 @@ echo "<script>var Chave='$sendChave'</script>"
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+    <section class="content" id="CONTENT_WRAPPER_MAIN_CONTENT">
+      <div class="container-fluid" id="CONTENT_WRAPPER_MAIN_CONTAINER_FLUID" style="height: 100%">
         <!-- Small boxes (Stat box) -->
-        <div class="row">
+        <div class="row" id="__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW" style="height: 100%">
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
@@ -244,7 +290,7 @@ echo "<script>var Chave='$sendChave'</script>"
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <footer class="main-footer" id="CONTENT_WRAPPER_MAIN_FOOTER">
     <strong>Copyright © 2014-2023 <a href="#">Marques</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
@@ -262,25 +308,49 @@ echo "<script>var Chave='$sendChave'</script>"
 
 <!-- jQuery -->
 <script src="/blitz/Recursos/plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="/blitz/Recursos/plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
+
 
 <!-- AdminLTE App -->
+
 <script src="/blitz/Recursos/dist/js/adminlte.js?s=12"></script>
 
-<script src="/blitz/Componentes/viewPopover.js?1" defer=""></script>
-
-
-<script  src="/blitz/Scripts/bootbox/bootbox.js?1" defer="defer"></script>
-<script  src="/blitz/Scripts/jsControlador/jsConstroller.js?1" defer="defer"></script>     
-<script  src="/blitz/Componentes/Tabelas.js?q=10" defer="defer"></script>  
-<script  src="/blitz/Login/Sair.js?q=9" defer="defer"></script>
+<script src="/blitz/Componentes/viewPopover.js?1"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script  src="/blitz/Scripts/jsControlador/jsConstroller.js?1"></script>     
+<script  src="/blitz/Componentes/Tabelas.js?s=<?php echo time()?>"></script>  
+<script  src="/blitz/Login/Sair.js?q=9"></script>
 
 <!-- Ações personalizadas para o administrador -->
-<script src="/blitz/Recursos/dist/js/Administrador.js?s=112"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=<?php echo time()?>"></script>
 
-</body></html>
+<!-- The Modal -->
+  <div class="modal fade" id="myJanelas">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Título</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer status-footer">
+          
+        </div>        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn  cancelar" data-dismiss="modal"></button><button type="button" class="btn  ok" data-dismiss="modal"></button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -220,12 +220,8 @@ class TabelaBancoDadosMD5{
      */
     private static $Tabelas = [
                                 ["83849cf6295498c96deb555e00f4c757",["login", true]],
-                                ["83849cf6295498c96deb555e00f4c756",["cadastrar", true]],
-                                ["83849cf6295498c96deb555e00f4c777",["evento", false]],
-                                ["83849cf6295498c96deb555e00f4c778",["view_user", false]],
-                                ["83849cf6295498c96deb555e00f4c779",["perfil", false]],
-                                ["83849cf6295498c96deb555e00f4c710",["lista", false]],
-                                ["83849cf629549fgtrdeb555e00f4c711",["BancoImagens", false]],
+                                ["83849cf6295498c96deb555e00f4c756",["adm_cadastro", true]],
+                                ["7095e737a19ed11f0df0f07b7ec84131",["adm_perfil", true]],
                             ];
     
     /**

@@ -48,6 +48,8 @@ class TabelaHTML extends JSController{
                 Instancia.CSSTableGeral.GeralTbodyClass = "TBODY_TABLE_CELL";
                 Instancia.CSSTableGeral.GeralTrClass = "TR_TABLE_CELL";
                 Instancia.CSSTableGeral.GeralTdClass = "TD_TABLE_CELL";
+                Instancia.CSSTableGeral.GeralDivClass_Botoes = "FIXA_BARRA_BOTOES_CELL";
+                
                 Instancia.Refresh();
             }else{
                 Instancia.__isPhone = false;
@@ -55,6 +57,8 @@ class TabelaHTML extends JSController{
                 Instancia.CSSTableGeral.GeralTbodyClass = "TBODY_TABLE_PC";
                 Instancia.CSSTableGeral.GeralTrClass = "TR_TABLE_PC";
                 Instancia.CSSTableGeral.GeralTdClass = "TD_TABLE_PC";
+                Instancia.CSSTableGeral.GeralDivClass_Botoes = "FIXA_BARRA_BOTOES_PC";
+                
                 Instancia.Refresh();
             }
         };
@@ -78,6 +82,9 @@ class TabelaHTML extends JSController{
         }
         this.CSSTableGeral = {
                                 "GeralDivClass":"",
+                                "GeralDivClass_Componente":"",
+                                "GeralDivClass_Corpo":"",
+                                "GeralDivClass_Botoes":"",
                                 "GeralTableClass":"table",
                                 "GeralTheadClass":"",
                                 "GeralThClass":GeralThClass,
@@ -149,14 +156,23 @@ class TabelaHTML extends JSController{
                 return Instancia.Funcoes.Conteudo(Instancia, Linha, Num);
             }
         };
+        
+        this.ADDSET_FUNCTION_ONLOAD = {
+            "SHOW":[],
+            "INSERIR":[],
+            "ATUALIZAR":[],
+            "EXCLUIR":[]
+        };
+        
          /**
-         * Funções executadas aopós carregar os dados;
+         * Funções executadas após exibição dos dados em componentes.
+         * Executa de forma async funções após a exibição do componente tabela ou das caixas de diálogo como inserir, atualizar, excluir
          * Select / Insert / Update
          * Tem um tratador de erro para esses funções, dentro de cada operação
          */
         this.FUNCOES_ONLOAD = function(){
             let FUNCs = new Map([
-                //Inserir as funcoes;
+                //Funções são inseriridas no momento da instanciação do componente;
             ]);
             return {
                 __Exec: async function(CONJUNTO,OBJECT_INSTANCIA_FORMULARIO,OTHER){  //Recebe um objeto {"Evento":..., ?}
@@ -176,14 +192,34 @@ class TabelaHTML extends JSController{
                     
                     
                 },
-                add: function(n,f){
-                    FUNCs.set(n,f);
+                /**
+                 * Adiciona um funções em um mapa que serão executadas de acordo com um array informado pela função addNomeSET.
+                 * @param {type} Operacao - SHOW, INSERIR, ATUALIZAR ou EXCLUIR
+                 * @param {type} Nome - Nome da função
+                 * @param {type} Função - function(){} vinda do codigo da instancia.
+                 * @returns {undefined}
+                 */
+                add: function(Operacao, Nome, Funcao, tabela){
+                    FUNCs.set(Nome,Funcao);
+                    if(Operacao === "SHOW"){
+                        tabela.ADDSET_FUNCTION_ONLOAD.SHOW.push(Nome);
+                        
+                    }else if(Operacao === "INSERIR"){
+                        tabela.ADDSET_FUNCTION_ONLOAD.INSERIR.push(Nome);
+                        
+                    }else if(Operacao === "ATUALIZAR"){
+                        tabela.ADDSET_FUNCTION_ONLOAD.ATUALIZAR.push(Nome);
+                        
+                    }else if(Operacao === "EXCLUIR"){
+                        tabela.ADDSET_FUNCTION_ONLOAD.EXCLUIR.push(Nome);
+                        
+                    }
                 }
             };
         }();
         
         /**
-         * Eventos que ocorreram durante as fases de envio dos dados
+         * FUNÇÕES QUE SERÃO EXECUTADAS APÓS A REALIZAÇÃO DAS OPERAÇÕES DE INSERIR, ATUALIZAR, EXCLUIR E SHOW
          */
         this.FUNCOES_EVENT = function(){
             let FUNCs = new Map([
@@ -231,14 +267,14 @@ class TabelaHTML extends JSController{
         
     }
     
-    addFunctons_LOAD(Nome,F){
-        if(Nome !== null && Nome !== "" && Nome !== undefined && F !== undefined){
-            this.FUNCOES_ONLOAD.add(Nome, F);
+    addFunctons_LOAD(Operacao, Nome, Funcao){
+        if(Operacao !== null && Operacao !== "" && Operacao !== undefined && Nome !== null && Nome !== "" && Nome !== undefined && Funcao !== null && Funcao !== "" && Funcao !== undefined){
+            this.FUNCOES_ONLOAD.add(Operacao, Nome, Funcao, this);
         }else{
             Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: "É necessário um nome e uma função, método: addFunctons_Eventos",
+                    text: "É necessário uma operação, um nome e uma função, método: addFunctons_Eventos",
                     //footer: '<a href="">Why do I have this issue?</a>'
                   });
         }
@@ -722,7 +758,7 @@ class TabelaHTML extends JSController{
         }
 
         if(InfPag.ModoPaginacao.BRefresh){
-            Refresh ='<td><div style="text-align: center;"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><img style="width:20px" src="https://iconarchive.com/download/i7969/hopstarter/soft-scraps/Button-Refresh.ico"></button></div></td>';
+            Refresh ='<td style="display:flex; margin: auto"><div style="text-align: center;"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><i class="fa-duotone fa-arrows-rotate"></i></button></div></td>';
         }
         
         /**
@@ -1217,12 +1253,21 @@ class TabelaHTML extends JSController{
     TratarErros(Erros){
         switch(Erros.Codigo){
             case 12006:
-                bootbox.alert("<h3>"+ Erros.Mensagem +"</h3>");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: Erros.Mensagem,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
                 window.location = Erros.Dominio;
                 break;
             default:
-                
-                bootbox.alert("<h3>"+ Erros.Mensagem +"</h3>");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: Erros.Mensagem,
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
                 break;
         }
     }
@@ -1239,7 +1284,7 @@ class TabelaHTML extends JSController{
         event.preventDefault();
         var Campos = [];
         Campos = $(F).serializeArray();
-        let rst = await this.FUNCOES_EVENT.__Exec("INSERIR","BEFORE", this, Campos) || true;
+        let rst = await this.FUNCOES_EVENT.__Exec("INSERIR","BEFORE", this, Campos);
         
         if(rst === true){
             this.DadosEnvio.sendCamposAndValores = Campos;
@@ -1263,8 +1308,6 @@ class TabelaHTML extends JSController{
               });
               
         }else{
-            await this.show();
-
             await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, null);
         }
         
@@ -1280,7 +1323,7 @@ class TabelaHTML extends JSController{
             if(GetResultado.Campos[indx][8].Exibir !== true) continue; 
             Campos += await this.getGrupoCamposblitz(GetResultado.Campos[indx], "Inserir");
         }
-        Campos = "<form onsubmit='"+ this.NomeInstancia +".EnviarFormularioInserir(this)'>"+ Campos+ "<button class='btn btn-primary btn-block'>Inserir</button></form>"
+        Campos = "<form onsubmit='"+ this.NomeInstancia +".EnviarFormularioInserir(this)'>"+ Campos+ "<button class='btn btn-primary btn-block'>Inserir</button></form>";
         return Campos;
     }
     /**
@@ -1289,6 +1332,7 @@ class TabelaHTML extends JSController{
      */
     async showFormularioInserir(){
         var FormsCampos = await this.getCamposInserir();
+        let o = this;
         var Janela = {
                                     Janela: {Nome: "myJanelas", Tipo: "modal-lg", Tamanho: "30vw"},
                                     Header: {Title: "Inserir", CorTexto: "white", backgroundcolor: "#007bff"}, 
@@ -1300,7 +1344,8 @@ class TabelaHTML extends JSController{
                                             },
                                     Modal: {backdrop: true,keyboard: true}
                                 };
-            this.CustomJanelaModal(Janela);        
+            this.CustomJanelaModal(Janela);
+            this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["INSERIR"], this);
     }
     /**
      * Método assíncrono que envia os dados para inserção.
@@ -1323,7 +1368,7 @@ class TabelaHTML extends JSController{
             event.preventDefault();
             var Campos = [];
             Campos = $(F).serializeArray();
-            let rst = await this.FUNCOES_EVENT.__Exec("UPDATE","BEFORE", this, Campos) || true;
+            let rst = await this.FUNCOES_EVENT.__Exec("UPDATE","BEFORE", this, Campos);
 
             if(rst === true){
                 this.DadosEnvio.sendCamposAndValores = Campos;
@@ -1358,8 +1403,6 @@ class TabelaHTML extends JSController{
                     }
                 }
             }else{
-                await this.show(); //Somente após a atualização de todas as linhas;
-
                 await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, null);
             }
         }catch(e){
@@ -1387,25 +1430,31 @@ class TabelaHTML extends JSController{
     async showFormularioAtualizar(){
         var FormsCampos = await this.getCamposAtualizar();
             if(FormsCampos == false) {
-                bootbox.alert("<h3><i class='fa fa-check-square-o' style='font-size:36px;'></i> Não há campos para serem editados.</h3>");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "<i class='fa fa-check-square-o' style='font-size:36px;'></i> Não há campos para serem editados.",
+                    //footer: '<a href="">Why do I have this issue?</a>'
+                  });
                 return false;
             }
             this._TotalRegistroUpdate = this.ChavesPrimarias.length;
             let Status = "<div style='font-style: italic;font-family: monospace;'><span><b>Registro(s)</b></span> <span id='ContadorRegistro'>:0</span><span> / "+ this.ChavesPrimarias.length +"</span></div>";
-            
+        let o = this;
         var Janela = {
                                     Janela: {Nome: "myJanelas", Tipo: "modal-lg", Tamanho: "48em"},
                                     Header: {Title: "Editar", CorTexto: "white", backgroundcolor: "#5cb85c"}, 
                                     Body: {Conteudo: FormsCampos, Scroll: true}, 
                                     Footer: {
                                                 Cancelar: {Nome: "Cancelar", classe: "" , Visible: "none", Funcao: function(){var o}}, 
-                                                Aceitar: {Nome: "Close", classe: "" , Visible: "block", Funcao: function(){var o}},
+                                                Aceitar: {Nome: "Close", classe: "btn-danger" , Visible: "block", Funcao: function(){var o}},
                                                 Status: {Display: true, Conteudo: Status}
                                             },
                                     Modal: {backdrop: true,keyboard: true}
                                 };
 
         this.CustomJanelaModal(Janela);
+        this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["ATUALIZAR"], this);
     }
     
     /**
@@ -1459,22 +1508,22 @@ class TabelaHTML extends JSController{
         this.ChavesPrimarias = []; //Na mudança de página todas as chaves selecionadas são excluídas.
         
         ComponentCompleto = "\n\
-            <div class=' "+ this.CSSTableGeral.GeralDivClass +" ' id='Componente_" + Indexador + "'>                  \n\
+            <div class=' "+ this.CSSTableGeral.GeralDivClass + " " + this.CSSTableGeral.GeralDivClass_Componente +" ' id='Componente_" + Indexador + "'>                  \n\
                 <div class='' id='Cabecalho_" + Indexador + "'>                                         \n\
                         "+ InfoP +"                                                                     \n\
                 </div>                                                                                  \n\
                                                                                                         \n\
-                <div  class='  "+ this.CSSTableGeral.GeralDivClass +" ' id='Corpo_" + Indexador + "'>                 \n\
+                <div  class='  "+ this.CSSTableGeral.GeralDivClass  + " " + this.CSSTableGeral.GeralDivClass_Corpo +" ' id='Corpo_" + Indexador + "'>                 \n\
                     <table class='"+ this.CSSTableGeral.GeralTableClass +"' id='"+ NomeTabela +"'>                    \n\
                         "+ cabecalho +"                                                                 \n\
                         "+ Linhas +"                                                                    \n\
                     </table>                                                                            \n\
                 </div>                                                                                  \n\
-                <div class=' "+ this.CSSTableGeral.GeralDivClass +" ' id='Botoes_" + Indexador + "'>"+ Botoes + "</div>" 
+                <div class=' "+ this.CSSTableGeral.GeralDivClass  + " " + this.CSSTableGeral.GeralDivClass_Botoes +" ' id='Botoes_" + Indexador + "'>"+ Botoes + "</div>" 
                      + Paginacao ;
         $("#" + this.Recipiente).html(ComponentCompleto);
         //$("*").popover('hide');
-        //$("*").tooltip();
+        $(".tooltip").remove();
         
         if(this.Funcoes.Linhas != false){
             $(".tr_" + this.ResultSet.Indexador).click(this.FAnonimas.Linha).css("cursor","pointer");
@@ -1490,7 +1539,7 @@ class TabelaHTML extends JSController{
                 $(this).css("background-color","#557775");
             }, function(){
                 $(this).css("background-color","initial");
-            })
+            });
         }
         
         if(this.ResultSet.ShowColumnsIcones[0]){
@@ -1505,7 +1554,7 @@ class TabelaHTML extends JSController{
         
         await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, null);
         
-        //this.FUNCOES_ONLOAD.__Exec(["NOMEQUALQER2", "NOMEQUALQER1"],this);
+        this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["SHOW"], this);
     }
     
     /**
@@ -1540,7 +1589,6 @@ class TabelaHTML extends JSController{
                   });
             }
         }else{
-            this.show();
             await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this);
         }
         
@@ -1565,7 +1613,7 @@ class TabelaHTML extends JSController{
                                     Modal: {keyboard: false}
                                 };
             this.CustomJanelaModal(Janela);        
-
+            this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["EXCLUIR"], this);
     }
     /**
      * Seta os valores para a criação de uma janela bootstrap.
@@ -1603,9 +1651,9 @@ class TabelaHTML extends JSController{
         $(".modal-title").css("color", Componentes.Header.CorTexto);
         
         if(Componentes.Body.Scroll){
-            $(".modal-dialog").addClass("modal-dialog-scrollable")
+            $(".modal-dialog").addClass("modal-dialog-scrollable");
         }else{
-            $(".modal-dialog").removeClass("modal-dialog-scrollable")
+            $(".modal-dialog").removeClass("modal-dialog-scrollable");
         }
         
         $(".modal-body").html(Componentes.Body.Conteudo);
@@ -1614,7 +1662,7 @@ class TabelaHTML extends JSController{
             $(".modal-footer").css("display","none");
         }else{
             $(".modal-footer").css("display","inherit");
-            //$(".modal-footer").html(Componentes.Footer.Status.Conteudo);
+            $(".status-footer").html(Componentes.Footer.Status.Conteudo);
         }
         
         $(".cancelar").css("display", Componentes.Footer.Cancelar.Visible);
@@ -1645,7 +1693,7 @@ class TabelaHTML extends JSController{
         $(".ok").addClass(Componentes.Footer.Aceitar.classe);
         
         $("#" + Componentes.Janela.Nome).modal('show');
-
+        
     }
     
     /**

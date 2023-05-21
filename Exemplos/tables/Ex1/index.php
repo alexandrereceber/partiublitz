@@ -27,7 +27,7 @@ and open the template in the editor.
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
          
         <script src="/blitz/Recursos/plugins/bootstrap-switch/js/bootstrap-switch.min.js" ></script>
-         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer="defer"></script>
         <script  src="../../../Scripts/bootbox/bootbox.js?5aa" defer="defer"></script>
         <script  src="../../../Scripts/jsControlador/jsConstroller.js?ddfa44s3ss3" defer="defer"></script>     
         <script  src="../../../Componentes/Tabelas.js?q=7111" defer="defer"></script>  

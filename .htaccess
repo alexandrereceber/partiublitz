@@ -8,6 +8,8 @@ RewriteBase /blitz
 #RewriteCond %{REQUEST_URI} ^/blitz/$
 #RewriteRule (.*) pgweb/table-vs-div-o-bom [R]
 #
+RewriteCond %{REQUEST_URI} /blitz/Manisfeto
+RewriteRule (.*) /blitz/app.webmanifest.json [L]
 
 RewriteCond %{REQUEST_URI} ^/blitz/Logar$
 RewriteRule (.*) Login/login.php?D=%{REQUEST_URI}&URL=%{QUERY_STRING} [L]
