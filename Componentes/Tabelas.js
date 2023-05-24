@@ -758,7 +758,7 @@ class TabelaHTML extends JSController{
         }
 
         if(InfPag.ModoPaginacao.BRefresh){
-            Refresh ='<td style="display:flex; margin: auto"><div style="text-align: center;"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><i class="fa-duotone fa-arrows-rotate"></i></button></div></td>';
+            Refresh ='<td style="display:flex; margin: auto" id="TR_BREFRESH"><div style="text-align: center;" id="BREFRESH"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><i class="fa-duotone fa-arrows-rotate"></i></button></div></td>';
         }
         
         /**
@@ -1029,108 +1029,116 @@ class TabelaHTML extends JSController{
      * @param {int} NF
      * @returns {TabelaHTML@arr;@call;FuncoesChvExt}
      */
-    async setFExecuteChv(NF, Objeto){
-       return await this.FuncoesChvExt[NF](this, NF);
-    }
+    
+//    
+//    async setFExecuteChv(NF, Objeto){
+//       return await this.FuncoesChvExt[NF](this, NF);
+//    }
+    
     /**
      * Cria um campo especial para as chaves extrangeiras.
      * @param {array} Campo
      * @returns {undefined}
      */
-    async getCamposChaveExtrangeira(Campo, Valor){
-        var 
-            Template = "", 
-            Label = "", 
-            FNome = "", 
-            Tipo = "",
-            Leitura = "",
-            Botao = "",
-            Func = "",
-            Required = "";
-                
-    Label           = Campo[1];
-    FNome           = Campo[8].Name;
-    Tipo            = Campo[8].TypeConteudo;
-    Leitura         = Campo[8].readonly == true ? "readonly" : "";
-    Botao           = Campo[19].NomeBotao;
-    Required        = Campo[8].Required == true ? "required='true'" : "";
-    /**
-     * Campo muito importante para o sistema de chave extrangeira, fica configurado lá no arquivo de php. Caso
-     * seu valor seja false, significa que os dados da tabela extrangeira foram incorporados ao dados da tabela atual.
-     * e que estão localizados no campo DadosTblExt pra tratamento.
-     */
-    Func            = Campo[19].Funcao; 
     
-    if(this.blitz == "bootstrap"){
-        if(Campo[8].TypeComponente == "button"){
+//    async getCamposChaveExtrangeira(Campo, Valor){
+//        var 
+//            Template = "", 
+//            Label = "", 
+//            FNome = "", 
+//            Tipo = "",
+//            Leitura = "",
+//            Botao = "",
+//            Func = "",
+//            Required = "";
+//                
+//    Label           = Campo[1];
+//    FNome           = Campo[8].Name;
+//    Tipo            = Campo[8].TypeConteudo;
+//    Leitura         = Campo[8].readonly == true ? "readonly" : "";
+//    Botao           = Campo[19].NomeBotao;
+//    Required        = Campo[8].Required == true ? "required='true'" : "";
+//    /**
+//     * Campo muito importante para o sistema de chave extrangeira, fica configurado lá no arquivo de php. Caso
+//     * seu valor seja false, significa que os dados da tabela extrangeira foram incorporados ao dados da tabela atual.
+//     * e que estão localizados no campo DadosTblExt pra tratamento.
+//     */
+//    Func            = Campo[19].Funcao; 
+//    
+//    if(this.blitz == "bootstrap"){
+//        if(Campo[8].TypeComponente == "button"){
+//
+//                Template = ' \n\
+//                                <div class="input-group mb-3">' +
+//                                    '<div class="input-group-prepend">' +
+//                                        '<span class="input-group-text">'+ Label +':</span>' +
+//                                    '</div>' +
+//                                    '<input '+ Required +' type="'+ Tipo +'" '+ Leitura +' class="form-control" name="'+ FNome +'" value="'+ Valor +'"><button type="button" onclick="'+ this.NomeInstancia +'.setFExecuteChv('+ Func +', this)" class="btn btn-primary Bt_ChvExt_'+ this.ResultSet.Indexador +'">'+ Botao +'</button>' +
+//                                '</div>';
+//                return Template;
+//        }   
+//            
+//        if(Campo[8].TypeComponente == "select"){
+//                if(Func !== false){
+//                    Template = ' \n\
+//                                    <div class="input-group mb-3">' +
+//                                        '<div class="input-group-prepend">' +
+//                                            '<span class="input-group-text">'+ Label +':</span>' +
+//                                        '</div>' +
+//                                        '<select  '+ Required +'  class="form-control"  name="'+ FNome +'" >'+ 
+//
+//                                            await this.setFExecuteChv(Func) 
+//
+//                                        +'</select>' +
+//                                    '</div>';
+//                    
+//                }else{
+//                    Template = ' \n\
+//                                    <div class="input-group mb-3">' +
+//                                        '<div class="input-group-prepend">' +
+//                                            '<span class="input-group-text">'+ Label +':</span>' +
+//                                        '</div>' +
+//                                        '<select  '+ Required +'  class="form-control"  name="'+ FNome +'" >'+ 
+//
+//                                            await this.getSelectChExtrangeira(Campo, Valor) 
+//
+//                                        +'</select>' +
+//                                    '</div>';
+//                    
+//                }
+//                return Template;
+//            }  
+//    }
+//                    
+//                    
+//}
 
-                Template = ' \n\
-                                <div class="input-group mb-3">' +
-                                    '<div class="input-group-prepend">' +
-                                        '<span class="input-group-text">'+ Label +':</span>' +
-                                    '</div>' +
-                                    '<input '+ Required +' type="'+ Tipo +'" '+ Leitura +' class="form-control" name="'+ FNome +'" value="'+ Valor +'"><button type="button" onclick="'+ this.NomeInstancia +'.setFExecuteChv('+ Func +', this)" class="btn btn-primary Bt_ChvExt_'+ this.ResultSet.Indexador +'">'+ Botao +'</button>' +
-                                '</div>';
-                return Template;
-        }   
-            
-        if(Campo[8].TypeComponente == "select"){
-                if(Func !== false){
-                    Template = ' \n\
-                                    <div class="input-group mb-3">' +
-                                        '<div class="input-group-prepend">' +
-                                            '<span class="input-group-text">'+ Label +':</span>' +
-                                        '</div>' +
-                                        '<select  '+ Required +'  class="form-control"  name="'+ FNome +'" >'+ 
-
-                                            await this.setFExecuteChv(Func) 
-
-                                        +'</select>' +
-                                    '</div>';
-                    
-                }else{
-                    Template = ' \n\
-                                    <div class="input-group mb-3">' +
-                                        '<div class="input-group-prepend">' +
-                                            '<span class="input-group-text">'+ Label +':</span>' +
-                                        '</div>' +
-                                        '<select  '+ Required +'  class="form-control"  name="'+ FNome +'" >'+ 
-
-                                            await this.getSelectChExtrangeira(Campo, Valor) 
-
-                                        +'</select>' +
-                                    '</div>';
-                    
-                }
-                return Template;
-            }  
-    }
-                    
-                    
-}
 /**
  * Método que gera as opções da caixa de select para as janalas do botão inserir e editar
  * @param {Array} Dados
  * @param {Text} Valor
  * @returns {String}
  */
-    async getSelectChExtrangeira(Dados, Valor){
-        let Selects = '<option value=""></option>',
-            Selected = '';
 
-        for (var i in Dados[19].DadosTblExt) {
-            for(var c in Dados[19].DadosTblExt[i]){
-                
-                if(c == Dados[19].IdxCampoVinculado) continue;
-                
-                Selected = Dados[19].DadosTblExt[i][Dados[19].IdxCampoVinculado] == Valor ? "selected" : "";
-                
-                Selects += '<option '+ Selected + ' value="'+ Dados[19].DadosTblExt[i][Dados[19].IdxCampoVinculado] + '">'+ Dados[19].DadosTblExt[i][c] + '</option>';
-            }
-        }
-       
-        return Selects;
-    }
+//    async getSelectChExtrangeira(Dados, Valor){
+//        let Selects = '<option value=""></option>',
+//            Selected = '';
+//
+//        for (var i in Dados[19].DadosTblExt) {
+//            for(var c in Dados[19].DadosTblExt[i]){
+//                
+//                if(c == Dados[19].IdxCampoVinculado) continue;
+//                
+//                Selected = Dados[19].DadosTblExt[i][Dados[19].IdxCampoVinculado] == Valor ? "selected" : "";
+//                
+//                Selects += '<option '+ Selected + ' value="'+ Dados[19].DadosTblExt[i][Dados[19].IdxCampoVinculado] + '">'+ Dados[19].DadosTblExt[i][c] + '</option>';
+//            }
+//        }
+//       
+//        return Selects;
+//    }
+    
+    
     /**
      * Cria um formulário com os campos que podem ser enviado.
      * @param {array} Campo Representa o conjunto de atributos de uma campo para formulários.
@@ -1148,32 +1156,43 @@ class TabelaHTML extends JSController{
             Required = "", 
             Title = "", 
             Patterns = "",
-            Formenctype = "",
             Leitura = "",
-            Opcoes = "";
+            Opcoes = "",
+            Estilo = "",
+            Tamanho = "",
+            Max = "",
+            Min = "",
+            MaxLength = "",
+            IDX = "";
         
         if(Modo == "Atualizar" && !Campo[19].TExt){
             Valor = this.getObterValorCampos(Campo[0]);
         }
         //Chave extrangeira.
-        if(Campo[19].TExt){
-            Valor = Modo == "Atualizar" ? this.getObterValorCampos(Campo[0]) : ""; //IdxCampoVinculado -> Vem do banco de dados e é o vínculo entre a chave extrangeira
-            return await this.getCamposChaveExtrangeira(Campo, Valor);
-        }
+        //if(Campo[19].TExt){
+        //    Valor = Modo == "Atualizar" ? this.getObterValorCampos(Campo[0]) : ""; //IdxCampoVinculado -> Vem do banco de dados e é o vínculo entre a chave extrangeira
+        //    return await this.getCamposChaveExtrangeira(Campo, Valor);
+        //}
+        Label           = Campo[1];
+        Placeholder     = Campo[8].Placeholder;
+        FNome           = Campo[8].Name;
+        Tipo            = Campo[8].TypeConteudo[0];
+        Required        = Campo[8].Required == true ? "required='true'" : "";;
+        Title           = Campo[8].Titles;
+        Patterns        = Campo[8].Patterns;
+        Leitura         = Campo[8].readonly == true ? "readonly" : "";
+        Estilo          = Campo[8].style;
+        Tamanho         = Campo[8].size;
+        Max             = Campo[8].max;
+        Min             = Campo[8].min;
+        MaxLength       = Campo[8].maxlength;
+        IDX             = Campo[0];
         
         if(this.blitz == "bootstrap"){
             
            
             if(Campo[8].TypeComponente == "inputbox"){
-                Label           = Campo[1];
-                Placeholder     = Campo[8].Placeholder;
-                FNome           = Campo[8].Name;
-                Tipo            = Campo[8].TypeConteudo[0];
-                Required        = Campo[8].Required == true ? "required='true'" : "";;
-                Title           = Campo[8].Titles;
-                Patterns        = Campo[8].Patterns;
-                Leitura         = Campo[8].readonly == true ? "readonly" : "";
-                Formenctype     = Campo[8].formenctype == "" ? "" : "formenctype='"+ Campo[8].formenctype + "'";
+                
                 //TabelaBD - Campos valores padrões, devem ter uma definição para cada uma
                 if(Campo[2].Exist && Modo != "Atualizar"){
                     Valor = Campo[2].Valor;
@@ -1182,35 +1201,78 @@ class TabelaHTML extends JSController{
                     }
                 }
                 
-                Template = ' \n\
-                                <div class="input-group mb-3">' +
-                                    '<div class="input-group-prepend">' +
-                                        '<span class="input-group-text">'+ Label +':</span>' +
-                                    '</div>' +
-                                    '<input type="'+ Tipo +'" '+ Required +' title="'+ Title +'"  '+ Patterns +' class="form-control" '+ Leitura +' placeholder="'+ Placeholder +'" name="'+ FNome +'" value="'+ Valor +'">' +
-                                '</div>';
+                Template =`<div class="form-group" >`+
+                                `<label for="${Label}">${Label}</label>`+
+                                `<input `+
+                                        `title="${Title}" `+
+                                        `style="${Estilo}" `+
+                                        `size="${Tamanho}" `+
+                                        `max="${Max}" `+
+                                        `min="${Min}" `+
+                                        `maxlength="${MaxLength}" `+
+                                        `${Leitura} `+
+                                        `${Required} `+
+                                        `${Patterns} `+
+                                        `type="${Tipo}" `+
+                                        `name="${FNome}" `+
+                                        `class="form-control" `+
+                                        `id="INPUT_`+ this.ResultSet.Indexador +`_${Label}" `+
+                                        `value="${Valor}" `+
+                                        `placeholder="${Placeholder}">`+
+                            `</div>`;
+
                 return Template;
             }
             
             if(Campo[8].TypeComponente == "select"){
-                Label           = Campo[1];
-                FNome           = Campo[8].Name;
-                Tipo            = Campo[8].TypeConteudo;
-                Required        = Campo[8].Required == true ? "required='true'" : "";
                 
-                Tipo.forEach(function(v,i,p){
-                    var S = v == Valor ? "selected" : "";
-                    Opcoes += "<option "+ S +" >"+ v +"</option>";
-                })
+                Tipo = Campo[8].TypeConteudo;
                 
-                Template = ' \n\
-                                <div class="input-group mb-3">' +
-                                    '<div class="input-group-prepend">' +
-                                        '<span class="input-group-text">'+ Label +':</span>' +
-                                    '</div>' +
-                                    '<select  '+ Required +' class="form-control"  name="'+ FNome +'">'+ Opcoes +'</select>' +
-                                '</div>';
-                return Template;
+                if(!Campo[19].TExt){
+
+                    Tipo.forEach(function(v,i,p){
+                        var S = v == Valor ? "selected" : "";
+                        Opcoes += "<option "+ S +" >"+ v +"</option>";
+                    })
+                    
+                    Template = `<div class="form-group">`+
+                                      `<label for="${Label}">${Label}</label>`+
+                                      `<select class="form-control" `+
+                                            `title="${Title}" `+
+                                            `style="${Estilo}" `+
+                                            `id="SELECT_`+ this.ResultSet.Indexador +`_${Label}" `+
+                                            ` ${Required} ` +
+                                            `name="${FNome}" `+
+                                            `data-Campo="${Label}" `+
+                                            `data-IDX="${IDX}" `+
+                                            `aria-hidden="true"> `+
+                                            `${Opcoes}`+
+                                      `</select>`+
+                                `</div>`;
+
+                    return Template;
+                }else{
+                    
+                    Valor = this.getObterValorCampos(Campo[19].CamposTblExtrangeira[3]);
+                    Opcoes += `<option selected >${Valor}</option>`;
+                    Template = `<div class="form-group">`+
+                                      `<label for="${Label}">${Label}</label>`+
+                                      `<select class="form-control SELECTD2_`+ this.ResultSet.Indexador +`" `+
+                                            `title="${Title}" `+
+                                            `style="${Estilo}" `+
+                                            `id="SELECT_`+ this.ResultSet.Indexador +`_${Label}" `+
+                                            ` ${Required} ` +
+                                            `name="${FNome}" `+
+                                            `data-Campo="${Label}" `+
+                                            `data-IDX="${IDX}" `+
+                                            `aria-hidden="true"> `+
+                                            `${Opcoes}`+
+                                      `</select>`+
+                                `</div>`;
+            
+                    return Template;
+                }
+
             }           
             
             if(Campo[8].TypeComponente == "textarea"){
@@ -1222,7 +1284,6 @@ class TabelaHTML extends JSController{
                 Title           = Campo[8].Titles;
                 Patterns        = Campo[8].Patterns;
                 Leitura         = Campo[8].readonly == true ? "readonly" : "";
-                Formenctype     = Campo[8].formenctype == "" ? "" : "formenctype='"+ Campo[8].formenctype + "'";
                 
                 if(Campo[2].Exist && Modo != "Atualizar"){
                     Valor = Campo[2].Valor;
@@ -1245,7 +1306,73 @@ class TabelaHTML extends JSController{
         
         return Template;
     }
-       /**
+    
+    async obter_FOREING(data){
+        let Value_CAMPOS = this.ResultSet.Campos,
+            IDX_Atual = null;
+    
+        IDX_Atual = data.objecto[0].dataset.idx || null;
+        if(IDX_Atual == null) throw 7000;
+        for(let i of Value_CAMPOS){
+            if(i[0] == IDX_Atual){
+                return i[19];
+            }
+        }
+        
+    }
+    
+    async getValor_CHV_FOREIGN(options){
+        let TratarResposta = null
+           ,Config_FOREGIN = null
+           ,_TERM = null
+           , _FUNC = null;
+           try{
+               Config_FOREGIN = await this.obter_FOREING(options.data);
+           }catch(e){
+               this.TratarErros({Codigo: e});
+               return false;
+           }
+           
+        _TERM = options.data.search == null ? true : options.data.search;
+        _FUNC = Config_FOREGIN.Funcao;
+        if(_FUNC !== false){
+            this.FUNCOES_FOREIGN[_FUNC](options);
+        }
+        let Tabela_Original = null, ModoOperacao_Original = null;
+       /*
+        * Tabelas e modo de operação originais, pois usa-se o mesmo controle para mais de uma funcionalidade
+        */ 
+        Tabela_Original = this.DadosEnvio.sendTabelas;
+        ModoOperacao_Original = this.DadosEnvio.sendModoOperacao;
+        
+        this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
+        
+        
+        if(_TERM !== true){
+            this.DadosEnvio.sendFiltros[0]  = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM]];            
+        }else{
+            this.DadosEnvio.sendFiltros[0]  = false;
+        }
+
+        this.DadosEnvio.sendPagina = options.data.Prox_pagina;
+        /*
+         * Restabelecimento das operações originais;
+         */
+        this.DadosEnvio.sendModoOperacao = "ab58b01839a6d92154c615db22ea4b8f";
+        TratarResposta = await this.Atualizar(false);
+        
+        this.DadosEnvio.sendTabelas =  Tabela_Original;
+        this.DadosEnvio.sendModoOperacao = ModoOperacao_Original;
+        
+        if(TratarResposta.Error != false){
+            this.TratarErros(TratarResposta);
+            return false;
+        }else{
+            TratarResposta.Dados_Campo_Foreign = Config_FOREGIN; //Envia os dados para criar a tabela da chave estrangeria no componente;
+            return TratarResposta;
+        }
+    }
+    /**
      * 
      * @param {array} Erros
      * @returns {void}
@@ -1300,7 +1427,7 @@ class TabelaHTML extends JSController{
 
             await this.show();
 
-            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, null);
+            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, true);
             
             Toast.fire({
                 icon: 'success',
@@ -1308,7 +1435,7 @@ class TabelaHTML extends JSController{
               });
               
         }else{
-            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, null);
+            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, false);
         }
         
     }
@@ -1395,7 +1522,7 @@ class TabelaHTML extends JSController{
 
                         await this.show(); //Somente após a atualização de todas as linhas;
 
-                        await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, null);
+                        await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, true);
                         Toast.fire({
                             icon: 'success',
                             title: 'Os dados foram atualizados.'
@@ -1403,7 +1530,7 @@ class TabelaHTML extends JSController{
                     }
                 }
             }else{
-                await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, null);
+                await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, false);
             }
         }catch(e){
             
@@ -1582,14 +1709,14 @@ class TabelaHTML extends JSController{
                 return false;
             }else{
                 this.show();
-                await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this);
+                await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this, true);
                 Toast.fire({
                     icon: 'success',
                     title: 'Os dados foram excluídos.'
                   });
             }
         }else{
-            await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this);
+            await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this, false);
         }
         
     }

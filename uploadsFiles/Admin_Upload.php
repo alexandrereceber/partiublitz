@@ -9,10 +9,9 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/Blitz/uploadsFiles/css/uploadsCSS.css?01"> 
+        <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?01"> 
 
-        <script  src="/Blitz/uploadsFiles/js/tratarFiles.js?23" defer="dfer"></script> 
-        <script src="/blitz/Recursos/dist/js/admin/Admin_Upload.js?s=<?php echo time()?>"></script>
+
         
 
       

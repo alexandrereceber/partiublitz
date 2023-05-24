@@ -15,7 +15,7 @@ try{
      * Caso a sessão esteja ativada, será buscado o nome de usuário logado no sistema para gravações em 
      * pastas separadas.
      */
-    $User = "04953988612" ;
+    $User = $SystemUsuario;
     /**
      * Busca o caminho onde serão armazenado os arquivos.
      */
@@ -56,7 +56,7 @@ try{
                         
                         $Dados = [
                                     ["name"=>"destino", "value"=>"$CaminhoHTML"],
-                                    ["name"=>"idUser", "value"=>"1"],
+                                    ["name"=>"idUser", "value"=> $User],
                                     ["name"=>"Nome", "value"=>$NII],
                                 ];  
                     }else{
@@ -76,7 +76,7 @@ try{
                      * Se a sessão for anônima deverá ser devinido um usuario e privilégios de acesso na tabela através
                      * da variável privilegios em cada classe que representa a tabela.
                      */
-                    $InserirDados->setUsuario("Blitz");
+                    $InserirDados->setUsuario("blitz");
                     $Result = $InserirDados->InserirDadosTabela($Dados);
                     $Dados = NULL;
                     
@@ -105,9 +105,9 @@ try{
     
 } catch (Exception $ex) {
         $ResultRequest["Erros"]["Modo"]        = "S";
-        $ResultRequest["Erros"][0]             = true;
-        $ResultRequest["Erros"][1]             = $ex->getCode();
-        $ResultRequest["Erros"][2]             = $ex->getMessage();
+        $ResultRequest["Erros"]["Error"]             = true;
+        $ResultRequest["Erros"]["Codigo"]             = $ex->getCode();
+        $ResultRequest["Erros"]["Mensagem"]             = $ex->getMessage();
 
         echo json_encode($ResultRequest); 
         exit;

@@ -9521,7 +9521,7 @@
 				new _Api( settings ).columns().visible( true );
 			}
 	
-			// Blitz all `DT` namespaced events (these are internal events, the
+			// blitz all `DT` namespaced events (these are internal events, the
 			// lowercase, `dt` events are user subscribed and they are responsible
 			// for removing them
 			jqWrapper.off('.DT').find(':not(tbody *)').off('.DT');

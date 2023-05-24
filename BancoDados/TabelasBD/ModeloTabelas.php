@@ -825,7 +825,7 @@ abstract class ModeloTabelas extends BDSQL{
     private function getDadosTBLExtrangeira(&$ChvExtrangeira) {
         if($ChvExtrangeira["TExt"] === false) return $ChvExtrangeira;
         if($ChvExtrangeira["CamposTblExtrangeira"] == ""){
-            throw new Exception("É necessário definiar os campos da chave estrangeira",5000);
+            throw new Exception("É necessário definir os campos da chave estrangeira",5000);
         }else{
             //$ChvExtrangeira["DadosTblExt"] = $this->LoadCamposTableExtrangeira($ChvExtrangeira["Tabela"], $ChvExtrangeira["CamposTblExtrangeira"]);
             $ChvExtrangeira["Tabela"] = TabelaBancoDadosMD5::getTabelaForMD5($ChvExtrangeira["Tabela"]);

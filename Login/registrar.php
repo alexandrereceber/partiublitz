@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blitz | Registro</title>
+  <title>blitz | Registro</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,7 +14,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?2">
     <!-- Logo da blitz -->
-  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
+  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?2" type="image/jpg">
 </head>
 <body class="hold-transition register-page"  style="display: block; background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%">
     <div class="wrapper" style="position: absolute;width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8)">

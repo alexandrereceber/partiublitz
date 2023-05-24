@@ -39,7 +39,7 @@ echo "<script>var Chave='$sendChave'</script>"
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Adminstrador | Dashboard</title>
   <!-- Logo da blitz -->
-  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
+  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?3" type="image/jpg">
   
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
@@ -49,12 +49,17 @@ echo "<script>var Chave='$sendChave'</script>"
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   
+  <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=1">
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
   
-  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?39">
+  
+  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?45">
   
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  
+  <!<!-- UPLOADFILES -->
+  <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?01"> 
   
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
@@ -113,7 +118,7 @@ echo "<script>var Chave='$sendChave'</script>"
     <div class="Administrar">
         <a href="#" class="brand-link" id="__LOGO">
             <div id="Logo_BLIZ">
-                <img id="IMG_ADMIN" src="/blitz/Imagens/Logo/Logo_Blitz_2.png?2" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img id="IMG_ADMIN" src="/blitz/Imagens/Logo/Logo_blitz_2.png?3" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
             </div>
             <div id="Logo_DESC"><span class="brand-text font-weight-light">Administrador</span></div>    
         </a>
@@ -148,7 +153,9 @@ echo "<script>var Chave='$sendChave'</script>"
                       <li class="nav-item" >
                         <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_CADASTRO">
                           <i class="fas fa-user-plus"></i>
-                          <p style="margin-left: 5px">Cadastro</p>
+                          <p style="margin-left: 5px">
+                                Cadastro
+                          </p>
                         </a>
                       </li>
                       <li class="nav-item" >
@@ -158,35 +165,35 @@ echo "<script>var Chave='$sendChave'</script>"
                         </a>
                       </li>
                       <!-- SubMENU -->
-                        <li class="nav-item">
-                          <a href="#" class="nav-link">
-                            <i class="fa-regular fa-image"></i>
-                            <p style="margin-left: 5px">
-                              Imagens
-                              <i class="fas fa-angle-left right"></i>
-                            </p>
-                          </a>
-                          <ul class="nav nav-treeview" style="display: none;">
-                            <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_VIEW">
-                              <a href="#" class="nav-link">
-                                <i class="fa-solid fa-eye"></i>
-                                <p style="margin-left: 5px">Visualizar</p>
-                              </a>
-                            </li>
-                            <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD">
-                              <a href="#" class="nav-link">
-                                <i class="fa-solid fa-upload"></i>
-                                <p  style="margin-left: 5px">Upload</p>
-                              </a>
-                            </li>
-                          </ul>
-                        </li>
+                        
                     </ul>
                   </li>
-              
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fa-regular fa-image"></i>
+                    <p style="margin-left: 5px">
+                       Imagens 
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_VIEW">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-eye"></i>
+                        <p style="margin-left: 5px">Visualizar</p>
+                      </a>
+                    </li>
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-upload"></i>
+                        <p  style="margin-left: 5px">Upload</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_EVENTOS">
-                      <i class="far fa-calendar-plus" style="font-size: +16;"></i>
+                      <i class="nav-icon far fa-calendar-plus" ></i>
                       <p style="margin-left: 8px">
                           Eventos
                       </p>
@@ -314,6 +321,8 @@ echo "<script>var Chave='$sendChave'</script>"
 
 <script src="/blitz/Recursos/dist/js/adminlte.js?s=12"></script>
 
+
+        
 <script src="/blitz/Componentes/viewPopover.js?1"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -323,8 +332,13 @@ echo "<script>var Chave='$sendChave'</script>"
 
 <!-- Ações personalizadas para o administrador -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=<?php echo time()?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<script  src="/blitz/uploadsFiles/js/tratarFiles.js?24"></script> 
+        
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=18"></script>
+
+        
 <!-- The Modal -->
   <div class="modal fade" id="myJanelas">
     <div class="modal-dialog">

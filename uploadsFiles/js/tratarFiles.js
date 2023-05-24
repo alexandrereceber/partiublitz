@@ -1,13 +1,15 @@
 
 
 class ReceberEnviar extends JSController{
-    constructor(objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela, MultFILES = true){
+    constructor(Chave = null, objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela, MultFILES = true, imgName = true){
         super (CaminhoEnvio);
         this.TipoConteudo = false;
         this.ProcessarDados = false;
         this.MapaNome = new Map();
         this.MultFiles = MultFILES;
+        this.imagensName = imgName;
         this.TotalFiles = 0;
+        this.Autenticacao = Chave;
         
          let Dispositivo = window.matchMedia("(max-width: 700px)");
         this.__isPhone = Dispositivo.matches;
@@ -391,8 +393,11 @@ class ReceberEnviar extends JSController{
               }
               
             let NomesArray = [];
-              
+            //debugger;
             for(let i of objeto.MapaNome){
+                if(!objeto.imagensName){
+                    break;
+                }
                 if(i[1] !== ""){
                     NomesArray.unshift(i);
                 }else{
@@ -407,8 +412,20 @@ class ReceberEnviar extends JSController{
                 }
                 
             }
-              
-              objeto.Forms.append("NomesImagens", NomesArray);
+            if(objeto.Autenticacao === null){
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "A chave de autenticação não foi informada."
+                        //footer: '<a href="">Why do I have this issue?</a>'
+                      });
+                      
+                      return false;
+            }else{
+                objeto.Forms.append("enviarChaves", objeto.Autenticacao);
+            }
+            
+            objeto.Forms.append("NomesImagens", NomesArray);
             /**
              * Envia o tipo de operação que o controlador deverá buscar.
              */

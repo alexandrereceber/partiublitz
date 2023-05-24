@@ -182,9 +182,9 @@ class ConfigSystema {
 class AcessoBancoDados {
     private static $EngineSQL = "mysql"; //Banco de dados MYSQL|PostgreSQL|ORACLE
     private static $Host = "localhost";
-    private static $NomeBancoDados = "u363389093_BDBlitz";
-    private static $Usuario = "u363389093_partiublitz";
-    private static $Senha = "Al$#2810";
+    private static $NomeBancoDados = "blitz";
+    private static $Usuario = "root";
+    private static $Senha = "";
     private static $UTF = "utf8";
 
     
