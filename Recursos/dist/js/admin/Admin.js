@@ -28,6 +28,7 @@ let TABELA_EVENTOS = null;
 let TABELA_CADASTRO = null;
 let TABELA_PERFIL = null;
 
+let FORMULARIO_EVENTOS = null;
 
 $("#__INICIO, #__LOGO").click(function(){
     window.location.reload();
@@ -58,10 +59,66 @@ $("#__CONTROL_SIDERBAR").click(function(e){
 });
 
 $("#__SIDEBAR_NAV_ITEM_EVENTOS").click(function(e){
-    $("#__CONTENT_WRAPPER_HEADER").hide();
-    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-3 col-12" id="T_CONTEUDO"></div>');
+    $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar Eventos");
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+        `<div class="card card-primary card-tabs" style="width:100%">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Criar evento</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-gerenciar-tab" data-toggle="pill" href="#custom-tabs-one-gerenciar" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Gerenciar</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-gerenciar" role="tabpanel" aria-labelledby="custom-tabs-one-gerenciar-tab">
+
+                  </div>
+                </div>
+              </div>
+            </div>`);
     
-    TABELA_EVENTOS
+    if(FORMULARIO_EVENTOS === null){
+        FORMULARIO_EVENTOS = new FormHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }    
+
+    $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_FORMULARIO" style="height: 100%;overflow: auto"></div>');
+
+    FORMULARIO_EVENTOS.setTabela = "e1f550bec98a7e0f4a256579fbe333ee";
+    FORMULARIO_EVENTOS.setRecipiente = "T_CONTEUDO_FORMULARIO";
+    FORMULARIO_EVENTOS.setNome_BtSubmit = "Enviar";
+    FORMULARIO_EVENTOS.Modo_Operacao = "I";
+    let g = {
+                Groups: false,
+                N_Grupos: 2,
+                Columns:  1,
+                Titulos: ["Titulo 1 - Bloco1", "Titulo 2 - Bloco2","Titulo 3 - Bloco3"], //Cada índice representa o nome de cada grupo
+                Rodapes: ["Rodape 1 - Bloco1", "Rodape 2 - Bloco2","Rodape 3 - Bloco3"], //Cada índice representa o rodapé de cada grupo
+                Styles:  [
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                        ]
+            };
+    FORMULARIO_EVENTOS.setGrupos = g;
+    FORMULARIO_EVENTOS.show();
+
+//    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+//    if(TABELA_EVENTOS === null){
+//        TABELA_EVENTOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+//    }
+//    TABELA_EVENTOS.setTabela = "e1f550bec98a7e0f4a256579fbe333ee";
+//    TABELA_EVENTOS.setRecipiente = "T_CONTEUDO_TABELA";
+//    TABELA_EVENTOS.Name = "TABELA_EVENTOS";
+//
+//    TABELA_EVENTOS.show();
 });
 
 $("#__SIDEBAR_NAV_ITEM_CADASTRO").click(function(e){
@@ -367,7 +424,7 @@ $("#__SIDEBAR_NAV_ITEM_PERFIL").click(function(e){
 $("#__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD").click(function(e){
     $("#__CONTENT_WRAPPER_HEADER").hide();
     $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto;"></div>');
-    //$("#T_CONTEUDO").load( Padrao.getHostServer() + "/blitz/uploadsFiles/Admin_Upload.php?s=1");
+
     
     var InstanciarUpload = new ReceberEnviar(Chave,"#T_CONTEUDO",2, Padrao.getHostServer() +"/blitz/ControladorTabelas/", "4812b51890682745102213bd785eb5c0", true, false);
-})
+});

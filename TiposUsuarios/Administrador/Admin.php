@@ -216,7 +216,7 @@ echo "<script>var Chave='$sendChave'</script>"
       <div class="container-fluid" idCONTENT_WRAPPER_HEADER="__CONTENT_WRAPPER_HEADER_FLUID">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
+            <h1 class="m-0" id="__CONTENT_WRAPPER_HEADER_FLUID_TITULO">Dashboard</h1>
           </div><!-- /.col -->
           <!-- /.col -->
         </div><!-- /.row -->
@@ -335,8 +335,11 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?24"></script> 
-        
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=18"></script>
+
+<script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
+<script  src="/blitz/Componentes/Formularios.js?q=<?php echo time()?>" defer="defer"></script> 
+
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=24"></script>
 
         
 <!-- The Modal -->

@@ -17,6 +17,8 @@ class FormHTML extends JSController{
         this.DadosEnvio.sendPagina = 1;
         this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6";
         this.ChavesPrimarias = [];
+        this.visibleTitulo = false;
+        
         this.Groups = {
                         Groups: true,
                         N_Grupos: 1,
@@ -244,7 +246,9 @@ class FormHTML extends JSController{
                 this.FUNCOES_ONLOAD.__Exec("SELECT","BEFORE", this);
                 this.ResultSet = TratarResposta;
                 this.CriarFormulario();
-                this.getValor_Campos(this.Registro);
+                if(this.DadosEnvio.sendModoOperacao !== "5a59ffc82a16fc2b17daa935c1aed3e9"){
+                    this.getValor_Campos(this.Registro);
+                }
                 this.FUNCOES_ONLOAD.__Exec("SELECT","AFTER", this);                
             }catch(e){
                 Swal.fire({
@@ -360,6 +364,13 @@ class FormHTML extends JSController{
             , Size            = i[8].size
             , Style           = i[8].style
             , Opcoes          = null;
+            
+            if(i[3][0] !== false){
+                if(i[3][0] === true || i[3][1] === false){
+                    continue
+                }
+            }
+            
             
             /**
              * Camada usada, tanto para criação de componentes em grupos ou sem grupos
@@ -808,8 +819,10 @@ class FormHTML extends JSController{
         let BLOCKS_GROUPS = "";
         
         if( TOTAL_GROUPS === 0) throw "A informação sobre grupos é 0.";
+        let Bloks = "";
         
-        let Bloks = '<div class="card card-default">'+
+        if(this.visibleTitulo){
+            Bloks = '<div class="card card-default">'+
                         '<div class="card-header" style="{CARD_HEARD}">'+
                           '<h3 class="card-title">{TITULO_CARD}</h3>'+
                           '<div class="card-tools">'+
@@ -837,6 +850,29 @@ class FormHTML extends JSController{
                          "{RODAPE_CARD}"+
                         '</div>'+
                     '</div>';
+        }else{
+            Bloks = '<div class="card card-default">'+
+                       ' <!-- /.card-header -->'+
+                        '<div class="card-body" style="{CARD_BODY}">'+
+                         ' <div class="row">'+
+                            '<div class="col-md-6">'+
+                                "{BLOCKs_1}"+ //Block 1 do card_Default
+                            '</div>'+
+                            '<!-- /.col -->'+
+                            '<div class="col-md-6">'+
+                                "{BLOCKs_2}"+ //Block 2 do card_Default
+                           ' </div>'+
+                           ' <!-- /.col -->'+
+                          '</div>'+
+                          '<!-- /.row -->'+
+                        '</div>'+
+                        '<!-- /.card-body -->'+
+                        '<div class="card-footer"  style="{CARD_RODAPE}">'+
+                         "{RODAPE_CARD}"+
+                        '</div>'+
+                    '</div>';
+        }
+        
             
         let TITULO_CARD = "";
         let RODAPE_CARD = "";
@@ -874,7 +910,8 @@ class FormHTML extends JSController{
         let BaseFormulario = null;
         let o = this;
         if(this.Groups.Groups === false){
-            BaseFormulario =  '<section class="content">'+
+            if(this.visibleTitulo){
+                BaseFormulario =  '<section class="content">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
@@ -906,8 +943,40 @@ class FormHTML extends JSController{
                           '<!-- /.row -->'+
                         '</div><!-- /.container-fluid -->'+
                       '</section>';
+            }else{
+                BaseFormulario =  '<section class="content">'+
+                        '<div class="container-fluid">'+
+                          '<div class="row">'+
+                            '<div class="col-md-12">'+
+                              '<!-- jquery validation -->'+
+                              '<div class="card card-primary">'+
+                                '<!-- form start -->'+
+                                '<form id="FORM_'+ this.ResultSet.Indexador +'">'+
+                                  '<div class="card-body" style="'+ this.Configuracoes.card_body.style +'">'+
+                                  this.gerar_CAMPOSFormGrups()+
+                                  '</div>'+
+                                  '<!-- /.card-body -->'+
+                                  '<div class="card-footer">'+
+                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                  '</div>'+
+                                '</form>'+
+                              '</div>'+
+                              '<!-- /.card -->'+
+                              '</div>'+
+                            '<!--/.col (left) -->'+
+                            '<!-- right column -->'+
+                            '<div class="col-md-6">'+
+                            '</div>'+
+                            '<!--/.col (right) -->'+
+                         ' </div>'+
+                          '<!-- /.row -->'+
+                        '</div><!-- /.container-fluid -->'+
+                      '</section>';
+            }
+            
         }else{
-            BaseFormulario = '<section class="content">'+
+            if(this.visibleTitulo){
+                BaseFormulario = '<section class="content">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
@@ -939,6 +1008,37 @@ class FormHTML extends JSController{
                           '<!-- /.row -->'+
                         '</div><!-- /.container-fluid -->'+
                       '</section>';
+            }else{
+                BaseFormulario = '<section class="content">'+
+                        '<div class="container-fluid">'+
+                          '<div class="row">'+
+                            '<div class="col-md-12">'+
+                              '<!-- jquery validation -->'+
+                              '<div class="card card-primary">'+
+                                    '<!-- form start -->'+
+                                    '<form id="FORM_'+ this.ResultSet.Indexador +'">'+
+                                        '<div class="card-body" style="'+ this.Configuracoes.card_body.style +'">'+
+                                                      this.CriarBlocos_Groups() +
+                                        '</div>'+
+                                  '<!-- /.card-body -->'+
+                                  '<div class="card-footer">'+
+                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                  '</div>'+
+                                '</form>'+
+                              '</div>'+
+                              '<!-- /.card -->'+
+                              '</div>'+
+                            '<!--/.col (left) -->'+
+                            '<!-- right column -->'+
+                            '<div class="col-md-6">'+
+                            '</div>'+
+                            '<!--/.col (right) -->'+
+                         ' </div>'+
+                          '<!-- /.row -->'+
+                        '</div><!-- /.container-fluid -->'+
+                      '</section>';
+            }
+            
               
               
         }

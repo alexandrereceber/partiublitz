@@ -396,7 +396,7 @@ class ReceberEnviar extends JSController{
             //debugger;
             for(let i of objeto.MapaNome){
                 if(!objeto.imagensName){
-                    break;
+                    continue;
                 }
                 if(i[1] !== ""){
                     NomesArray.unshift(i);

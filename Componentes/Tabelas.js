@@ -169,6 +169,8 @@ class TabelaHTML extends JSController{
          * Executa de forma async funções após a exibição do componente tabela ou das caixas de diálogo como inserir, atualizar, excluir
          * Select / Insert / Update
          * Tem um tratador de erro para esses funções, dentro de cada operação
+         * 
+         * Obs.: Não precisam de retorno.
          */
         this.FUNCOES_ONLOAD = function(){
             let FUNCs = new Map([
@@ -186,7 +188,7 @@ class TabelaHTML extends JSController{
                         }
                     }else{
                         for(let i of FUNCs){
-                            await i[1](OBJECT_INSTANCIA_FORMULARIO);
+                           await i[1](OBJECT_INSTANCIA_FORMULARIO);
                         }
                     }
                     

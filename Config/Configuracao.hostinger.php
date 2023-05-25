@@ -182,9 +182,9 @@ class ConfigSystema {
 class AcessoBancoDados {
     private static $EngineSQL = "mysql"; //Banco de dados MYSQL|PostgreSQL|ORACLE
     private static $Host = "localhost";
-    private static $NomeBancoDados = "blitz";
-    private static $Usuario = "root";
-    private static $Senha = "";
+    private static $NomeBancoDados = "u363389093_BDBlitz";
+    private static $Usuario = "u363389093_partiublitz";
+    private static $Senha = "Al$#2810";
     private static $UTF = "utf8";
 
     
@@ -223,6 +223,7 @@ class TabelaBancoDadosMD5{
                                 ["83849cf6295498c96deb555e00f4c756",["adm_cadastro", true]],
                                 ["7095e737a19ed11f0df0f07b7ec84131",["adm_perfil", true]],
                                 ["4812b51890682745102213bd785eb5c0",["adm_blitzimagens", true]],
+                                ["e1f550bec98a7e0f4a256579fbe333ee",["adm_eventos", true]]
                             ];
     
     /**
