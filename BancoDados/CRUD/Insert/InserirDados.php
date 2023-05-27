@@ -31,7 +31,8 @@ try{
      * da variável privilegios em cada classe que representa a tabela.
      */
     $InserirDados->setUsuario("blitz");
-    
+    $InserirDados->setUsuarioLogado($SystemUsuario);
+    $InserirDados->setIDUsuario($IDUserName);
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

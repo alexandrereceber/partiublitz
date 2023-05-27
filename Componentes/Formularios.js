@@ -40,6 +40,15 @@ class FormHTML extends JSController{
         
         /*Configuração das partes do formulário*/
         this.Configuracoes = {
+                                "div_content_section":{
+                                    "style":""
+                                },
+                                "card_header":{
+                                    "style":""
+                                },
+                                "card_primary":{
+                                    "style":""
+                                },
                                 "card_body":{
                                                 "style":""
                                             },
@@ -60,6 +69,9 @@ class FormHTML extends JSController{
                 alert(9);
             }
         };
+        
+        
+        
         /**
          * Funções executadas aopós carregar os dados;
          * Select / Insert / Update
@@ -70,18 +82,59 @@ class FormHTML extends JSController{
                 //Inserir as funcoes;
             ]);
             return {
-                __Exec: function(Params, MOMENT, OBJECT_INSTANCIA_FORMULARIO){  //Recebe um objeto {"Evento":..., ?}
-                    for(let i of FUNCs){
-                        i[1](Params, MOMENT, OBJECT_INSTANCIA_FORMULARIO);
-                    }
                     
+                __Exec: async function(ACTION, MOMENT, OBJECT_INSTANCIA_FORMULARIO, OTHER = null){  //Recebe um objeto {"Evento":..., ?}
+                    for(let i of FUNCs){
+                        let s = await i[1](ACTION, MOMENT, OBJECT_INSTANCIA_FORMULARIO, OTHER);
+                        if(!s){
+                            return false;
+                        }
+                    }
+                    return true;
                 },
                 add: function(n,f){
                     FUNCs.set(n,f);
+                },
+                /**
+                 * Função executadas todas as vezes que há inserção ou atualização dos dados.
+                 * Será utilizada para executar funções essenciais ou vitais antes de qualquer outra função.
+                 * @returns {undefined}
+                 */
+                Padrao:function(){
+                    
+                    let f = function (ACTION, MOMENT, OBJECT_INSTANCIA_FORMULARIO, OTHER){
+                        
+                        switch (ACTION) {
+                            case "INSERT":
+                                if(MOMENT === "BEFORE"){
+                                    
+                                }
+                                break;
+
+                            case "UPDATE":
+                                if(MOMENT === "BEFORE"){
+
+                                }
+                                break;
+
+                            default:
+                                return true;
+                                break;
+                        }
+                        
+                        return true;
+                    };
+                    
+                    FUNCs.set("PADRAO",f);
                 }
             };
+            
+            
         }();
+        
+        this.FUNCOES_ONLOAD.Padrao();
     }
+
     
     addFunctons_Eventos(Nome,F){
         if(Nome !== null && Nome !== "" && Nome !== undefined && F !== undefined){
@@ -96,7 +149,13 @@ class FormHTML extends JSController{
         }
         
     }
-  
+    /**
+     * Exibi ou não título nas caixa de formulário
+     * @type type
+     */
+    set visible_Title(t){
+        this.visibleTitulo = t;
+    }
     /**
      * {
             N_Grupos: 1,
@@ -162,6 +221,9 @@ class FormHTML extends JSController{
         }else if(n == "E"){
             this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6";
             this.Nome_Submit = "Atualizar";
+        }else if(n == "V"){
+            this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1aeVISUALIZAR";
+            this.Nome_Submit = "view";
         }else{
             Swal.fire({
                     icon: 'error',
@@ -231,35 +293,42 @@ class FormHTML extends JSController{
     
 //####################MÓDULO Select###########################    
     async show(){
-        let TratarResposta = null;
+        try{
+            let TratarResposta = null;
         
-        let Modo_Original = this.DadosEnvio.sendModoOperacao;
-        this.DadosEnvio.sendModoOperacao = "ab58b01839a6d92154c615db22ea4b8f";
-        TratarResposta = await this.Atualizar(true);
-        this.DadosEnvio.sendModoOperacao = Modo_Original;
-        
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta);
-            return false;
-        }else{
-            try{
-                this.FUNCOES_ONLOAD.__Exec("SELECT","BEFORE", this);
-                this.ResultSet = TratarResposta;
-                this.CriarFormulario();
-                if(this.DadosEnvio.sendModoOperacao !== "5a59ffc82a16fc2b17daa935c1aed3e9"){
-                    this.getValor_Campos(this.Registro);
-                }
-                this.FUNCOES_ONLOAD.__Exec("SELECT","AFTER", this);                
-            }catch(e){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: e,
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                  });
-            }
+            let Modo_Original = this.DadosEnvio.sendModoOperacao;
+            this.DadosEnvio.sendModoOperacao = "ab58b01839a6d92154c615db22ea4b8f";
+            TratarResposta = await this.Atualizar(true);
+            this.DadosEnvio.sendModoOperacao = Modo_Original;
 
+            if(TratarResposta.Error != false){
+                this.TratarErros(TratarResposta);
+                return false;
+            }else{
+
+
+            }
+            
+            this.FUNCOES_ONLOAD.__Exec("SELECT","BEFORE", this);
+            this.ResultSet = TratarResposta;
+            this.CriarFormulario();
+            /**
+             * Dentro dessa função já é verificado se é insert ou update
+             */
+            this.getValor_Campos(this.Registro);
+
+            this.FUNCOES_ONLOAD.__Exec("SELECT","AFTER", this); 
+            
+        }catch(e){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: e,
+                //footer: '<a href="">Why do I have this issue?</a>'
+              });
         }
+            
+        
     }
     get_BaseGoup_input(){
         let BaseGroup_input = '<div class="form-group" style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo}">'+
@@ -540,69 +609,79 @@ class FormHTML extends JSController{
     }
 //####################MÓDULO ATUALIZAR###########################    
     async Enviar_Update(F){
+        try{
+            var TratarResposta = "";
         
-        var TratarResposta = "";
-        
-        event.preventDefault();
-        var Campos = [];
-        Campos = $(F.currentTarget).serializeArray();
-        this.DadosEnvio.sendCamposAndValores = Campos;
-        this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6"
-        ;
-        this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias);
-        
-        TratarResposta = await this.Atualizar();
-        
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta);
-            return false;
-        }else{
-            try{
-                this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this);
-                return true;
-                this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this); 
-            }catch(e){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: e,
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                  });
+            event.preventDefault();
+            var Campos = [];
+            Campos = $(F.currentTarget).serializeArray();
+            this.DadosEnvio.sendCamposAndValores = Campos;
+            this.DadosEnvio.sendModoOperacao = "1b24931707c03902dad1ae4b42266fd6";
+            this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias);
+            
+            let s = await this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this, Campos);
+            if(s){
+                TratarResposta = await this.Atualizar();
+
+                if(TratarResposta.Error != false){
+                    this.TratarErros(TratarResposta);
+                    return false;
+                }else{
+
+                    return true;
+                    this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, null);
+
+                }
             }
             
+        }catch(e){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: e,
+                //footer: '<a href="">Why do I have this issue?</a>'
+              });
         }
+            
+        
     }
      
     async Enviar_Inserir(F){
+        try{
+            var TratarResposta = "";
         
-        var TratarResposta = "";
-        
-        event.preventDefault();
-        var Campos = [];
-        Campos = $(F.currentTarget).serializeArray();
-        this.DadosEnvio.sendCamposAndValores = Campos;
-        this.DadosEnvio.sendModoOperacao = "5a59ffc82a16fc2b17daa935c1aed3e9";
-        
-        TratarResposta = await this.Atualizar(false);
-        
-        if(TratarResposta.Error != false){
-            this.TratarErros(TratarResposta);
-            return false;
-        }else{
-            try{
-                this.FUNCOES_ONLOAD.__Exec("INSERT","BEFORE", this);
-                return true;
-                this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this);               
-            }catch(e){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: e,
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                  });
+            event.preventDefault();
+            var Campos = [];
+            Campos = $(F.currentTarget).serializeArray();
+            this.DadosEnvio.sendCamposAndValores = Campos;
+            this.DadosEnvio.sendModoOperacao = "5a59ffc82a16fc2b17daa935c1aed3e9";
+            
+            let s = await this.FUNCOES_ONLOAD.__Exec("INSERT","BEFORE", this, Campos);
+            if(s){
+                TratarResposta = await this.Atualizar(false);
+
+                if(TratarResposta.Error != false){
+                    this.TratarErros(TratarResposta);
+                    return false;
+                }else{
+                    this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, null);
+                    return true;
+                }    
+            }else{
+                
             }
             
+
+        }catch(e){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: e,
+                //footer: '<a href="">Why do I have this issue?</a>'
+              });
         }
+
+        
     }    
     async obter_FOREING(data){
         let Value_CAMPOS = this.ResultSet.Campos,
@@ -665,8 +744,10 @@ class FormHTML extends JSController{
             let CAMPOS = this.ResultSet.Campos,
                 RESULT = this.ResultSet.ResultDados,
                 Total  = RESULT.length;
+            if(this.DadosEnvio.sendModoOperacao !== "1b24931707c03902dad1aeVISUALIZAR"){
                 if(RESULT.length == 0 || this.Registro > RESULT.length) {throw "Não há registro para edição ou índice inválido.";}
-            if(this.DadosEnvio.sendModoOperacao === "5a59ffc82a16fc2b17daa935c1aed3e9"){
+            }
+            if(this.DadosEnvio.sendModoOperacao === "5a59ffc82a16fc2b17daa935c1aed3e9" || this.DadosEnvio.sendModoOperacao === "1b24931707c03902dad1aeVISUALIZAR"){
                 for(let i in CAMPOS){
                     if(CAMPOS[i][8].Exibir){
                         if(CAMPOS[i][8].TypeComponente === "inputbox"){
@@ -911,13 +992,14 @@ class FormHTML extends JSController{
         let o = this;
         if(this.Groups.Groups === false){
             if(this.visibleTitulo){
-                BaseFormulario =  '<section class="content">'+
+                BaseFormulario =  
+                    '<section class="content" style="'+ this.Configuracoes.div_content_section.style +'">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
                               '<!-- jquery validation -->'+
-                              '<div class="card card-primary">'+
-                                '<div class="card-header">'+
+                              '<div class="card card-primary" style="'+ this.Configuracoes.card_primary.style +'">'+
+                                '<div class="card-header"  style="'+ this.Configuracoes.card_header.style +'">'+
                                   '<h3 class="card-title">'+ this.ResultSet.InfoPaginacao.TituloTabela +'</h3>'+
                                 '</div>'+
                                 '<!-- /.card-header -->'+
@@ -928,7 +1010,7 @@ class FormHTML extends JSController{
                                   '</div>'+
                                   '<!-- /.card-body -->'+
                                   '<div class="card-footer">'+
-                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                    (this.Nome_Submit !== "view" ? '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>' : "")+
                                   '</div>'+
                                 '</form>'+
                               '</div>'+
@@ -944,12 +1026,13 @@ class FormHTML extends JSController{
                         '</div><!-- /.container-fluid -->'+
                       '</section>';
             }else{
-                BaseFormulario =  '<section class="content">'+
+                BaseFormulario =  
+                    '<section class="content" style="'+ this.Configuracoes.div_content_section.style +'">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
                               '<!-- jquery validation -->'+
-                              '<div class="card card-primary">'+
+                              '<div class="card card-primary" style="'+ this.Configuracoes.card_primary.style +'">'+
                                 '<!-- form start -->'+
                                 '<form id="FORM_'+ this.ResultSet.Indexador +'">'+
                                   '<div class="card-body" style="'+ this.Configuracoes.card_body.style +'">'+
@@ -957,7 +1040,7 @@ class FormHTML extends JSController{
                                   '</div>'+
                                   '<!-- /.card-body -->'+
                                   '<div class="card-footer">'+
-                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                    (this.Nome_Submit !== "view" ? '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>' : "")+
                                   '</div>'+
                                 '</form>'+
                               '</div>'+
@@ -976,13 +1059,14 @@ class FormHTML extends JSController{
             
         }else{
             if(this.visibleTitulo){
-                BaseFormulario = '<section class="content">'+
+                BaseFormulario = 
+                    '<section class="content" style="'+ this.Configuracoes.div_content_section.style +'">'+
                         '<div class="container-fluid">'+
                           '<div class="row">'+
                             '<div class="col-md-12">'+
                               '<!-- jquery validation -->'+
-                              '<div class="card card-primary">'+
-                                '<div class="card-header">'+
+                              '<div class="card card-primary" style="'+ this.Configuracoes.card_primary.style +'">'+
+                                '<div class="card-header"  style="'+ this.Configuracoes.card_header.style +'">'+
                                   '<h3 class="card-title">'+ this.ResultSet.InfoPaginacao.TituloTabela +'</h3>'+
                                 '</div>'+
                                     '<!-- /.card-header -->'+
@@ -993,7 +1077,7 @@ class FormHTML extends JSController{
                                         '</div>'+
                                   '<!-- /.card-body -->'+
                                   '<div class="card-footer">'+
-                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                    (this.Nome_Submit !== "view" ? '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>' : "")+
                                   '</div>'+
                                 '</form>'+
                               '</div>'+
@@ -1022,7 +1106,7 @@ class FormHTML extends JSController{
                                         '</div>'+
                                   '<!-- /.card-body -->'+
                                   '<div class="card-footer">'+
-                                    '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>'+
+                                    (this.Nome_Submit !== "view" ? '<button type="submit" class="btn btn-primary">'+ this.Nome_Submit + '</button>' : "")+
                                   '</div>'+
                                 '</form>'+
                               '</div>'+
@@ -1113,6 +1197,7 @@ class FormHTML extends JSController{
                         // Busca os dados no banco de dados e utiliza das configurações da tabela .php para obter os dados de foreign
                             async function buscarDados() {
                                 let rst = await o.getValor_CHV_FOREIGN(params);
+                                params.data.OBJECTO_FORMULARIO = o;
                                 if(rst === false){
                                     Reject();  // when error
                                 }else{
@@ -1150,6 +1235,16 @@ class FormHTML extends JSController{
                         }else{
                             Mais_Pagina = true;
                         }
+                        /**
+                         * Como os parâmetros são passados por referêcia e são para tratamentos não há a necessidade de retorno
+                         OBS.: MUITO IMPORTANTE:
+                            ANTES DE USAR A FUNÇÃO ATUALIZAR() DO JSCONTROLE, O COMPONENTE TROCA AS TABELAS DE FORMA MOMENTÂNEA
+                            PARA REALIZAR ESSA TAREFA E LOGO DEPOIS VOLTA PARA A TABELA ANTERIOR.
+                            POR ISSO, DEVE-SE ATENTAR PARA O FATO DE QUE O COMANDO LOGO ABAIXO CHAMA A FUNÇÃO DE TRATAMENTO
+                            COM OS DADOS DA TABELA ORIGINAL NÃO A DOS DADOS DA TABELA ESTRANGEIRA.
+                         **/
+                        params.OBJECTO_FORMULARIO.FUNCOES_ONLOAD.__Exec("SELECTD2","AFTER", data, params.OBJECTO_FORMULARIO);
+                        
                         for(let i of data.ResultDados){
                             let result_data = Object.create(result_objecto);
                             result_data.id = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[0]];

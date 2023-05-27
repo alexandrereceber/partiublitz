@@ -11,6 +11,7 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/uploadsFiles/phpUpfiles/
     exit;
 }
 try{
+    $Campos = filter_input(INPUT_POST, "CAMPOS");
     /**
      * Caso a sessão esteja ativada, será buscado o nome de usuário logado no sistema para gravações em 
      * pastas separadas.
@@ -36,29 +37,46 @@ try{
                 $Saida = $upFiles->moverImagens(); //Move os arquivos da pasta temporária para a pasta permanente.
                 if($Saida[0]){
                     $CaminhoHTML = $Saida[2];
+                    /**
+                     * Cadas domínio terá que ser avaliado o tamanho
+                     */
+                    $CaminhoHTML = substr($CaminhoHTML, 21, strlen($CaminhoHTML));
+                    
                     if(!$upFiles->get_Storeg_tabela()) continue;
                     /**
                      * Verifica se o array $Saida já vem com dados.
                      */
+                    $NII = null;
                     if(!is_array($Dados)){
                         $nomeImagem = $_POST["NomesImagens"];
-                        $NII = null;
-                        if($nomeImagem !== null){
+                        if($nomeImagem !== null && $nomeImagem !== ""){
                             $NI = preg_split("/,/", $nomeImagem);
-                        }
-                        $NII = null;
-                        foreach ($NI as $IKey => $IValue) {
-                            if($IValue === $value["name"]){
-                                $NII = $NI[$IKey + 1];
-                                break;
+                            
+                            foreach ($NI as $IKey => $IValue) {
+                                if($IValue === $value["name"]){
+                                    $NII = $NI[$IKey + 1];
+                                    break;
+                                }
                             }
+                        }else{
+                            $NII = substr($Saida[1], 0, strlen($Saida[1]) - 4);                            
                         }
                         
                         $Dados = [
                                     ["name"=>"destino", "value"=>"$CaminhoHTML"],
                                     ["name"=>"idUser", "value"=> $User],
                                     ["name"=>"Nome", "value"=>$NII],
-                                ];  
+                                ];
+                        
+                        if($Campos){
+                            $Trans_Campos = json_decode($Campos);
+                            foreach($Trans_Campos as $Chave => $Valor){
+                                $CMP["name"] = $Valor->name;
+                                $CMP["value"] = $Valor->value;
+                                array_push($Dados,$CMP);
+                            }
+                        }
+                        
                     }else{
                         /**
                          * Existindo um array, que provavelmente será de outros campos, será acrescentado um outro array.
@@ -104,10 +122,10 @@ try{
 
     
 } catch (Exception $ex) {
-        $ResultRequest["Erros"]["Modo"]        = "S";
-        $ResultRequest["Erros"]["Error"]             = true;
-        $ResultRequest["Erros"]["Codigo"]             = $ex->getCode();
-        $ResultRequest["Erros"]["Mensagem"]             = $ex->getMessage();
+        $ResultRequest["Modo"]        = "S";
+        $ResultRequest["Error"]             = true;
+        $ResultRequest["Codigo"]             = $ex->getCode();
+        $ResultRequest["Mensagem"]             = $ex->getMessage();
 
         echo json_encode($ResultRequest); 
         exit;

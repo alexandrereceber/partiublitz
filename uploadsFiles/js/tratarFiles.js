@@ -1,7 +1,7 @@
 
 
 class ReceberEnviar extends JSController{
-    constructor(Chave = null, objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela, MultFILES = true, imgName = true){
+    constructor(Chave = null, objetoRecipiente, ModoCaixaUpload, CaminhoEnvio, Tabela, MultFILES = true, imgName = true, Tipo = null, OBJETO = null){
         super (CaminhoEnvio);
         this.TipoConteudo = false;
         this.ProcessarDados = false;
@@ -10,6 +10,8 @@ class ReceberEnviar extends JSController{
         this.imagensName = imgName;
         this.TotalFiles = 0;
         this.Autenticacao = Chave;
+        this.TipoVinculo = Tipo;
+        this.NomeObjetoVinculado = OBJETO;
         
          let Dispositivo = window.matchMedia("(max-width: 700px)");
         this.__isPhone = Dispositivo.matches;
@@ -22,7 +24,7 @@ class ReceberEnviar extends JSController{
                 icon: 'success',
                 title: "Objeto recipiente necessário"
               }); 
-            return false
+            return false;
         };
         if(!Modo) {
             Toast.fire({
@@ -244,9 +246,7 @@ class ReceberEnviar extends JSController{
         }
 
     }
-    
-    
-    
+   
     async carregarImagens(file, idx_prevView, objeto){
         new Promise(function(resolve, reject){
                 objeto.MapaNome.clear();
@@ -272,8 +272,14 @@ class ReceberEnviar extends JSController{
                     
                     imagem.onclick = function(){
                         objeto.exibirImagem_tamanho_real(idx_prevView, Caminho);
-                    }                    
-                    $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div><div style='display: inline-block; width:100%' id='Nome_Imagem'><input  id='ID_NOMEIMAGEM_"+ idx_prevView + "' style='display: inline-block; width:100%' type='text' data-nomeimagem='"+ file.name +"' Placeholder='Nome'></div></div>");
+                    }
+                    if(objeto.imagensName){
+                        $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div><div style='display: inline-block; width:100%' id='Nome_Imagem'><input  id='ID_NOMEIMAGEM_"+ idx_prevView + "' style='display: inline-block; width:100%' type='text' data-nomeimagem='"+ file.name +"' Placeholder='Nome'></div></div>");
+
+                    }else{
+                        $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div></div>");
+                        
+                    }
                     $("#IMG_CARREGADA_" + idx_prevView).append(imagem);
                     $("#ID_NOMEIMAGEM_" + idx_prevView).keyup(function(e){
                         let Nome_Img = e.currentTarget.dataset.nomeimagem;
@@ -310,7 +316,7 @@ class ReceberEnviar extends JSController{
             })        
     }
     
-     TratarErros(Erros){
+    TratarErros(Erros){
         switch(Erros.Codigo){
             case 12006:
                  Swal.fire({
@@ -335,7 +341,7 @@ class ReceberEnviar extends JSController{
                  Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: "Usuário existente no sistema.",
+                    text: "Nome ou arquivo de imagem repetido.",
                     //footer: '<a href="">Why do I have this issue?</a>'
                   });
                 //window.location = Erros.Dominio;
@@ -354,10 +360,7 @@ class ReceberEnviar extends JSController{
     async verificarArquivos(fl){
         this.conteudoFl = [];
         var objeto = this, Count = 0;
-  
-        if(this.Modo == 2 || this.Modo == 4){
-            
-        }
+
         $(".preview_fts").html("");
         $("#prev_status").html("");
         $("#prev_Botoes").html("<center><div><button id='EnviarFls' class='btn btn-primary'>Uploads</button></div><div id='Progress_Uploads_files'></div></center>");
@@ -374,6 +377,22 @@ class ReceberEnviar extends JSController{
                       });
                       
                       return false;
+            }
+            
+            if(objeto.TipoVinculo === "FORM"){
+                let Formulario = $("#FORM_" + objeto.NomeObjetoVinculado.ResultSet.Indexador).serializeArray();
+                if(!Array.isArray(Formulario) || Formulario.length === 0){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Favor selecionar um evento."
+                        //footer: '<a href="">Why do I have this issue?</a>'
+                      });
+                    return false;
+                }
+                objeto.Forms.append("CAMPOS", JSON.stringify(Formulario));
+            }else{
+                objeto.Forms.append("CAMPOS", JSON.stringify(objeto.TipoVinculo));
             }
             
             let progress = '<div class="progress " style="margin-top: 5px;">'+
@@ -579,13 +598,20 @@ class ReceberEnviar extends JSController{
             });
     }
     
-    Modo3And4(Modo){
-        let Obj = this;
+    modo3And4(Modelo){
+        let Obj = this
+
         
-        let CaixaDIV =  '<div class="input-group mb-3">'+
+        let CaixaDIV =  '<div id="CONTENT_FORM_IMAGENS">d</div>'+
+                            '<div id="UPLOADS_CAIXA">'+
+                                '<div id="CUp" class="CaixaUploads" ondragover="return false" >'+
+                                    '<div class="CaixaUploadInterna" >\n\
+                                        <i class="fa fa-upload icoUp" ></i>\n\
+                                    </div>'+
+                                '</div>'+
+                                '<div class="input-group mb-3">'+
                             '<div class="input-group-prepend">'+
                               '<div class="input-group-prepend">'+
-                                '<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Arquivos</button>'+
                                 '<div class="dropdown-menu" id="ObterNamFiles">'+
                                   '<div role="separator" class="dropdown-divider"></div>'+
                                 '</div>'+
@@ -594,24 +620,43 @@ class ReceberEnviar extends JSController{
                             '<div class="custom-file">'+
                                 '<input type="file" class="custom-file-input" id="SelecFiles" multiple="" >'+
                                 '<label class="custom-file-label" for="inputGroupFile01">Selecionar arquivos</label>'+
-                            '</div>'
-                         +(this.Modo === 4 ? '<div class="preview_fts input-group" ></div>' : '' )+
-                                '<div class="input-group" id="prev_Botoes" style="display: table-cell;text-align: center;top:3px;margin-top: 10px"></div>'+
-                                '<div class="input-group" id="prev_status"" ></div>'+'</div>';
-        $(this.objRecipient).html(CaixaDIV); 
-        
-        $("#SelecFiles").on("change", function(e){
-            var Arquivos = e.target.files;
-            $("#ObterNamFiles").html("");
-            for(var i=0; i < Arquivos.length; i++){
-                $("#ObterNamFiles").append('<a class="dropdown-item" href="#">'+Arquivos[i].name+'</a>');
-            }
-            Obj.verificarArquivos(e.target);            
-                                              
+                            '</div>'+
+                                '</div>' +(this.Modo == 4 ? '<div class="preview_fts"></div>' : '' )+
+                                '<div id="prev_Botoes" style="width: 100%;top: 5px;position: relative;"></div>'+
+                                '<div id="prev_status"></div>'+
+                            '</div>';
+                    
+            $(this.objRecipient).html(CaixaDIV);
+                $("#SelecFiles").on("change", function(e){
+                    
+                    var Arquivos = e.target.files;
+                    $("#ObterNamFiles").html("");
+                    for(var i=0; i < Arquivos.length; i++){
+                        $("#ObterNamFiles").append('<a class="dropdown-item" href="#">'+Arquivos[i].name+'</a>');
+                    }
+                    Obj.verificarArquivos(e.target);            
 
-        })
-        
+
+                });
+                
+            $("#CUp").on("drop", function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                Obj.verificarArquivos(e.originalEvent.dataTransfer);
+                
+            }).on("dragover", 
+            
+                function(e){
+                    $(e.currentTarget).css("background","#f5efef40").css("border","solid 4px #f5efef40").css("border-style","dashed")
+                }).on("dragleave",
+                function(e){
+                    $(e.currentTarget).css("background","#f5efef40").css("border","solid 0px #f5efef40").css("border-style","dashed")
+            }).on("dragend", 
+            function(e){
+                debugger;
+            });
     }
+
     
     CriarCaixaEnvio(){
         /**
@@ -620,7 +665,7 @@ class ReceberEnviar extends JSController{
         if(this.Modo == 1 || this.Modo == 2){
             this.modo1And2(this.blitz);
         }else if(this.Modo == 3 || this.Modo == 4){
-            this.Modo3And4(this.blitz);
+            this.modo3And4(this.blitz);
         }
 
     }

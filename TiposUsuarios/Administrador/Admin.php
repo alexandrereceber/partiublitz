@@ -170,9 +170,9 @@ echo "<script>var Chave='$sendChave'</script>"
                   </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fa-regular fa-image"></i>
+                    <i class="fa-solid fa-party-horn"></i>
                     <p style="margin-left: 5px">
-                       Imagens 
+                       Festas 
                       <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
@@ -192,13 +192,29 @@ echo "<script>var Chave='$sendChave'</script>"
                   </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_EVENTOS">
-                      <i class="nav-icon far fa-calendar-plus" ></i>
-                      <p style="margin-left: 8px">
-                          Eventos
-                      </p>
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon far fa-calendar-plus"></i>
+                    <p style="margin-left: 5px">
+                       Eventos 
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
                   </a>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-eye"></i>
+                        <p style="margin-left: 5px">Gerenciar</p>
+                      </a>
+                    </li>
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD_EVENTOS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-upload"></i>
+                        <p  style="margin-left: 5px">Imagens</p>
+                      </a>
+                    </li>
+                  </ul>
                 </li>
+
 
             </ul>
           </nav>
@@ -334,12 +350,12 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script  src="/blitz/uploadsFiles/js/tratarFiles.js?24"></script> 
+<script  src="/blitz/uploadsFiles/js/tratarFiles.js?40"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=<?php echo time()?>" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=26" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=24"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=69"></script>
 
         
 <!-- The Modal -->

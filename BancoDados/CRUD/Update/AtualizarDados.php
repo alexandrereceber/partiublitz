@@ -25,6 +25,8 @@ try{
     $AtualizarDados = new $Tabela();
     $AtualizarDados->StartClock();
     $AtualizarDados->setUsuario("blitz");
+    $AtualizarDados->setUsuarioLogado($SystemUsuario);
+    $AtualizarDados->setIDUsuario($IDUserName);
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

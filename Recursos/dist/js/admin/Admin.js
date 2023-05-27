@@ -25,10 +25,14 @@ const swalWithBootstrapButtons = Swal.mixin({
  */
 
 let TABELA_EVENTOS = null;
+let TABELA_EVENTOS_IMGENS = null;
+
 let TABELA_CADASTRO = null;
 let TABELA_PERFIL = null;
 
 let FORMULARIO_EVENTOS = null;
+
+let FORMULARIO_EVENTOS_IMG_BLITZ = null;
 
 $("#__INICIO, #__LOGO").click(function(){
     window.location.reload();
@@ -58,7 +62,7 @@ $("#__CONTROL_SIDERBAR").click(function(e){
    }
 });
 
-$("#__SIDEBAR_NAV_ITEM_EVENTOS").click(function(e){
+$("#__SIDEBAR_NAV_ITEM_EVENTOS").click(async function(e){
     $("#__CONTENT_WRAPPER_HEADER").show();
     $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar Eventos");
     $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
@@ -95,6 +99,20 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS").click(function(e){
     FORMULARIO_EVENTOS.setRecipiente = "T_CONTEUDO_FORMULARIO";
     FORMULARIO_EVENTOS.setNome_BtSubmit = "Enviar";
     FORMULARIO_EVENTOS.Modo_Operacao = "I";
+    /**
+     * O nome que será informado como parâmetro não altera em nada, pois o nome que será tratada vem da função chamadora.
+     * Ex.:
+     * let s = this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this, Campos);
+     * a = UPDATE
+     * B = BEFORE
+     * C = OBJETO DATASET
+     * D = CAMPOS OU NULL
+     * Ob.: O retorno true ou false é muito importante para a continuidade das funcionalidades.
+     */
+    FORMULARIO_EVENTOS.addFunctons_Eventos("FUNCAO_ALL",function(a,b,c,d){
+        let H = 0;
+    });
+    
     let g = {
                 Groups: false,
                 N_Grupos: 2,
@@ -108,18 +126,116 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS").click(function(e){
                         ]
             };
     FORMULARIO_EVENTOS.setGrupos = g;
-    FORMULARIO_EVENTOS.show();
+    await FORMULARIO_EVENTOS.show();
 
-//    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
-//    if(TABELA_EVENTOS === null){
-//        TABELA_EVENTOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
-//    }
-//    TABELA_EVENTOS.setTabela = "e1f550bec98a7e0f4a256579fbe333ee";
-//    TABELA_EVENTOS.setRecipiente = "T_CONTEUDO_TABELA";
-//    TABELA_EVENTOS.Name = "TABELA_EVENTOS";
-//
-//    TABELA_EVENTOS.show();
+    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+    if(TABELA_EVENTOS === null){
+        TABELA_EVENTOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }
+    TABELA_EVENTOS.setTabela = "e1f550bec98a7e0f4a256579fbe333ee";
+    TABELA_EVENTOS.setRecipiente = "T_CONTEUDO_TABELA";
+    TABELA_EVENTOS.Name = "TABELA_EVENTOS";
+    TABELA_EVENTOS.setDefaultOrderBy(9,"DESC");
+    TABELA_EVENTOS.FuncoesIcones[0] = function(a,b,c){
+        debugger;
+        let Linha = a.getObterLinhaInteira(a.getBreakChaves(b.dataset.chaveprimaria));
+    };
+    TABELA_EVENTOS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
+
+        $(".SELECTD2_" + n.ResultSet.Indexador).select2({
+                ajax: {
+                    data: function (params) {
+                        let o = this;
+                          params.search= params.term || null;
+                          params.type= 'public';
+                          params.objecto= o;
+                          params.Prox_pagina= params.page || 1;
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return params;
+                      },
+                    transport: function (params, success, failure) {
+                      
+                        let BDados = new Promise(function(Resolve, Reject) {
+                        // Busca os dados no banco de dados e utiliza das configurações da tabela .php para obter os dados de foreign
+                            async function buscarDados() {
+                                let rst = await n.getValor_CHV_FOREIGN(params);
+                                if(rst === false){
+                                    Reject();  // when error
+                                }else{
+                                    Resolve(rst); // when successful
+                                }
+                            }
+                            //Chama a função async e libera o código.
+                            buscarDados();
+
+                        });
+
+                        //Caso os dados ocorra sucesso na busca dos dados
+                        BDados.then(
+                                    function(value){
+                                        success(value);
+                                    },
+                                    
+                                    function(error){
+                                        failure(error);
+                                    }
+                                );
+
+
+                  },
+                    processResults: function (data, params) {
+                        
+                        let Pagina_Atual = parseInt(data.InfoPaginacao.PaginaAtual);
+                        let Total_Pagina = data.InfoPaginacao.TotaldePaginas;
+                        let Mais_Pagina = false;
+                        let result_objecto = {id:0,text:null};
+                        let RST_DADOS = [];
+                        
+                        if(Total_Pagina <= Pagina_Atual){
+                            Mais_Pagina = false;
+                        }else{
+                            Mais_Pagina = true;
+                        }
+                        for(let i of data.ResultDados){
+                            let result_data = Object.create(result_objecto);
+                            result_data.id = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[0]];
+                            result_data.text = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[1]];;
+                            RST_DADOS.push(result_data);
+                            
+                        }
+                        let p = {"results": RST_DADOS,
+                            "pagination": {
+                              "more": Mais_Pagina
+                            }};
+
+                        
+                        return p;
+                      }
+                }
+
+              });
+    });
+    
+    await TABELA_EVENTOS.show();
 });
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD_EVENTOS").click(function(e){
+    $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto"></div>');
+    
+    if(TABELA_EVENTOS_IMGENS === null){
+        TABELA_EVENTOS_IMGENS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }
+    TABELA_EVENTOS_IMGENS.setTabela = "83849cf6295498c96deb555e00f4c756";
+    TABELA_EVENTOS_IMGENS.setRecipiente = "T_CONTEUDO";
+    TABELA_EVENTOS_IMGENS.Name = "TABELA_CADASTRO";
+    
+
+    TABELA_EVENTOS_IMGENS.show();
+    
+});
+
 
 $("#__SIDEBAR_NAV_ITEM_CADASTRO").click(function(e){
     $("#__CONTENT_WRAPPER_HEADER").hide();
@@ -328,94 +444,6 @@ $("#__SIDEBAR_NAV_ITEM_PERFIL").click(function(e){
      });
 
     TABELA_PERFIL.CSSTableGeral.GeralDivClass_Botoes = "FIXA_BARRA_BOTOES";
-    
-    TABELA_PERFIL.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
-        let g = n;
-        $(".SELECTD2_" + n.ResultSet.Indexador).select2({
-                templateSelection: function (data) {
-                  if (data.id === '') { // adjust for custom placeholder values
-                    return 'Custom styled placeholder text';
-                  }
-
-                  return data.text;
-                },
-                matcher: function(params, data){
-                    let g = params;
-                    return data.text;
-                },
-                ajax: {
-                    data: function (params) {
-                        let o = this;
-                          params.search= params.term || null;
-                          params.type= 'public';
-                          params.objecto= o;
-                          params.Prox_pagina= params.page || 1;
-
-                        // Query parameters will be ?search=[term]&type=public
-                        return params;
-                      },
-                    transport: function (params, success, failure) {
-                      
-                        let BDados = new Promise(function(Resolve, Reject) {
-                        // Busca os dados no banco de dados e utiliza das configurações da tabela .php para obter os dados de foreign
-                            async function buscarDados() {
-                                let rst = await n.getValor_CHV_FOREIGN(params);
-                                if(rst === false){
-                                    Reject();  // when error
-                                }else{
-                                    Resolve(rst); // when successful
-                                }
-                            }
-                            //Chama a função async e libera o código.
-                            buscarDados();
-
-                        });
-
-                        //Caso os dados ocorra sucesso na busca dos dados
-                        BDados.then(
-                                    function(value){
-                                        success(value);
-                                    },
-                                    
-                                    function(error){
-                                        failure(error);
-                                    }
-                                );
-
-
-                  },
-                    processResults: function (data, params) {
-                        
-                        let Pagina_Atual = parseInt(data.InfoPaginacao.PaginaAtual);
-                        let Total_Pagina = data.InfoPaginacao.TotaldePaginas;
-                        let Mais_Pagina = false;
-                        let result_objecto = {id:0,text:null};
-                        let RST_DADOS = [];
-                        
-                        if(Total_Pagina <= Pagina_Atual){
-                            Mais_Pagina = false;
-                        }else{
-                            Mais_Pagina = true;
-                        }
-                        for(let i of data.ResultDados){
-                            let result_data = Object.create(result_objecto);
-                            result_data.id = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[0]];
-                            result_data.text = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[1]];;
-                            RST_DADOS.push(result_data);
-                            
-                        }
-                        let p = {"results": RST_DADOS,
-                            "pagination": {
-                              "more": Mais_Pagina
-                            }};
-
-                        
-                        return p;
-                      }
-                }
-
-              });
-    });
 
     TABELA_PERFIL.show();
     
@@ -426,5 +454,22 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD").click(function(e){
     $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto;"></div>');
 
     
-    var InstanciarUpload = new ReceberEnviar(Chave,"#T_CONTEUDO",2, Padrao.getHostServer() +"/blitz/ControladorTabelas/", "4812b51890682745102213bd785eb5c0", true, false);
+
+    if(FORMULARIO_EVENTOS_IMG_BLITZ === null){
+        FORMULARIO_EVENTOS_IMG_BLITZ = new FormHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }    
+    var InstanciarUpload = new ReceberEnviar(Chave,"#T_CONTEUDO",4, Padrao.getHostServer() +"/blitz/ControladorTabelas/", "4812b51890682745102213bd785eb5c0", true, false, "FORM", FORMULARIO_EVENTOS_IMG_BLITZ);
+    
+    FORMULARIO_EVENTOS_IMG_BLITZ.setTabela = "4812b51890682745102213bd785eb5c0";
+    FORMULARIO_EVENTOS_IMG_BLITZ.setRecipiente = "CONTENT_FORM_IMAGENS";
+    FORMULARIO_EVENTOS_IMG_BLITZ.setNome_BtSubmit = "Enviar";
+    FORMULARIO_EVENTOS_IMG_BLITZ.Modo_Operacao = "V";
+    FORMULARIO_EVENTOS_IMG_BLITZ.visible_Title = true;
+    FORMULARIO_EVENTOS_IMG_BLITZ.Configuracoes.div_content_section.style = "margin-top: 10px"
+    let g = {
+                Groups: false
+            };
+    FORMULARIO_EVENTOS_IMG_BLITZ.setGrupos = g;
+    FORMULARIO_EVENTOS_IMG_BLITZ.show();
+
 });

@@ -149,8 +149,8 @@ class TabelaHTML extends JSController{
                 return Instancia.Funcoes.Style(Instancia, Index, VConteudo, Linha);
 
             }, 
-            ShowIcons: function(LInha, Icone){
-                return Instancia.Funcoes.Conteudo(Instancia, Linha, Icone);
+            ShowIcons: function(Linha, Icone){
+                return Instancia.Funcoes.ShowIcons(Instancia, Linha, Icone);
             }, 
             Numerador: function(Linha, Num){
                 return Instancia.Funcoes.Conteudo(Instancia, Linha, Num);
@@ -222,6 +222,11 @@ class TabelaHTML extends JSController{
         
         /**
          * FUNÇÕES QUE SERÃO EXECUTADAS APÓS A REALIZAÇÃO DAS OPERAÇÕES DE INSERIR, ATUALIZAR, EXCLUIR E SHOW
+         * AS AÇÕES ENVIAM OS SEUS REPECTIVOS PARÂMETROS
+         * ACTION
+         * MOMENT
+         * OBJECT_INSTACIA_FORMULARIO
+         * VALUE
          */
         this.FUNCOES_EVENT = function(){
             let FUNCs = new Map([
@@ -451,7 +456,7 @@ class TabelaHTML extends JSController{
             
             if(DadosLinhas.ShowColumnsIcones[0]){
                 ShowIcons = this.gerarLinhasIcones(DadosLinhas.ShowColumnsIcones[1], ChavePrimaria);
-                //uso para o componente que será visualizado em celular;
+                //Criar os ícone, via javascript, pela própria intância
                 if(this.Funcoes.ShowIcons != false){
                     ShowIcons = this.FAnonimas.ShowIcons(indx1, ShowIcons);
                 }
@@ -588,7 +593,7 @@ class TabelaHTML extends JSController{
             for(var i in Icon){
                 if(!Icon[i].Visible) continue;
                 TipoIcone = Icon[i].Tipo;
-                if(TipoIcone == "Bootstrap"){
+                if(TipoIcone == "Font_Awesome"){
                     TdI += "<td  class='"+ this.CSSEspefTableBD[1].Corpo.td +"' style='text-align: center;vertical-align: inherit;'><i data-chavePrimaria='" + ChavePrimaria +"'  class='"+ Icon[i].Icone + " "+ Icon[i].NomeBotao + "_"+ this.ResultSet.Indexador + "' style='font-size:18px; cursor: pointer' title='"+ Icon[i].tooltip +"'></i></td>";
                 }else if(TipoIcone == "image"){
                     

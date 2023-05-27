@@ -1788,8 +1788,8 @@ class adm_perfil extends ModeloTabelas{
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
                "Key"            => [false, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
-                                        "TExt" => true,
-                                        "Tabela"=> "login",
+                                        "TExt" => false,
+                                        "Tabela"=> null,
                                         "IdxCampoVinculado"=> 0, 
                                         "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
                                         "NomeBotao"=> "",
@@ -1810,7 +1810,7 @@ class adm_perfil extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"select", 
                                         "TypeConteudo"=> ["text"], 
@@ -1936,8 +1936,11 @@ class adm_perfil extends ModeloTabelas{
             case "AtualizarDadosTabela":
                 switch ($Action) {
                     case "BeforeUpdate":
+                        
                         $MD5_Password = md5($ConjuntoDados[1]["value"]);
                         $ConjuntoDados[1]["value"] = $MD5_Password;
+                        $ConjuntoDados[6]["name"] = "PLogin";
+                        $ConjuntoDados[6]["value"] = $this->UsuarioLogin;
                         break;
 
                     default:
@@ -1996,7 +1999,7 @@ class adm_blitzimagens extends ModeloTabelas{
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Visible"        => false,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
                                         "Exibir"=> false,
@@ -2055,10 +2058,10 @@ class adm_blitzimagens extends ModeloTabelas{
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Visible"        => false,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"inputbox", 
                                         "TypeConteudo"=> ["text"], 
@@ -2117,7 +2120,7 @@ class adm_blitzimagens extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"inputbox", 
                                         "TypeConteudo"=> ["text"], 
@@ -2152,6 +2155,65 @@ class adm_blitzimagens extends ModeloTabelas{
            ],
             [
                "Index"          => 3,                                   //Ordem dos campos
+               "Field"          => "ide",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Evento",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => true,
+                                        "Tabela"=> "adm_eventos",
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>[0,1,2,3] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> true,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"select", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PIDE",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 4,                                   //Ordem dos campos
                "Field"          => "Path",                       //Nome original do campo (String)
                "FieldFunc"      => [false,null],
                "CodNome"        => "Caminho",                       //Codnome do campo, o que será visualizado pelo usuário (String)
@@ -2171,7 +2233,7 @@ class adm_blitzimagens extends ModeloTabelas{
                "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"inputbox", 
                                         "TypeConteudo"=> ["text"], 
@@ -2241,7 +2303,7 @@ class adm_blitzimagens extends ModeloTabelas{
     }
 
     public function getTituloTabela() {
-        return "PERFIL DOS USUÁRIOS CADASTRADOS NO SISTEMA";
+        return "Eventos cadastrados no sistema";
     }
 
     public function getLimite() {
@@ -2427,7 +2489,7 @@ class adm_eventos extends ModeloTabelas{
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
                                         "Patterns"=> "", 
                                         "Titles" => "",
-                                        "Required" => "",
+                                        "Required" => true,
                                         "width" => "",
                                         "height"=>"",
                                         "step"=>"",
@@ -2622,18 +2684,18 @@ class adm_eventos extends ModeloTabelas{
             [
                "Index"          => 5,                                   //Ordem dos campos
                "Field"          => "Capa",                       //Nome original do campo (String)
-               "FieldFunc"      => [false,null],
+               "FieldFunc"      => [true,"(select blitz_bimagens.Path from blitz_bimagens where blitz_bimagens.idi=Capa) as Capa"],
                "CodNome"        => "Capa",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
                "Key"            => [false, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
-                                        "TExt" => false,
-                                        "Tabela"=> null,
+                                        "TExt" => true,
+                                        "Tabela"=> "adm_blitzimagens",
                                         "IdxCampoVinculado"=> 0, 
-                                        "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
                                         "NomeBotao"=> null,
-                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                        "CamposTblExtrangeira"=>[0,3,1,3] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
@@ -2642,7 +2704,7 @@ class adm_eventos extends ModeloTabelas{
                "Formulario"     => [
                                         "Exibir"=> true,
                                         "Placeholder"=> "", 
-                                        "TypeComponente"=>"inputbox", 
+                                        "TypeComponente"=>"select", 
                                         "TypeConteudo"=> ["text"], 
                                         "Name" => "PCapa",
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
@@ -2683,7 +2745,7 @@ class adm_eventos extends ModeloTabelas{
                "Key"            => [false, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
                                         "TExt" => false,
-                                        "Tabela"=> null,
+                                        "Tabela"=> "",
                                         "IdxCampoVinculado"=> 0, 
                                         "Funcao"=> null,  //"null" ou "0" número da função representanda no componente.
                                         "NomeBotao"=> null,
@@ -2745,7 +2807,7 @@ class adm_eventos extends ModeloTabelas{
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Visible"        => false,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
                                         "Exibir"=> false,
@@ -2799,7 +2861,7 @@ class adm_eventos extends ModeloTabelas{
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Visible"        => false,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
                                         "Exibir"=> false,
@@ -2838,9 +2900,9 @@ class adm_eventos extends ModeloTabelas{
             [
                "Index"          => 9,                                   //Ordem dos campos
                "Field"          => "dtCriado",                       //Nome original do campo (String)
-               "FieldFunc"      => [false,null],
-               "CodNome"        => "dtCriado",                       //Codnome do campo, o que será visualizado pelo usuário (String)
-               "TypeConteudo"   => ["date"],                           //Tipo de conteudo exibido na tabela HTML
+               "FieldFunc"      => [true,("DATE_FORMAT(dtCriado,'%d/%m/%Y - %H:%i') as dtCriado")],
+               "CodNome"        => "Criado",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
                "Key"            => [false, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
@@ -2926,7 +2988,7 @@ class adm_eventos extends ModeloTabelas{
     }
 
     public function getTituloTabela() {
-        return "PERFIL DOS USUÁRIOS CADASTRADOS NO SISTEMA";
+        return "Eventos Gerenciados";
     }
 
     public function getLimite() {
@@ -2938,9 +3000,9 @@ class adm_eventos extends ModeloTabelas{
     }
 
     public function showColumnsIcones() {
-        $Habilitar = false;
+        $Habilitar = true;
         $Icones = [
-                        //["NomeColuna"=> "<i class='fa fa-bluetooth' style='font-size:20px'></i>","NomeBotao"=>"Localizar", "Icone" => "fa fa-search", "Func" => 0, "Tipo" => "Bootstrap", "tooltip"=> "busca"]
+                        ["NomeColuna"=> "<i class='fa fa-camera' style='font-size:20px'></i>","NomeBotao"=>"Localizar", "Icone" => "fa fa-camera", "Func" => 0, "Tipo" => "Font_Awesome", "tooltip"=> "Exibir foto","Visible"=>true]
                     ];
         $ShowColumns[0] = $Habilitar;
         $ShowColumns[1] = $Icones;
@@ -2980,10 +3042,11 @@ class adm_eventos extends ModeloTabelas{
 
     public function Jobs($Tipo, &$ConjuntoDados, $Action, $Resultado) {
         switch ($Tipo) {
-            case "AtualizarDadosTabela":
+            case "InserirDadosTabela":
                 switch ($Action) {
-                    case "BeforeUpdate":
-
+                    case "BeforeInsert":
+                        $ConjuntoDados[6]["name"] = "PLogin";
+                        $ConjuntoDados[6]["value"] = $this->UsuarioLogin;
                         break;
 
                     default:
