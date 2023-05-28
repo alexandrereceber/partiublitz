@@ -116,6 +116,10 @@ async function EnviarDados(obj){
             case 9100:
                 Result.Mensagem = "Regra de criação de usuário não determinada!";
                 break;
+
+            case 6003:
+                Result.Mensagem = "Usuário ou tipo definido não possui privilégios nessa tabela.";
+                break;
                 
             default:
                 Result.Mensagem = "Error não tratado ou inesperado. Favor entrar em contato com o administrador."

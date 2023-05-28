@@ -26,6 +26,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 
 let TABELA_EVENTOS = null;
 let TABELA_EVENTOS_IMGENS = null;
+let TABELA_EVENTOS_EIMGENS = null;
 
 let TABELA_CADASTRO = null;
 let TABELA_PERFIL = null;
@@ -471,5 +472,106 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD").click(function(e){
             };
     FORMULARIO_EVENTOS_IMG_BLITZ.setGrupos = g;
     FORMULARIO_EVENTOS_IMG_BLITZ.show();
+
+});
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_VIEW").click(function(e){
+    $("#__CONTENT_WRAPPER_HEADER").hide();
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto"></div>');
+    
+    if(TABELA_EVENTOS_EIMGENS === null){
+        TABELA_EVENTOS_EIMGENS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }
+    TABELA_EVENTOS_EIMGENS.setTabela = "0cdfc60825ce8e9cb6e78f0cb28a3f61";
+    TABELA_EVENTOS_EIMGENS.setRecipiente = "T_CONTEUDO";
+    TABELA_EVENTOS_EIMGENS.Name = "TABELA_EVENTOS_EIMGENS";
+    TABELA_EVENTOS_EIMGENS.Funcoes.Conteudo = function(a,n,c, linha){
+        switch (n) {
+        case "4":
+            let Servidor = Padrao.getHostServer();
+            return `<img src="${Servidor + "/blitz/" + c}" style="width: 150px"/>`;
+            break;
+        default:
+            return c;
+            break;
+    }
+    }
+    TABELA_EVENTOS_EIMGENS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
+
+        $(".SELECTD2_" + n.ResultSet.Indexador).select2({
+                ajax: {
+                    data: function (params) {
+                        let o = this;
+                          params.search= params.term || null;
+                          params.type= 'public';
+                          params.objecto= o;
+                          params.Prox_pagina= params.page || 1;
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return params;
+                      },
+                    transport: function (params, success, failure) {
+                      
+                        let BDados = new Promise(function(Resolve, Reject) {
+                        // Busca os dados no banco de dados e utiliza das configurações da tabela .php para obter os dados de foreign
+                            async function buscarDados() {
+                                let rst = await n.getValor_CHV_FOREIGN(params);
+                                if(rst === false){
+                                    Reject();  // when error
+                                }else{
+                                    Resolve(rst); // when successful
+                                }
+                            }
+                            //Chama a função async e libera o código.
+                            buscarDados();
+
+                        });
+
+                        //Caso os dados ocorra sucesso na busca dos dados
+                        BDados.then(
+                                    function(value){
+                                        success(value);
+                                    },
+                                    
+                                    function(error){
+                                        failure(error);
+                                    }
+                                );
+
+
+                  },
+                    processResults: function (data, params) {
+                        
+                        let Pagina_Atual = parseInt(data.InfoPaginacao.PaginaAtual);
+                        let Total_Pagina = data.InfoPaginacao.TotaldePaginas;
+                        let Mais_Pagina = false;
+                        let result_objecto = {id:0,text:null};
+                        let RST_DADOS = [];
+                        
+                        if(Total_Pagina <= Pagina_Atual){
+                            Mais_Pagina = false;
+                        }else{
+                            Mais_Pagina = true;
+                        }
+                        for(let i of data.ResultDados){
+                            let result_data = Object.create(result_objecto);
+                            result_data.id = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[0]];
+                            result_data.text = i[data.Dados_Campo_Foreign.CamposTblExtrangeira[1]];;
+                            RST_DADOS.push(result_data);
+                            
+                        }
+                        let p = {"results": RST_DADOS,
+                            "pagination": {
+                              "more": Mais_Pagina
+                            }};
+
+                        
+                        return p;
+                      }
+                }
+
+              });
+    });
+    TABELA_EVENTOS_EIMGENS.show();
 
 });

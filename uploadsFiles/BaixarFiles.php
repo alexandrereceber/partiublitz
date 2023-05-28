@@ -94,7 +94,8 @@ try{
                      * Se a sessão for anônima deverá ser devinido um usuario e privilégios de acesso na tabela através
                      * da variável privilegios em cada classe que representa a tabela.
                      */
-                    $InserirDados->setUsuario("blitz");
+                    $InserirDados->setUsuario("04953988612");
+                    $InserirDados->setTipoUsuario("FULL");
                     $Result = $InserirDados->InserirDadosTabela($Dados);
                     $Dados = NULL;
                     

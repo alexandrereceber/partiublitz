@@ -21,6 +21,7 @@ try{
     $SelecionarDados->setUsuario("blitz");
     $SelecionarDados->setUsuarioLogado($SystemUsuario);
     $SelecionarDados->setIDUsuario($IDUserName);
+    $SelecionarDados->setTipoUsuario($TipoUsuario);
     $SelecionarDados->setFiltros($FiltroCampos);
     $SelecionarDados->setOrderBy($Ordem);
     $SelecionarDados->setPagina($Pagina);

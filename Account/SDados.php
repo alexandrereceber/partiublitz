@@ -71,7 +71,11 @@ class SessaoDados{
     public function getUsernameChave() {
         return $this->Chaves->Username;
     }
-
+    
+    public function getTipoUsername() {
+        return $this->Chaves->Tusuario;
+    }
+    
     public function getPasswordChave() {
         return $this->Chaves->Password;
     }

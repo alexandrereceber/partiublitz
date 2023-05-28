@@ -82,7 +82,8 @@ try {
 
     $SelecionarDados = new login();
 
-    $SelecionarDados->setUsuario("blitz");
+    $SelecionarDados->setUsuario("NADA");
+    $SelecionarDados->setTipoUsuario("QUALQUER");
     /**
      * Instrução que verifica se o sistema irá autenticar o usuário pelo conjunto usuário e senha ou somente usuário.
      */

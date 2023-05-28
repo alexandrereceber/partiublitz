@@ -1354,6 +1354,14 @@ class TabelaHTML extends JSController{
         
         this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
         
+        let Filtros_TOLD = [];
+        Filtros_TOLD[0] = this.DadosEnvio.sendFiltros[0];
+        Filtros_TOLD[1] = this.DadosEnvio.sendFiltros[1];
+        Filtros_TOLD[2] = this.DadosEnvio.sendFiltros[2];
+        
+        this.DadosEnvio.sendFiltros[0] = false;
+        this.DadosEnvio.sendFiltros[1] = false;
+        this.DadosEnvio.sendFiltros[2] = false;
         
         if(_TERM !== true){
             this.DadosEnvio.sendFiltros[0]  = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM]];            
@@ -1370,6 +1378,10 @@ class TabelaHTML extends JSController{
         
         this.DadosEnvio.sendTabelas =  Tabela_Original;
         this.DadosEnvio.sendModoOperacao = ModoOperacao_Original;
+        
+        this.DadosEnvio.sendFiltros[0] = this.DadosEnvio.sendFiltros[0];
+        this.DadosEnvio.sendFiltros[1] = Filtros_TOLD[1];
+        this.DadosEnvio.sendFiltros[2] = Filtros_TOLD[2];
         
         if(TratarResposta.Error != false){
             this.TratarErros(TratarResposta);

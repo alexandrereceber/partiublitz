@@ -72,6 +72,7 @@ abstract class ModeloTabelas extends BDSQL{
     private $Usuario = null;
     protected $UsuarioLogin = null;
     protected $IDUsuario = null;
+    protected $TipoUsuario = null;
     /**
      * Armazena o total de linhas recuperadas pela consulta à tabela.
      * @var integer 
@@ -438,26 +439,32 @@ abstract class ModeloTabelas extends BDSQL{
         
     }
     /*
-     * Método obrigatório que deverá ser utilizado após a instância da classe.
-     * Esse método é case sensitive.
+     * Define um usuário que terá acesso ao dados dad tabela, esse usuário é para 
+     * definições mais restritas de acesso.
      */
     public function setUsuario($Usuario) {
         $this->Usuario = $Usuario;
     }
     /*
-     * Método obrigatório que deverá ser utilizado após a instância da classe.
-     * Esse método é case sensitive.
+     * Define o nome do usuário da sessão que stá utilizando o sistema.
      */
     public function setUsuarioLogado($LGin) {
         $this->UsuarioLogin = $LGin;
     }
     /*
-     * Método obrigatório que deverá ser utilizado após a instância da classe.
-     * Esse método é case sensitive.
+     * Define a chave primária do usuário que será utilizada para diversas funções.
      */
     public function setIDUsuario($ID) {
         $this->IDUsuario= $ID;
-    }    
+    }  
+
+    /*
+     * Informa o tipo de usuário para definir níveis de acesso RBAC.
+     */
+    public function setTipoUsuario($TP) {
+        $this->TipoUsuario= $TP;
+    } 
+    
     /**
      * BANCO DE DADOS - ESQUEMA
      * TABELA LOGIN
@@ -519,9 +526,14 @@ abstract class ModeloTabelas extends BDSQL{
      * @return boolean
      * @throws Exception Usuário não foi definido pelo método $Class->setUsuarios($Usuario) ou não possue privilégios para a operação desejada.
      */
-    private function getVerificarPrivilegios($Tipo){
+    private function getVerificarPrivilegios($Tipo, $BT = false){
+        /**
+         * Como a função setUsuario foi descontinuada dando vez ao tipo de usuário, foi mantido para usos futuros.
+         * Pois se existir algum usuário com nome do usuário que foi enviado pela tabela, o mesmo terá acesso total.
+         */
+        if($this->Usuario === $this->UsuarioLogin){ return true;}
         
-        if(($this->Usuario != null)){
+        if(($this->Usuario != null) && ($this->TipoUsuario != null)){
             foreach ($this->Privilegios as $Chave => $Valor) {
                 if($Valor[0] == "Todos"){
                     $PRV = preg_match('/' . $Tipo . '/i', $Valor[1]);
@@ -529,27 +541,37 @@ abstract class ModeloTabelas extends BDSQL{
                         return true;
                     }else{
                         if($Tipo == "Select"){
-                            throw new Exception("Usuário definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6003);
+                            throw new Exception("Usuário ou tipo definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6004);
                         }else{
-                            return false;
-                        }                        
+                            if($BT == true){
+                                return false;
+                            }else{
+                                throw new Exception("Usuário ou tipo definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6004);                                
+                            }
+                            
+                        }
+                        
                     }
                 }
-                if (preg_match('/^' . $this->Usuario . '$/i', $Valor[0])) {
+                if (preg_match('/^' . $this->TipoUsuario . '$/i', $Valor[0])) {
                     $PRV = preg_match('/' . $Tipo . '/i', $Valor[1]);
                     if($PRV == true){
                         return true;
                     }else{
-                        if($Tipo == "Select"){
-                            throw new Exception("Usuário definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6004);
+                         if($Tipo == "Select"){
+                            throw new Exception("Usuário ou tipo definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6004);
                         }else{
-                            return false;
+                            if($BT == true){
+                                return false;
+                            }else{
+                                throw new Exception("Usuário ou tipo definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6004);                                
+                            }
                         }
                     }
                 }
             }
             //Para evitar perguntas ao sistema a mensagem foi definida como padrão.
-            throw new Exception("Usuário definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6005);
+            throw new Exception("Usuário ou tipo definido não possui privilégios nessa tabela(".md5($this->NomeTabela).") para essa operação: $Tipo", 6005);
 
         }else{
             throw new Exception("Nenhum usuário foi definido para que possa ser verificado o acesso.", 6006);
@@ -880,7 +902,7 @@ abstract class ModeloTabelas extends BDSQL{
     }
     
     private function getBotaoEditar() {
-        $Bt = $this->getVerificarPrivilegios("Update");
+        $Bt = $this->getVerificarPrivilegios("Update", true);
         
         if($Bt){
             $Botao["Editar"] = true;
@@ -892,7 +914,7 @@ abstract class ModeloTabelas extends BDSQL{
     
     private function getBotaoIncluir() {
         
-        $Bt = $this->getVerificarPrivilegios("Insert");
+        $Bt = $this->getVerificarPrivilegios("Insert", true);
         if($Bt){
             $Botao["Inserir"] = true;
         }else{
@@ -905,7 +927,7 @@ abstract class ModeloTabelas extends BDSQL{
      * @return boolean
      */
     private function getBotaoDelete() {
-        $Bt = $this->getVerificarPrivilegios("Delete");
+        $Bt = $this->getVerificarPrivilegios("Delete", true);
         if($Bt){
             $Botao["Delete"] = true;
         }else{

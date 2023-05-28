@@ -33,6 +33,7 @@ try{
     $InserirDados->setUsuario("blitz");
     $InserirDados->setUsuarioLogado($SystemUsuario);
     $InserirDados->setIDUsuario($IDUserName);
+    $InserirDados->setTipoUsuario($TipoUsuario);
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

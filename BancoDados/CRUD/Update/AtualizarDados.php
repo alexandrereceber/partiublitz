@@ -27,6 +27,7 @@ try{
     $AtualizarDados->setUsuario("blitz");
     $AtualizarDados->setUsuarioLogado($SystemUsuario);
     $AtualizarDados->setIDUsuario($IDUserName);
+    $AtualizarDados->setTipoUsuario($TipoUsuario);
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

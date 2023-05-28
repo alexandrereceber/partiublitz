@@ -355,7 +355,7 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
 <script  src="/blitz/Componentes/Formularios.js?q=26" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=69"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=79"></script>
 
         
 <!-- The Modal -->

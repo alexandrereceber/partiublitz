@@ -132,6 +132,7 @@ if($Sessao && $SessaoProcedure){
         
         $SystemUsuario = $SD->getUsernameChave();
         $IDUserName = $SD->getIDUsername();
+        $TipoUsuario = $SD->getTipoUsername();
         
     } catch (Exception $exc) {
         /**

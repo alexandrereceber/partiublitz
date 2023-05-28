@@ -223,6 +223,7 @@ class TabelaBancoDadosMD5{
                                 ["83849cf6295498c96deb555e00f4c756",["adm_cadastro", true]],
                                 ["7095e737a19ed11f0df0f07b7ec84131",["adm_perfil", true]],
                                 ["4812b51890682745102213bd785eb5c0",["adm_blitzimagens", true]],
+                                ["0cdfc60825ce8e9cb6e78f0cb28a3f61",["adm_Eblitzimagens", true]],
                                 ["e1f550bec98a7e0f4a256579fbe333ee",["adm_eventos", true]]
                             ];
     
