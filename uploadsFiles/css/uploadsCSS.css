@@ -39,7 +39,6 @@
 
 .preview_fts{
     width: 100%;
-    height: 182px;
     /* border: solid 1px #ced4da; */
     margin-top: 10px;
     /* height: 172px; */
@@ -65,7 +64,7 @@
     vertical-align: middle;
 }
 
-.ig_prev{max-width: 112px;max-height: 88px;border-radius: inherit;border-color: black;border: solid 1px #00000073;}
+.ig_prev{max-width: 112px;max-height: 88px;}
 
 #CIMG{
     display: flex;
@@ -146,7 +145,7 @@
 }
 
 #N_img_prev{
-    border: solid 1px #1f3f2300;
+    /*border: solid 1px #1f3f2300;*/
     width: 100%;
     height: 22px;
     /* background-color: #00000070; */

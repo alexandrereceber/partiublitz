@@ -59,7 +59,7 @@ echo "<script>var Chave='$sendChave'</script>"
   <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   
   <!<!-- UPLOADFILES -->
-  <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?01"> 
+  <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04"> 
   
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
@@ -151,7 +151,7 @@ echo "<script>var Chave='$sendChave'</script>"
                     </a>
                     <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
                       <li class="nav-item" >
-                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_CADASTRO">
+                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_MEMBROS_CADASTRO">
                           <i class="fas fa-user-plus"></i>
                           <p style="margin-left: 5px">
                                 Cadastro
@@ -159,7 +159,7 @@ echo "<script>var Chave='$sendChave'</script>"
                         </a>
                       </li>
                       <li class="nav-item" >
-                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_PERFIL">
+                        <a href="#" class="nav-link" id="__SIDEBAR_NAV_ITEM_MEMBROS_PERFIL">
                           <i class="fas fa-user-edit"></i>
                           <p  style="margin-left: 5px">Perfil</p>
                         </a>
@@ -177,13 +177,13 @@ echo "<script>var Chave='$sendChave'</script>"
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_VIEW">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_FESTAS_VIEW">
                       <a href="#" class="nav-link">
                         <i class="fa-solid fa-eye"></i>
                         <p style="margin-left: 5px">Visualizar</p>
                       </a>
                     </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_FESTAS_UPLOAD">
                       <a href="#" class="nav-link">
                         <i class="fa-solid fa-upload"></i>
                         <p  style="margin-left: 5px">Upload</p>
@@ -200,13 +200,19 @@ echo "<script>var Chave='$sendChave'</script>"
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS">
+                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS_GERENCIAR">
                       <a href="#" class="nav-link">
-                        <i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-rectangles-mixed"></i>
                         <p style="margin-left: 5px">Gerenciar</p>
                       </a>
                     </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_UPLOAD_EVENTOS">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_VIEW">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-eye"></i>
+                        <p  style="margin-left: 5px">Visualizar</p>
+                      </a>
+                    </li>
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_IMG">
                       <a href="#" class="nav-link">
                         <i class="fa-solid fa-upload"></i>
                         <p  style="margin-left: 5px">Imagens</p>
@@ -314,8 +320,8 @@ echo "<script>var Chave='$sendChave'</script>"
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer" id="CONTENT_WRAPPER_MAIN_FOOTER">
-    <strong>Copyright © 2014-2023 <a href="#">Marques</a>.</strong>
-    All rights reserved.
+    <strong>Copyright © 2014-2023 <a href="#">Alexandre Marques</a>.</strong>
+    Todos os direitos reservados.
     <div class="float-right d-none d-sm-inline-block">
       <b>Versão</b> 1.0.0
     </div>
@@ -350,12 +356,12 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script  src="/blitz/uploadsFiles/js/tratarFiles.js?40"></script> 
+<script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
 <script  src="/blitz/Componentes/Formularios.js?q=26" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=79"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=88"></script>
 
         
 <!-- The Modal -->

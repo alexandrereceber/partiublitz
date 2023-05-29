@@ -80,7 +80,7 @@ class ReceberEnviar extends JSController{
         /**
          * Variável que define se a visualização das imagens será simples ou avança
          */
-        this.TipoView = 2; //1 - Simples, 2 - Eterna
+        this.TipoView = 1; //1 - Simples, 2 - Eterna
         /**
          * Cria a caixa visual do componente
          */
@@ -99,50 +99,9 @@ class ReceberEnviar extends JSController{
     loadImagens(n, tOriginal, Titulo){
         var T = (document.querySelector("#img_prev_titulo"));
         //T.innerHTML =  "Nº " + n + " - " + Titulo;
-        (document.querySelector("#preview_Width_Real")).src = tOriginal;
+        (document.querySelector(".img-fluid")).src = tOriginal;
     }
-    
-    avancoImagem(){
-        var nimg = this.ImagemAtual;
-        if((nimg + 1) > this.Total) return false;
-        
-        for(var i in this.conteudoFl){
-            if(this.conteudoFl[i][0] == nimg){
-                let px = parseInt(i) + 1;
-                try {
-                    this.ImagemAtual = this.conteudoFl[px][0];
-                } catch (e) {
-                    
-                }
-                break;
-            }
-        }
-        
-        var img = document.querySelector("[data-number-Prev='"+ (this.ImagemAtual) +"']");
-        this.loadImagens((this.ImagemAtual + 1), img.src, img.name)
-        //this.ImagemAtual++;
-    }
-    
-    retroImagem(){
-        var nimg = this.ImagemAtual;
-        if((nimg - 1) < 0) return false;
-        
-        for(var i in this.conteudoFl){
-            if(this.conteudoFl[i][0] == nimg){
-                let px = parseInt(i) - 1;
-                try {
-                    this.ImagemAtual = this.conteudoFl[px][0];
-                } catch (e) {
-                    
-                }
 
-                break;
-            }
-        }
-        
-        var img = document.querySelector("[data-number-Prev='"+ (this.ImagemAtual) +"']");
-        this.loadImagens((this.ImagemAtual + 1), img.src, img.name)
-    }
     exibirImagem_tamanho_real(n, tOriginal){
         
         for(var i in this.conteudoFl){
@@ -152,98 +111,19 @@ class ReceberEnviar extends JSController{
             }
         }
         
-        var Scroll = window.scrollY;
-        if(this.TipoView ==1){
-            
-            $("body").append('<div \n\
-                                    class="" \n\
-                                    id="myLoader" \n\
-                                    style="z-index: 999999; top:'+ Scroll +'px;background-color: #000000;text-align: -webkit-center;position: absolute;left: 0px;width: 100%;height: 100%;"><div style="display: table-cell;vertical-align: middle;height: 50vw;"> \n\
-                                    <div style="height: 40vw;display: table-cell;vertical-align: middle;">\n\
-                                        \n\
-                                        <div id="TituloPreviewImage" style="text-align: right">\n\
-                                            <div id="img_prev_titulo" style="display: inline-block;width: 92%;color: white;font-size: larger;font-weight: bolder;">'+ Titulo +'</div>\n\
-                                            <div style="display: inline-block;width: 47px;">\n\
-                                                <i class="fa fa-window-close-o" style="color: white;font-size:24px; cursor: pointer"></i>\n\
-                                            </div>\n\
-                                    </div>\n\
-                                        <img id="preview_Width_Real" style="width: 50%;">\n\
-                                    </div>\n\
-                                </div>\n\
-                            </div>').addClass("modal-open");
+        $("body").append(`<div id="ekkoLightbox-135" class="ekko-lightbox modal fade in show" tabindex="-1" role="dialog" aria-modal="true" style="padding-right: 15px; display: block;"><div class="modal-dialog" role="document" style="display: block; flex: 1 1 1px; max-width: 502px;"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">sample 5 - black</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div><div class="modal-body"><div class="ekko-lightbox-container" style="height: 468px;"><div class="ekko-lightbox-item fade"></div><div class="ekko-lightbox-item fade in show"><img src="https://via.placeholder.com/1200/000000.png?text=5" class="img-fluid" style="width: 100%;"></div></div></div><div class="modal-footer hide" style="display: none;">&nbsp;</div></div></div></div><div class="modal-backdrop fade show"></div>`);
+        $(".modal-title").html(Titulo);
+        $(".close").click(function(e){
+            $(".ekko-lightbox").remove();
+            $(".modal-backdrop").remove();
+        });
         
-            $(".fa-window-close-o").unbind();
-            $(".fa-window-close-o").click(function(){
-                $("#myLoader").remove();
-                //$("body").removeClass('modal-open');
-            });
-            
-            
-            
-            this.loadImagens(n + 1, tOriginal, Titulo)            
-        }else{
-            if(!this.__isPhone){
-                $("body").append('<div \n\
-                                    class="" \n\
-                                    id="myLoader" \n\
-                                    style="z-index: 999999; top:'+ Scroll +'px;background-color: #000000c4;text-align: -webkit-center;position: absolute;left: 0px;width: 100%;height: 100%;"><div style="display: table-cell;vertical-align: middle;height: 50vw;"> \n\
-                                    <div style="height: 40vw;display: table-cell;vertical-align: middle;">\n\
-                                        <div class="pp_pic_holder pp_default" style="z-index: 999999;opacity: 0;top: 52.5px;left: 307px;display: block;width: 738px;">'+
-                                            '<div id="img_prev_titulo" class="ppt" style="opacity: 1;display: block;width: 100%;"></div>'+
-                                                '<div class="pp_top">'+
-                                                    '<div class="pp_left"></div>'+
-                                                    '<div class="pp_middle"></div>'+
-                                                    '<div class="pp_right"></div>'+
-                                                '</div>'+
-                                                '<div class="pp_content_container">'+
-                                                                    '<div class="pp_left">'+
-                                                                    '<div class="pp_right">'+
-                                                                            '<div class="pp_content" style="height: 516px;width: 99%;">'+
-                                                                                    '<div class="pp_loaderIcon" style="display: none;"></div>'+
-                                                                                    '<div class="pp_fade" style="display: block;">'+
-                                                                                            '<a href="#" class="pp_expand" title="Expand the image" style="display: none;">Expand</a>'+
-                                                                                            '<div class="pp_hoverContainer" style="height: 480px; width: 720px; display: none;">'+
-                                                                                                    '<a class="pp_next" href="#">next</a>'+
-                                                                                                    '<a class="pp_previous" href="#">previous</a>'+
-                                                                                            '</div>'+
-                                                                                            '<div id="pp_full_res" style="width: 100%;position: relative;"><img id="preview_Width_Real" src="../Imagens/repositorio/IMG_1518.JPG" style="height: 480px;width: 100%;position: relative;right: 0px;left: 0px;border-radius: 12px;"></div> '+
-                                                                                            '<div class="pp_details" style="width: 100%;">'+
-                                                                                                    '<div class="pp_nav" style="display: none;"><a href="#" class="pp_play">Play</a>'+
-                                                                                                            '<a href="#" class="pp_arrow_previous">Previous</a> '+
-                                                                                                            '<p class="currentTextHolder">1/1</p>'+
-                                                                                                            '<a href="#" class="pp_arrow_next">Next</a>'+
-                                                                                                    '</div>'+
-                                                                                                    '<p class="pp_description" style="display: none;"></p>'+
-                                                                                                    '<div class="pp_social"></div>'+
-                                                                                                    '<a class="pp_close" href="#">Close</a>'+
-                                                                                            '</div>'+
-                                                                                    '</div>'+
-                                                                            '</div>'+
-                                                                    '</div>'+
-                                                                    '</div>'+
-                                                            '</div>'+
-                                                            '<div class="pp_bottom">'+
-                                                                    '<div class="pp_left"></div>'+
-                                                                    '<div class="pp_middle"></div> '+
-                                                                    '<div class="pp_right"></div>'+
-                                                            '</div>'+
-                                                    '</div>'+
-                                                '</div>\n\
-                                            </div>\n\
-                            </div>').addClass("modal-open");
-                $(".pp_pic_holder").animate({opacity:1},1000);
-                $(".pp_close").unbind();
-                $(".pp_close").click(function(){
-                    $("#myLoader").fadeOut(function(){
-                        $("#myLoader").remove();
-                    });
-                }); 
-
-
-                this.loadImagens(n + 1, tOriginal, Titulo)
-            }
-            
-        }
+        $(".ekko-lightbox").click(function(e){
+            $(".ekko-lightbox").remove();
+            $(".modal-backdrop").remove();
+        });
+        
+        this.loadImagens(n + 1, tOriginal, Titulo) ;
 
     }
    
@@ -274,7 +154,7 @@ class ReceberEnviar extends JSController{
                         objeto.exibirImagem_tamanho_real(idx_prevView, Caminho);
                     }
                     if(objeto.imagensName){
-                        $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div><div style='display: inline-block; width:100%' id='Nome_Imagem'><input  id='ID_NOMEIMAGEM_"+ idx_prevView + "' style='display: inline-block; width:100%' type='text' data-nomeimagem='"+ file.name +"' Placeholder='Nome'></div></div>");
+                        $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div><div style='display: inline-block; width:100%' id='Nome_Imagem'><input style='margin-top: 3px' class='form-control'  id='ID_NOMEIMAGEM_"+ idx_prevView + "' style='display: inline-block; width:100%' type='text' data-nomeimagem='"+ file.name +"' Placeholder='Nome'></div></div>");
 
                     }else{
                         $("#img_prev_" + idx_prevView).html("<div id='N_img_prev'><div style='display: inline-block;font-size: smaller; cursor: pointer'><i data-number='"+ idx_prevView + "' class='fa fa-times MatarFoto' aria-hidden='true'></i></div><div id='IMG_CARREGADA_"+ idx_prevView + "'></div></div>");
@@ -602,7 +482,7 @@ class ReceberEnviar extends JSController{
         let Obj = this
 
         
-        let CaixaDIV =  '<div id="CONTENT_FORM_IMAGENS">d</div>'+
+        let CaixaDIV =  '<div id="CONTENT_FORM_IMAGENS"></div>'+
                             '<div id="UPLOADS_CAIXA">'+
                                 '<div id="CUp" class="CaixaUploads" ondragover="return false" >'+
                                     '<div class="CaixaUploadInterna" >\n\

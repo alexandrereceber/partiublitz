@@ -273,6 +273,53 @@ class TabelaHTML extends JSController{
         }
         
     }
+    showImagens(Titulo, Path_IMG){
+        
+        $("body").append(`
+                            <div 
+                                id="ekkoLightbox-135" 
+                                class="ekko-lightbox modal fade in show" 
+                                tabindex="-1" 
+                                role="dialog" 
+                                aria-modal="true" 
+                                style="padding-right: 15px; display: block;">
+                                    <div 
+                                        class="modal-dialog" 
+                                        role="document" 
+                                        style="display: block; flex: 1 1 1px; max-width: 502px;">
+                                            <div 
+                                                class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">sample 5 - black</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="ekko-lightbox-container" style="height: 468px;">
+                                                        <div class="ekko-lightbox-item fade"></div>
+                                                        <div class="ekko-lightbox-item fade in show">
+                                                            <img src="${Path_IMG}" class="img-fluid" style="width: 100%;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer hide" style="display: none;">&nbsp;</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="modal-backdrop fade show">
+                                </div>`);
+        $(".modal-title").html(Titulo);
+        $(".close").click(function(e){
+            $(".ekko-lightbox").remove();
+            $(".modal-backdrop").remove();
+        });
+        
+        $(".ekko-lightbox").click(function(e){
+            $(".ekko-lightbox").remove();
+            $(".modal-backdrop").remove();
+        });
+        
+    }
     
     addFunctons_LOAD(Operacao, Nome, Funcao){
         if(Operacao !== null && Operacao !== "" && Operacao !== undefined && Nome !== null && Nome !== "" && Nome !== undefined && Funcao !== null && Funcao !== "" && Funcao !== undefined){
