@@ -354,7 +354,8 @@ class FormHTML extends JSController{
     get_BaseGroup_Select(){
         let BaseGroup_Select = '<div class="form-group"  style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo};">'+
                                       '<label for="{ROTULO_id}">{ROTULO_Nome}</label>'+
-                                      '<select class="form-control {ROTULO_SELECTD2}" \n\
+                                      '<select class="form-control {ROTULO_SELECTD2} " \n\
+                                            {ROTULO_MULTIPLE} \n\
                                             style="{ROTULO_style}" \n\
                                             id="SELECT_'+ this.ResultSet.Indexador +'_{ROTULO_id}"\n\
                                             name="{ROTULO_id}" \n\
@@ -365,6 +366,14 @@ class FormHTML extends JSController{
         return BaseGroup_Select;
     }
 
+    get_BaseGroup_Textarea(){
+        let BaseGroup_Select = '<div class="form-group"  style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo};">'+ 
+                                    '<label for="{ROTULO_id}">{ROTULO_Nome}</label>'+
+                                    '<textarea {ROTULO_patterns} {ROTULO_leitura} maxlength="{ROTULO_maxlength} max="{ROTULO_max}" size="{ROTULO_size}" {ROTULO_required} name="{ROTULO_id}" id="SELECT_'+ this.ResultSet.Indexador +'_{ROTULO_id}" class="form-control" rows="3" placeholder="{ROLTULO_placeholder}" style="{ROTULO_style}"></textarea>'+
+                                '</div>';
+        return BaseGroup_Select;
+    }
+    
     get_BaseGroup_Imagem(){
         this.Imagem = true;
         let BaseGroup_Imagem = '<div class="form-group"  style="'+ this.Configuracoes.form_group.style +';{ROTULO_style_por_campo};">'+
@@ -400,19 +409,7 @@ class FormHTML extends JSController{
      */
     gerar_CAMPOSFormGrups(BLOCK = false, DIVIS = false){
         let CAMPOS = this.ResultSet.Campos;
-        /*
-         * Representa os campos da classe que tem como componente o inputbox
-         * @type String
-         */
-        let BaseGroup_input = this.get_BaseGoup_input();
-        /*
-         * Representa os campos da classe que tem como componente o select
-         * @type String
-         */      
-        let BaseGroup_Select = this.get_BaseGroup_Select();
-        
-        let BaseGroup_imagem = this.get_BaseGroup_Imagem();
-        
+                
         let BaseGROUPS = "", Count = 0;;
         
         for(let i of CAMPOS){
@@ -423,6 +420,7 @@ class FormHTML extends JSController{
             , Groups          = i[8].Grupos
             , Componente      = i[8].TypeComponente
             , Tipo_Conteudo   = i[8].TypeConteudo
+            , Multiple        = i[8].Multiple == true ? "multiple='multiple'" : ""
             , Required        = i[8].Required == true ? "required='true'" : ""
             , Title           = i[8].Titles
             , Patterns        = i[8].Patterns != "" ? "pattern='"+ i[8].Patterns + "'" : ""
@@ -453,7 +451,12 @@ class FormHTML extends JSController{
             
             if(Componente === "inputbox"){
                     if(i[8].Exibir){
-                        
+                        /*
+                    * Representa os campos da classe que tem como componente o inputbox
+                    * @type String
+                    */
+                    let BaseGroup_input = this.get_BaseGoup_input();
+
                         BaseGROUPS += BaseGroup_input
                                                         .replace(/{ROTULO_Nome}/ig, Label)
                                                         .replace(/{ROLTULO_placeholder}/ig, Placeholder)
@@ -470,7 +473,8 @@ class FormHTML extends JSController{
                                                         .replace(/{ROTULO_style_por_campo}/ig, this.Configuracoes.form_group.Campos[Count])
                     }
                     Count++;
-                }else if(i[8].TypeComponente === "select"){
+                }
+            else if(i[8].TypeComponente === "select"){
                     if(i[8].Exibir){
                             /* Chave estrangeira
                           * Verifica se o campo faz referência a outro campo.
@@ -481,7 +485,12 @@ class FormHTML extends JSController{
                              });                        
                          }
 
-
+                        /*
+                         * Representa os campos da classe que tem como componente o select
+                         * @type String
+                         */      
+                        let BaseGroup_Select = this.get_BaseGroup_Select();
+                        
                          BaseGROUPS += BaseGroup_Select
                                                              .replace(/{ROTULO_Nome}/ig, Label)
                                                              .replace(/{ROTULO_id}/ig, FNome)
@@ -490,7 +499,8 @@ class FormHTML extends JSController{
                                                              .replace(/{ROTULO_size}/ig, Size)
                                                              .replace(/{ROTULO_style}/ig, Style)
                                                              .replace(/{ROTULO_style_por_campo}/ig, this.Configuracoes.form_group.Campos[Count] + ";" + this.Configuracoes.form_group.For_by_Form[Count])
-                                                             .replace(/{ROTULO_ITENS}/ig, Opcoes);
+                                                             .replace(/{ROTULO_ITENS}/ig, Opcoes)
+                                                             .replace(/{ROTULO_MULTIPLE}/ig, Multiple);
                          if(i[19].TExt){
                              BaseGROUPS = BaseGROUPS.replace(/{ROTULO_SELECTD2}/ig, "SELECTD2");
                          }else{
@@ -498,8 +508,10 @@ class FormHTML extends JSController{
                          }
                     }
                     
-            }else if(i[8].TypeComponente === "imagem"){
-                if(i[8].Exibir){
+            }
+            else if(i[8].TypeComponente === "imagem"){
+            if(i[8].Exibir){
+                    let BaseGroup_imagem = this.get_BaseGroup_Imagem();
                     BaseGROUPS += BaseGroup_imagem
                                             .replace(/{ROTULO_Nome}/ig, Label)
                                             .replace(/{ROLTULO_placeholder}/ig, Placeholder)
@@ -517,7 +529,29 @@ class FormHTML extends JSController{
                     
                 }
                 
-            }else{
+            }
+            else if(i[8].TypeComponente === "textarea"){
+            if(i[8].Exibir){
+                    let BaseGroup_TextArea = this.get_BaseGroup_Textarea();
+                    BaseGROUPS += BaseGroup_TextArea
+                                            .replace(/{ROTULO_Nome}/ig, Label)
+                                            .replace(/{ROLTULO_placeholder}/ig, Placeholder)
+                                            .replace(/{ROTULO_id}/ig, FNome)
+                                            .replace(/{ROTULO_tipo}/ig, Tipo_Conteudo[0])
+                                            .replace(/{ROTULO_required}/ig, Required)
+                                            .replace(/{ROTULO_patterns}/ig, Patterns)
+                                            .replace(/{ROTULO_leitura}/ig, Leitura)
+                                            .replace(/{ROTULO_maxlength}/ig, Maxlength)
+                                            .replace(/{ROTULO_Max}/ig, Max)
+                                            .replace(/{ROTULO_Min}/ig, Min)
+                                            .replace(/{ROTULO_size}/ig, Size)
+                                            .replace(/{ROTULO_style}/ig, Style)
+                                            .replace(/{ROTULO_style_por_campo}/ig, this.Configuracoes.form_group.Campos[Count]);
+                    
+                }
+                
+            }
+            else{
                 throw "Não há campo correspondente a esse tipo de dados";
             }
         }
@@ -632,6 +666,11 @@ class FormHTML extends JSController{
                     this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, null);
 
                 }
+            }else{
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Uma ou outra função retornou false.'
+                });
             }
             
         }catch(e){
@@ -668,7 +707,10 @@ class FormHTML extends JSController{
                     return true;
                 }    
             }else{
-                
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Uma ou outra função retornou false.'
+                });                
             }
             
 
@@ -744,7 +786,7 @@ class FormHTML extends JSController{
             let CAMPOS = this.ResultSet.Campos,
                 RESULT = this.ResultSet.ResultDados,
                 Total  = RESULT.length;
-            if(this.DadosEnvio.sendModoOperacao !== "1b24931707c03902dad1aeVISUALIZAR"){
+            if(this.DadosEnvio.sendModoOperacao !== "1b24931707c03902dad1aeVISUALIZAR" && this.DadosEnvio.sendModoOperacao !== "5a59ffc82a16fc2b17daa935c1aed3e9"){
                 if(RESULT.length == 0 || this.Registro > RESULT.length) {throw "Não há registro para edição ou índice inválido.";}
             }
             if(this.DadosEnvio.sendModoOperacao === "5a59ffc82a16fc2b17daa935c1aed3e9" || this.DadosEnvio.sendModoOperacao === "1b24931707c03902dad1aeVISUALIZAR"){
@@ -1159,8 +1201,11 @@ class FormHTML extends JSController{
                 event.preventDefault();
                 o.confirme_Insercao(e);
             });
-        }
-;
+        };
+        
+        $(".form-control").keypress(function(e){
+            o.FUNCOES_ONLOAD.__Exec("keypress","evento", o, e);
+        });
         
       this.selecForeingKey();
         
@@ -1260,7 +1305,8 @@ class FormHTML extends JSController{
                         
                         return p;
                       }
-                }
+                },
+                maximumSelectionLength: 2
 
               });
     }

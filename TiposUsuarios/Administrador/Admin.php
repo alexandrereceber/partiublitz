@@ -170,7 +170,7 @@ echo "<script>var Chave='$sendChave'</script>"
                   </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
-                    <i class="fa-solid fa-party-horn"></i>
+                    <i class="nav-icon fa-solid fa-party-horn"></i>
                     <p style="margin-left: 5px">
                        Festas 
                       <i class="fas fa-angle-left right"></i>
@@ -221,6 +221,14 @@ echo "<script>var Chave='$sendChave'</script>"
                   </ul>
                 </li>
 
+                <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fa-regular fa-list-dropdown"></i>
+                    <p style="margin-left: 5px">
+                       Listas 
+                    </p>
+                  </a>
+                </li>
 
             </ul>
           </nav>
@@ -359,9 +367,9 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=26" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=42" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=88"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=100"></script>
 
         
 <!-- The Modal -->
