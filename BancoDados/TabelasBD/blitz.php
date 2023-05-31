@@ -4181,7 +4181,7 @@ class adm_tipo_listas extends ModeloTabelas{
                "Formulario"     => [
                                         "Exibir"=> true,
                                         "Placeholder"=> "", 
-                                        "TypeComponente"=>"textarea",
+                                        "TypeComponente"=>"select",
                                         "Multiple"=>false, 
                                         "TypeConteudo"=> ["text"], 
                                         "Name" => "LBeneficios",

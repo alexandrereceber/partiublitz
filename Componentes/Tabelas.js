@@ -812,7 +812,7 @@ class TabelaHTML extends JSController{
         }
 
         if(InfPag.ModoPaginacao.BRefresh){
-            Refresh ='<td style="display:flex; margin: auto" id="TR_BREFRESH"><div style="text-align: center;" id="BREFRESH"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><i class="fa-duotone fa-arrows-rotate"></i></button></div></td>';
+            Refresh ='<td style="vertical-align: middle !important;margin: auto" id="TR_BREFRESH"><div style="text-align: center;" id="BREFRESH"><button type="button" class="btn btn-primary" onclick="'+ this.NomeInstancia +'.Refresh()"><i class="fa-duotone fa-arrows-rotate"></i></button></div></td>';
         }
         
         /**
@@ -863,7 +863,7 @@ class TabelaHTML extends JSController{
 
             
         }
-        Tabela = "<table class='"+ this.CSSTableGeral.GeralTableClass +"' style='margin-bottom:0px'>\n\
+        Tabela = "<table class='table' style='margin-bottom:0px'>\n\
                                     <tr>\n\
                                         "+ (InfPag.TituloTabela == false ? "" : "<th colspan='4' style='text-align: center'>"+ InfPag.TituloTabela) +"</th>\n\
                                     </tr>"+ TH + "<tr>"+ FindAll + Refresh +"</tr>"+

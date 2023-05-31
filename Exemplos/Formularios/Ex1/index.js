@@ -28,7 +28,7 @@ var t = new FormHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
  * Nome da tabela que esta no formato MD5 no arquivo de configuração Config/Configuracao.php
  * @type String
  */
-t.setTabela = "83849cf6295498c96deb555e00f4c777";
+t.setTabela = "624c6fd80de356ec39f31f3d36bdbfa4";
 t.setRecipiente = "dados";
 t.setNome_BtSubmit = "Enviar";
 

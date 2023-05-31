@@ -19,7 +19,10 @@ and open the template in the editor.
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        
+        
         <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css"><!-- Tem que vir primeiro -->
+
         <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">      <!-- Tem que vir segundo por causa do select -->
        
         <link rel="stylesheet" href="/blitz/Recursos/plugins/fontawesome-free/css/all.min.css">

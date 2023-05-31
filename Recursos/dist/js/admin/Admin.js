@@ -173,7 +173,7 @@ $("#__SIDEBAR_NAV_ITEM_MEMBROS_CADASTRO").click(function(e){
         }
         
     };
-    //TABELA_CADASTRO.CSSTableGeral.GeralDivClass_Botoes = "FIXA_BARRA_BOTOES_CELL";
+    TABELA_CADASTRO.CSSTableGeral.GeralTableClass = "table";
     TABELA_CADASTRO.show();
     
 });

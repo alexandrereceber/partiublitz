@@ -49,8 +49,11 @@ echo "<script>var Chave='$sendChave'</script>"
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=1">
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
+
+  <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
+
+  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?2">
+  
   
   
   <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?45">
@@ -367,9 +370,9 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=42" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=47" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=100"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=104"></script>
 
         
 <!-- The Modal -->
