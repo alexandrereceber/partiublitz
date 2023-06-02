@@ -125,6 +125,13 @@ if($Sessao && $SessaoProcedure){
                 $SD->DestruirSessao();
                 throw new Exception("Tempo de sessão expirado, favor efetuar login novamente!.", 12005);
             }
+            
+            $TUsuario = $SD->getTipoUser();
+            if($TUsuario !== $URL){
+                $SD->DestruirSessao();
+                throw new Exception("Usuários não estão sincronizados.", 11006);                
+            }
+            
         }else{
             $SD->DestruirSessao();
             throw new Exception("Login necessário, favor entrar em contato com o administrador!.", 12006);

@@ -102,7 +102,11 @@ class SessaoDados{
     public function Commitar() {
         session_commit();
     }
-
+    
+    public function getTipoUser(){
+        return $this->Chaves->Tusuario;
+    }
+    
     public function DEcriptar($chv) {
         return base64_decode($chv);
     }
