@@ -27,7 +27,7 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/BancoDados/TabelasBD/'. 
 ConfigSystema::getStartTimeTotal();
 $URL            = filter_input(INPUT_GET, "URL");
 $Requisicao     = filter_input(INPUT_GET, "Req");
-$SSL            = filter_input(INPUT_GET, "SSL");
+$ESQUEMA        = filter_input(INPUT_SERVER, "REQUEST_SCHEME");
 $ProcedureMD5   = filter_input(INPUT_POST, "sendProcedure");
 $Formato        = filter_input(INPUT_POST, "sendRetorno") == "" ? "JSON" : filter_input(INPUT_POST, "sendRetorno"); //Atribui um formato padrão
 $Dispositivo    = filter_input(INPUT_POST, "sendDispositivo");
@@ -103,7 +103,11 @@ if($Sessao && $SessaoProcedure){
 
 
     try {
-
+        
+        if($ESQUEMA !== "https"){
+            throw new Exception("Somente conexões protegidas.", 11007);
+        }
+        
         $SD = new SessaoDados();
         $SD->setChaves($Dados_Sessao["Chave"]);
 

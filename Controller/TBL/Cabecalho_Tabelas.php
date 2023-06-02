@@ -28,7 +28,7 @@ ConfigSystema::getStartTimeTotal();
 $URL            = filter_input(INPUT_GET, "URL");
 $Requisicao     = filter_input(INPUT_GET, "Req");
 $Metodo         = filter_input(INPUT_GET, "Metodo");
-$SSL            = filter_input(INPUT_GET, "SSL");
+$ESQUEMA        = filter_input(INPUT_SERVER, "REQUEST_SCHEME");
 $TabelaMD5      = filter_input(INPUT_POST, "sendTabelas");
 $Formato        = filter_input(INPUT_POST, "sendRetorno")  == "" ? "JSON" : filter_input(INPUT_POST, "sendRetorno"); //Atribui um formato padrão
 $Dispositivo    = filter_input(INPUT_POST, "sendDispositivo");
@@ -109,7 +109,11 @@ if($Sessao && $SessaoTabela){
     $SD = new SessaoDados();
 
     try {
-
+        
+        if($ESQUEMA !== "https"){
+            throw new Exception("Somente conexões protegidas.", 11007);
+        }
+        
         $SD->setChaves($Dados_Sessao["Chave"]);
 
         if($SD->startSessao()){

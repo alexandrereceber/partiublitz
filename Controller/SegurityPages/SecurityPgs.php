@@ -25,9 +25,8 @@ ConfigSystema::getStartTimeTotal();
 $URL            = filter_input(INPUT_GET, "URL");
 $Requisicao     = filter_input(INPUT_GET, "Req");
 $Metodo         = filter_input(INPUT_GET, "Metodo");
-$SSL            = filter_input(INPUT_GET, "SSL");
+$ESQUEMA        = filter_input(INPUT_SERVER, "REQUEST_SCHEME");
 
-    
 /**
  * Verifise se o sistema está em sessão ou não, isso caso o sistema tenha acesso gerencial, caso não tenha poderá
  * setar a variável de sessão como false. 
@@ -67,7 +66,11 @@ if($Sessao){
 
 
     try {
-
+        
+        if($ESQUEMA !== "https"){
+            throw new Exception("Somente conexões protegidas.", 11007);
+        }
+        
         $SD = new SessaoDados();
         $SD->setChaves($Dados_Sessao["Chave"]);
 
