@@ -32,7 +32,16 @@ class ConfigSystema {
                                 "OutSystems"
                             ],
             $Email = true,
-            $Mensagem = true;
+            $Mensagem = true,
+            $LoginSimultaneos = 0; /* 0 -> O mesmo usuário loga somente em um equipamento
+             *                        1 -> Loga sem restrições, mas derruba a última(Usuário loga em qualquer lugar, mas somente uma delas continua)
+                                      2 -> sem restrição(loga sem verificar sessõa, nem derruba as outras)
+             *                      */
+    
+    
+    public static function getLoginsSimultaneos(){
+        return self::$LoginSimultaneos;
+    }
     
     
     /**

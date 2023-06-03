@@ -23,6 +23,10 @@ class SessaoDados{
         if(!isset($chv)) throw new Exception("Você não está autenticado, favor entrar em contato com o administrador.",5000);
     }
     
+    public function getSessaoAtiva() {
+        return $this->Chaves->Active;
+    }
+    
     public function getTimeChave() {
         return $this->Chaves->Tempo;
     }

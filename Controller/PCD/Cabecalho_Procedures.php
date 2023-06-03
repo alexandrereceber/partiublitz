@@ -111,35 +111,108 @@ if($Sessao && $SessaoProcedure){
         $SD = new SessaoDados();
         $SD->setChaves($Dados_Sessao["Chave"]);
 
-        if($SD->startSessao()){
-            $vd = $SD->Validar_UserName();
-            if(!$vd){
-              $SD->DestruirSessao();
-              throw new Exception("Usuário inválido para essa sessão, favor entrar em contato com o administrador!.", 12003);  
-            }
+        /**
+         * Verifica se já existe uma mesma sessão aberta. Caso exista o sistema apaga os dados anteriores;
+         */
+        $Ativo = $SD->getSessaoAtiva();
+        $TipoLogin = ConfigSystema::getLoginsSimultaneos();
 
-            $vt = $SD->ValidarTime();
-            if(!$vt){
-              $SD->DestruirSessao();
-              throw new Exception("Tempos não estão sincronizados, favor entrar em contato com o administrador!.", 12004);  
-            }
+        /**
+         * Loga somente em um equipamento
+         */
+        if($Ativo && $TipoLogin == 0){
+            if($SD->startSessao()){
+                $vd = $SD->Validar_UserName();
+                if(!$vd){
+                  $SD->DestruirSessao();
+                  throw new Exception("Usuário inválido para essa sessão, favor entrar em contato com o administrador!.", 11002);  
+                }
 
-            $vts = $SD->ValidarTempoSessao();
-            if(!$vts){
+                $vt = $SD->ValidarTime();
+                if(!$vt){
+                      $ResultRequest["Modo"]      = "Login";
+                      $ResultRequest["Error"]     = true;
+                      $ResultRequest["Codigo"]    = 4055;
+                      $ResultRequest["Mensagem"]  = "Usuário já está logado em outro sistema"; 
+                      echo json_encode($ResultRequest); 
+                      return false;  
+                }
+
+                $vts = $SD->ValidarTempoSessao();
+                if(!$vts){
+                    $ResultRequest["Modo"]      = "Login";
+                    $ResultRequest["Error"]     = true;
+                    $ResultRequest["Codigo"]    = 4055;
+                    $ResultRequest["Mensagem"]  = "Usuário já está logado em outro sistema"; 
+                    echo json_encode($ResultRequest); 
+                    return false;
+                }
+                /**
+                 * Usuário tentando elevar os privilégios com escalada, digitando o Administrador no lugar do Comum
+                 */
+                $TUsuario = $SD->getTipoUser();
+                if($TUsuario !== $URL){
+                    $SD->DestruirSessao();
+                    throw new Exception("Usuários não estão sincronizados.", 11006);                
+                }
+
+            }else{
                 $SD->DestruirSessao();
-                throw new Exception("Tempo de sessão expirado, favor efetuar login novamente!.", 12005);
+                throw new Exception("Login necessário, favor entrar em contato com o administrador!.", 11005);
             }
-            
-            $TUsuario = $SD->getTipoUser();
-            if($TUsuario !== $URL){
-                $SD->DestruirSessao();
-                throw new Exception("Usuários não estão sincronizados.", 11006);                
-            }
-            
-        }else{
-            $SD->DestruirSessao();
-            throw new Exception("Login necessário, favor entrar em contato com o administrador!.", 12006);
         }
+        /**
+         * Loga em 1 equipamento, sendo a outra sessão derruaba.
+         */
+        else if($Ativo && $TipoLogin == 1){
+            
+            if($SD->startSessao()){
+                $vd = $SD->Validar_UserName();
+                if(!$vd){
+                  $SD->DestruirSessao();
+                  throw new Exception("Usuário inválido para essa sessão, favor entrar em contato com o administrador!.", 11002);  
+                }
+
+                $vt = $SD->ValidarTime();
+                if(!$vt){
+                  $SD->DestruirSessao();
+                  throw new Exception("Tempos não estão sincronizados, favor entrar em contato com o administrador!.", 11003);  
+                }
+
+                $vts = $SD->ValidarTempoSessao();
+                if(!$vts){
+                    $SD->DestruirSessao();
+                    throw new Exception("Tempo de sessão expirado, favor efetuar login novamente!.", 11004);
+                }
+
+                $TUsuario = $SD->getTipoUser();
+                if($TUsuario !== $URL){
+                    $SD->DestruirSessao();
+                    throw new Exception("Usuários não estão sincronizados.", 11006);                
+                }
+
+            }else{
+                $SD->DestruirSessao();
+                throw new Exception("Login necessário, favor entrar em contato com o administrador!.", 11005);
+            }
+        }
+        /**
+         * Loga em qualquer dispositivo sem qualquer tipo de validação.
+         */
+        else if($Ativo && $TipoLogin == 2){
+
+        }
+        /**
+         * Destroe a sessão caso esteja sofrente algum tipo de ataque.
+         */
+        else if($Ativo && $TipoLogin > 2){
+            throw new Exception("Tipo de login incorreto", 11006); 
+        }  
+        
+        
+        /*
+         * Todas páginas que utilizarem esse sistema de segurança, obterão o nome de usuario através desta variável.
+         */
         
         $SystemUsuario = $SD->getUsernameChave();
         $IDUserName = $SD->getIDUsername();

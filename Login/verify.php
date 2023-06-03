@@ -238,8 +238,78 @@ try {
      * Verifica se já existe uma mesma sessão aberta. Caso exista o sistema apaga os dados anteriores;
      */
     $Ativo = $_SESSION[$SDados["ID"]]["Active"];
-    if($Ativo){
+    $TipoLogin = ConfigSystema::getLoginsSimultaneos();
+    
+    /**
+     * Loga somente em um equipamento
+     */
+    if($Ativo && $TipoLogin == 0){
+        
+        
+        if(!@include_once ConfigSystema::get_Path_Systema() . '/Account/SDados.php'){
+            $ResultRequest["Modo"]        = "Include";
+            $ResultRequest["Error"]    = true;
+            $ResultRequest["Codigo"]   = 11001;
+            $ResultRequest["Mensagem"] = "Error sessão.";
+
+            echo json_encode($ResultRequest); 
+            exit;
+        }
+        $Chave = base64_encode(json_encode($SDados));
+             
+        $SD = new SessaoDados();
+        $SD->setChaves($Chave);  
+        
+        $vt = $SD->ValidarTime();
+        if(!$vt){
+            $ResultRequest["Modo"]      = "Login";
+            $ResultRequest["Error"]     = true;
+            $ResultRequest["Codigo"]    = 4055;
+            $ResultRequest["Mensagem"]  = "Usuário já está logado em outro sistema"; 
+            echo json_encode($ResultRequest); 
+            return false;
+        }
+
+        $vts = $SD->ValidarTempoSessao();
+        if(!$vts){
+            $ResultRequest["Modo"]      = "Login";
+            $ResultRequest["Error"]     = true;
+            $ResultRequest["Codigo"]    = 4055;
+            $ResultRequest["Mensagem"]  = "Usuário já está logado em outro sistema";
+            echo json_encode($ResultRequest);
+            return false;
+        }else{
+            $SD->DestruirSessao();
+            throw new Exception("Tempo de sessão expirado, favor efetuar login novamente!.", 11004);
+        }
+        
+        $TUsuario = $SD->getTipoUser();
+        $isTypeIgual = preg_match("/$TUsuario/i", $URL);
+        if(!$isTypeIgual){
+            $SD->DestruirSessao();
+            $Server = $_SERVER["REMOTE_ADDR"];
+            EnviarEmail($Usuario, "", "Usuários não estão sincronizados. $Server");
+
+            throw new Exception("Usuários não estão sincronizados.", 11006);                
+        }
+    }
+    /**
+     * Loga em 1 equipamento, sendo a outra sessão derruaba.
+     */
+    else if($Ativo && $TipoLogin == 1){
         $_SESSION[$SDados["ID"]] = [];
+    }
+    /**
+     * Loga em qualquer dispositivo sem qualquer tipo de validação.
+     */
+    else if($Ativo && $TipoLogin == 2){
+        
+    }
+    /**
+     * Destroe a sessão caso esteja sofrente algum tipo de ataque.
+     */
+    else if($Ativo && $TipoLogin > 2){
+        throw new Exception("Tipo de login incorreto", 11006); 
     }
     
     $_SESSION[$SDados["ID"]] = json_encode($SDados);
