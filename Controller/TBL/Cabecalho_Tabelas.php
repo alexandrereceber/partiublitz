@@ -110,9 +110,9 @@ if($Sessao && $SessaoTabela){
 
     try {
         
-        if($ESQUEMA !== "https"){
-            throw new Exception("Somente conexões protegidas.", 11007);
-        }
+//        if($ESQUEMA !== "https"){
+//            throw new Exception("Somente conexões protegidas.", 11007);
+//        }
         
         $SD->setChaves($Dados_Sessao["Chave"]);
 

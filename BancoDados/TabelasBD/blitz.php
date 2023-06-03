@@ -560,7 +560,7 @@ class login extends ModeloTabelas{
       
         ];
     //private $Privilegios = [["PowerCoin","Select/Insert/Update/Delete"]];
-    private $Privilegios = [["Todos","Select"]];
+    private $Privilegios = [["Todos","Select/Update"]];
     private $TipoPaginacao = ["Simples"=>false, "SaltoPagina"=> true, "Filtros"=>true, "BRefresh"=>true];
     
     public function ModoPaginacao() {
