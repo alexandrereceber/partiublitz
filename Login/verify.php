@@ -76,7 +76,6 @@ try {
         if(!ConfigSystema::getDispositivos($Dispositivo)){
             throw new Exception("O dispositivo utilidado não é válido para esse sistema.", 14003);
             exit;
-
         }
     }
 

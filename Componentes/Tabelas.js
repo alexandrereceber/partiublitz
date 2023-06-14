@@ -1483,7 +1483,8 @@ class TabelaHTML extends JSController{
             this.DadosEnvio.sendCamposAndValores = Campos;
         
             TratarResposta = await this.inserir();
-
+            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, true);
+            
             if(TratarResposta.Error !== false){
                 this.TratarErros(TratarResposta, "Inserir");
                 return false;
@@ -1493,8 +1494,6 @@ class TabelaHTML extends JSController{
 
             await this.show();
 
-            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, true);
-            
             Toast.fire({
                 icon: 'success',
                 title: 'Os dados foram inseridos.'
@@ -1568,7 +1567,8 @@ class TabelaHTML extends JSController{
                 this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias[0]);
 
                 TratarResposta =  await this.atualizar();
-
+                await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, true);
+                
                 if(TratarResposta.Error !== false){
                     this.TratarErros(TratarResposta);
                     return false;
@@ -1588,7 +1588,6 @@ class TabelaHTML extends JSController{
 
                         await this.show(); //Somente após a atualização de todas as linhas;
 
-                        await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, true);
                         Toast.fire({
                             icon: 'success',
                             title: 'Os dados foram atualizados.'
@@ -1674,6 +1673,7 @@ class TabelaHTML extends JSController{
         
         await this.FUNCOES_EVENT.__Exec("SELECT","BEFORE", this, null);
         TratarResposta = await this.Atualizar();
+        await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, null);
         
         if(TratarResposta.Error !== false){
             this.TratarErros(TratarResposta);
@@ -1745,7 +1745,7 @@ class TabelaHTML extends JSController{
         }
         
         
-        await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, null);
+        
         
         this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["SHOW"], this);
     }

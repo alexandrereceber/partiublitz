@@ -1,13 +1,13 @@
 {
-    "lang": "en-us",
-    "name": "Temperature converter app",
-    "short_name": "Temperature converter",
-    "description": "A basic temperature converter application that can convert to and from Celsius, Kelvin, and Fahrenheit",
-    "start_url": "/blitz/",
+    "lang": "pt-BR",
+    "name": "Patiublitz",
+    "short_name": "Listas",
+    "description": "Lista com membros com diversos níveis.",
+    "start_url": "https://partiublitz.com.br/blitz/Logar",
     "background_color": "#2f3d58",
     "theme_color": "#2f3d58",
     "orientation": "any",
-    "display": "standalone",
+    "display": "fullscreen",
     "icons": [
           {
               "src": "/blitz/Imagens/Logo/Logo_blitz512.png?1",

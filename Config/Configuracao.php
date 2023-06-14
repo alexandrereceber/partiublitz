@@ -33,7 +33,7 @@ class ConfigSystema {
                             ],
             $Email = true,
             $Mensagem = true,
-            $LoginSimultaneos = 0; /* 0 -> O mesmo usuário loga somente em um equipamento
+            $LoginSimultaneos = 2; /* 0 -> O mesmo usuário loga somente em um equipamento
              *                        1 -> Loga sem restrições, mas derruba a última(Usuário loga em qualquer lugar, mas somente uma delas continua)
                                       2 -> sem restrição(loga sem verificar sessõa, nem derruba as outras)
              *                      */
@@ -235,6 +235,9 @@ class TabelaBancoDadosMD5{
                                 ["0cdfc60825ce8e9cb6e78f0cb28a3f61",["adm_Eblitzimagens", true]],
                                 ["e1f550bec98a7e0f4a256579fbe333ee",["adm_eventos", true]],
                                 ["abda7fb4369ce84c67c12e0e98e59e75",["adm_imagens_eventos", true]],
+                                ["624c6fd80de356ec39f31f3d36bdbfa4",["adm_tipo_listas", true]],
+                                ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
+        
                             ];
     
     /**

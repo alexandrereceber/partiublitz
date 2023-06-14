@@ -52,11 +52,11 @@ echo "<script>var Chave='$sendChave'</script>"
 
   <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
 
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?2">
+  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?3">
   
   
   
-  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?45">
+  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?47">
   
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
@@ -223,15 +223,32 @@ echo "<script>var Chave='$sendChave'</script>"
                     </li>
                   </ul>
                 </li>
-
-                <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS">
+                
+                <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fa-regular fa-list-dropdown"></i>
                     <p style="margin-left: 5px">
                        Listas 
+                      <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-rectangles-mixed"></i>
+                        <p style="margin-left: 5px">Gerenciar</p>
+                      </a>
+                    </li>
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_BENEFICIOS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-rectangle-history-circle-plus"></i>
+                        <p  style="margin-left: 5px">Benefícios</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
                 </li>
+                
 
             </ul>
           </nav>
@@ -370,9 +387,9 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=47" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=48" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=104"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=112"></script>
 
         
 <!-- The Modal -->

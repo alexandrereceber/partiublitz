@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>blitz | Login </title>
+  <title>Blitz | Login </title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -15,8 +15,8 @@
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte_login.min.css">
     <!-- Logo da blitz -->
-  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?2" type="image/jpg">
-  
+  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
+  <link rel="manifest" href="/blitz/app.webmanifest.json">
 </head>
 <body class="hold-transition login-page" style="display: block;background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
 <div class="wrapper" style="position: absolute;width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8); ">
