@@ -3473,7 +3473,7 @@ class adm_eventos extends ModeloTabelas{
 
                     case "AfterInsert":
                         $IDEvento = $this->lastInsertId();
-                        
+                        $Listas = $this->query("SELECT id", pdo::FETCH_ASSOC);
                         break;
                     default:
                         break;
@@ -4133,7 +4133,7 @@ class adm_tipo_listas extends ModeloTabelas{
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"select",
                                         "Multiple"=>false, 
-                                        "TypeConteudo"=> ["Aniversários", "Eventos"], 
+                                        "TypeConteudo"=> ["Aniversário", "Evento"], 
                                         "Name" => "PTipo",
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
                                         "Patterns"=> "", 
@@ -4227,24 +4227,24 @@ class adm_tipo_listas extends ModeloTabelas{
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
                "Key"            => [false, false],                       //Chave primária (boolean)
                "ChvExt"         => [        
-                                        "TExt" => true,
+                                        "TExt" => false,
                                         "Tabela"=> "adm_beneficios",
                                         "IdxCampoVinculado"=> 0, 
                                         "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
                                         "NomeBotao"=> null,
-                                        "CamposTblExtrangeira"=>[0,1,2,2] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                        "CamposTblExtrangeira"=>[1,1,5,5] //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
                                     ],   //Chave estrangeira
                "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
                "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Visible"        => false,                                //Mostrar na tabela HTML (boolean)
                "Regex"          => [Exist=> false, Regx=> ""],                               //Regex que será utilizada.
                "Formulario"     => [
-                                        "Exibir"=> true,
+                                        "Exibir"=> false,
                                         "Placeholder"=> "", 
-                                        "TypeComponente"=>"select",
-                                        "Multiple"=>true, 
+                                        "TypeComponente"=>"",
+                                        "Multiple"=>false, 
                                         "TypeConteudo"=> ["Teste1","Alexandre"], 
-                                        "Name" => "LBeneficios",
+                                        "Name" => "",
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
                                         "Patterns"=> "", 
                                         "Titles" => "",

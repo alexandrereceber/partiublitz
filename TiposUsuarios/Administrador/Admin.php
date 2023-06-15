@@ -209,6 +209,12 @@ echo "<script>var Chave='$sendChave'</script>"
                         <p style="margin-left: 5px">Gerenciar</p>
                       </a>
                     </li>
+                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-rectangles-mixed"></i>
+                        <p style="margin-left: 5px">Listas</p>
+                      </a>
+                    </li>
                     <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_VIEW">
                       <a href="#" class="nav-link">
                         <i class="fa-solid fa-eye"></i>
@@ -239,12 +245,7 @@ echo "<script>var Chave='$sendChave'</script>"
                         <p style="margin-left: 5px">Gerenciar</p>
                       </a>
                     </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_BENEFICIOS">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-rectangle-history-circle-plus"></i>
-                        <p  style="margin-left: 5px">Benefícios</p>
-                      </a>
-                    </li>
+
                     
                   </ul>
                 </li>
@@ -387,9 +388,9 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=48" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=56" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=112"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=115"></script>
 
         
 <!-- The Modal -->

@@ -26,7 +26,8 @@ class TabelaHTML extends JSController{
                             Conteudo: false,
                             Style: false,
                             ShowIcons: false,
-                            Numerador: false
+                            Numerador: false,
+                            Campo: false
                         };
 
         /*
@@ -36,6 +37,7 @@ class TabelaHTML extends JSController{
         this.FuncoesIcones = []; //Armazena as funções, criadas manualmente, para a execução dos ícones da tabela HTML, a função recebe os parâmetros Instância da tabela e o próprio objeto 
         this.FuncoesChvExt = []; //Armazena as funções para as chaves extrangeiras. São identificadas pelo numero da função. Esse número vem do ModeloTabela.php que fica no campo.
         this.StatusGeral = [];   //Amazena informações gerais como por exemplo se ja foi buscado os dados no banco. É a variável de estado do objeto.
+
         //---------------DISPOSITIVO----------------
         var Instancia = this;
         
@@ -154,6 +156,9 @@ class TabelaHTML extends JSController{
             }, 
             Numerador: function(Linha, Num){
                 return Instancia.Funcoes.Conteudo(Instancia, Linha, Num);
+            }, 
+            GerarCampoForm: function(Campo){
+                return  Instancia.Funcoes.Conteudo(Instancia, Campo);
             }
         };
         
@@ -426,13 +431,13 @@ class TabelaHTML extends JSController{
         var TipoCampo = this.ResultSet.Campos[id2][18][0];
         switch (TipoCampo) {
             case "text":
-                return "<span>"+ Valor +"</span>"
+                return "<span>"+ Valor +"</span>";
                 break;
 
             case "image":
-                var x = this.ResultSet.Campos[id2][18].width, y = this.ResultSet.Campos[id2][18].height
-                x = x != "" ? "width: "+ x : "";
-                y = y != "" ? "height: "+ y : "";
+                var x = this.ResultSet.Campos[id2][18].width, y = this.ResultSet.Campos[id2][18].height;
+                x = x !== "" ? "width: "+ x : "";
+                y = y !== "" ? "height: "+ y : "";
                 
                 return '<image style="'+ x +'; '+ y +'" src="">';
                 break;
@@ -441,9 +446,10 @@ class TabelaHTML extends JSController{
                 var     caixa = "", v = "";
                     if(/sim|não/i.test(Valor)){
                         return '<input disabled type="checkbox" '+ (/sim/i.test(Valor) ? "checked" : "") +' >';
-                    }
-                    if(/certo|errado/i.test(Valor)){//
+                    }else if(/certo|errado/i.test(Valor)){//
                         return '<i class="'+ (/certo/i.test(Valor) ? "fa fa-check" : "fa fa-remove") +'" style="font-size:19px"></i>';
+                    }else{
+                        return 'ErrorVerify';
                     }
                 
                 break;
@@ -1206,7 +1212,8 @@ class TabelaHTML extends JSController{
             Label = "", 
             Placeholder = "", 
             FNome = "", 
-            Tipo = "", 
+            Tipo = "",
+            Multiple = "",
             Required = "", 
             Title = "", 
             Patterns = "",
@@ -1231,7 +1238,8 @@ class TabelaHTML extends JSController{
         Placeholder     = Campo[8].Placeholder;
         FNome           = Campo[8].Name;
         Tipo            = Campo[8].TypeConteudo[0];
-        Required        = Campo[8].Required == true ? "required='true'" : "";;
+        Multiple        = Campo[8].Multiple == true ? "multiple='multiple'" : "";
+        Required        = Campo[8].Required == true ? "required='true'" : "";
         Title           = Campo[8].Titles;
         Patterns        = Campo[8].Patterns;
         Leitura         = Campo[8].readonly == true ? "readonly" : "";
@@ -1312,6 +1320,7 @@ class TabelaHTML extends JSController{
                     Template = `<div class="form-group">`+
                                       `<label for="${Label}">${Label}</label>`+
                                       `<select class="form-control SELECTD2_`+ this.ResultSet.Indexador +`" `+
+                                            `${Multiple} `+
                                             `title="${Title}" `+
                                             `style="${Estilo}" `+
                                             `id="SELECT_`+ this.ResultSet.Indexador +`_${Label}" `+
@@ -1339,20 +1348,41 @@ class TabelaHTML extends JSController{
                 Patterns        = Campo[8].Patterns;
                 Leitura         = Campo[8].readonly == true ? "readonly" : "";
                 
-                if(Campo[2].Exist && Modo != "Atualizar"){
-                    Valor = Campo[2].Valor;
-                }
-                
-                Template = ' \n\
-                                <div class="input-group mb-3">' +
-                                    '<div class="input-group-prepend">' +
-                                        '<span class="input-group-text">'+ Label +':</span>' +
-                                    '</div>' +
-                                    '<textarea '+ Required +' title="'+ Title +'"  '+ Patterns +' class="form-control" '+ Leitura +' placeholder="'+ Placeholder +'" name="'+ FNome +'">'+ Valor +'</textarea>' +
+                if(!Campo[19].TExt){
+                    
+                    if(Campo[2].Exist && Modo != "Atualizar"){
+                        Valor = Campo[2].Valor;
+                    } 
+                    Template = '<div class="form-group" >'+ 
+                                    '<label for="'+ Label + '">'+ Label + '</label>'+
+                                    '<textarea '+ Required +' title="'+ Title +'"  '+ Patterns +' class="form-control" '+ Leitura +' placeholder="'+ Placeholder +'" name="'+ FNome +'" rows=7>'+ Valor +'</textarea>' +
                                 '</div>';
+                        
                 return Template;
-            }
+                
+                }else{
+                    
+                    Valor = this.getObterValorCampos(Campo[19].CamposTblExtrangeira[3]);
+                    Template = '<div class="form-group" >'+ 
+                                    '<label for="'+ Label + '">'+ Label + '</label>'+
+                                    '<textarea '+ Required +' title="'+ Title +'"  '+ Patterns +' class="form-control" '+ Leitura +' placeholder="'+ Placeholder +'" name="'+ FNome +'"  rows=7>'+ Valor +'</textarea>' +
+                                '</div>';
+                        
+                return Template;
+                }
 
+                
+            }
+            if(Campo[8].TypeComponente == "funcao"){
+                if(this.Funcoes.Campo !== false){
+                    Template = await this.FAnonimas.GerarCampoForm(Campo);
+                    return Template;                    
+                }else{
+                    Template = "Esse campo é gerado por funções anônima que não foi definida.";
+                    return Template;
+                }
+
+            }
             
         }else if(this.blitz == "getcmdl.io"){
             
@@ -1392,14 +1422,16 @@ class TabelaHTML extends JSController{
         if(_FUNC !== false){
             this.FUNCOES_FOREIGN[_FUNC](options);
         }
-        let Tabela_Original = null, ModoOperacao_Original = null;
+        let Tabela_Original = null, ModoOperacao_Original = null, Ordem_Original = null;
        /*
         * Tabelas e modo de operação originais, pois usa-se o mesmo controle para mais de uma funcionalidade
         */ 
         Tabela_Original = this.DadosEnvio.sendTabelas;
         ModoOperacao_Original = this.DadosEnvio.sendModoOperacao;
+        Ordem_Original = this.DadosEnvio.sendOrdemBY;
         
         this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
+        this.DadosEnvio.sendOrdemBY = null;
         
         let Filtros_TOLD = [];
         Filtros_TOLD[0] = this.DadosEnvio.sendFiltros[0];
@@ -1425,6 +1457,7 @@ class TabelaHTML extends JSController{
         
         this.DadosEnvio.sendTabelas =  Tabela_Original;
         this.DadosEnvio.sendModoOperacao = ModoOperacao_Original;
+        this.DadosEnvio.sendOrdemBY = Ordem_Original;
         
         this.DadosEnvio.sendFiltros[0] = this.DadosEnvio.sendFiltros[0];
         this.DadosEnvio.sendFiltros[1] = Filtros_TOLD[1];
@@ -1483,13 +1516,14 @@ class TabelaHTML extends JSController{
             this.DadosEnvio.sendCamposAndValores = Campos;
         
             TratarResposta = await this.inserir();
-            await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, true);
             
             if(TratarResposta.Error !== false){
                 this.TratarErros(TratarResposta, "Inserir");
+                await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, TratarResposta);
                 return false;
             }else{
                 F.reset();
+                await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, true);
             }
 
             await this.show();
@@ -1567,12 +1601,16 @@ class TabelaHTML extends JSController{
                 this.DadosEnvio.sendChavesPrimarias = this.getBreakChaves(this.ChavesPrimarias[0]);
 
                 TratarResposta =  await this.atualizar();
-                await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, true);
                 
                 if(TratarResposta.Error !== false){
                     this.TratarErros(TratarResposta);
+                    
+                    await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, TratarResposta);
                     return false;
                 }else{
+                    
+                    await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, true);
+                    
                     let Diferenca = this._TotalRegistroUpdate - this.ChavesPrimarias.length + 1;
                     $("#ContadorRegistro").html(Diferenca);
 
@@ -1767,15 +1805,19 @@ class TabelaHTML extends JSController{
         this.DadosEnvio.sendChavesPrimarias = Quebradas;
         
         let rst = await this.FUNCOES_EVENT.__Exec("DELETE","BEFORE", this);
+        
         if(rst === true){
             TratarResposta = await this.Atualizar();
         
             if(TratarResposta.Error != false){
                 this.TratarErros(TratarResposta, "Excluir");
+                await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, TratarResposta);
                 return false;
             }else{
-                this.show();
                 await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this, true);
+                
+                this.show();
+                
                 Toast.fire({
                     icon: 'success',
                     title: 'Os dados foram excluídos.'

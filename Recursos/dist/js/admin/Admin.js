@@ -714,6 +714,9 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS").click(async function(e){
     FORMULARIO_LISTAS.setRecipiente = "T_CONTEUDO_FORMULARIO";
     FORMULARIO_LISTAS.setNome_BtSubmit = "Enviar";
     FORMULARIO_LISTAS.Modo_Operacao = "I";
+    FORMULARIO_LISTAS.FUNCAO_GERARCAMPOS = function(i){
+        return "<div>aqui</div>";
+    };
     /**
      * O nome que será informado como parâmetro não altera em nada, pois o nome que será tratada vem da função chamadora.
      * Ex.:
@@ -744,25 +747,28 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS").click(async function(e){
     await FORMULARIO_LISTAS.show();
 
     $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
-    if(TABELA_BENEFICIOS === null){
-        TABELA_BENEFICIOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    
+    if(TABELA_LISTAS === null){
+        TABELA_LISTAS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
     }
-    TABELA_BENEFICIOS.setTabela = "624c6fd80de356ec39f31f3d36bdbfa4";
-    TABELA_BENEFICIOS.setRecipiente = "T_CONTEUDO_TABELA";
-    TABELA_BENEFICIOS.Name = "TABELA_BENEFICIOS";
-    TABELA_BENEFICIOS.setDefaultOrderBy(8,"DESC");
-    TABELA_BENEFICIOS.FuncoesIcones[0] = function(a,b,c){
+    TABELA_LISTAS.setTabela = "624c6fd80de356ec39f31f3d36bdbfa4";
+    TABELA_LISTAS.setRecipiente = "T_CONTEUDO_TABELA";
+    TABELA_LISTAS.Name = "TABELA_LISTAS";
+    TABELA_LISTAS.setDefaultOrderBy(8,"DESC");
+    
+    TABELA_LISTAS.FuncoesIcones[0] = function(a,b,c){
         debugger;
         let Linha = a.getObterLinhaInteira(a.getBreakChaves(b.dataset.chaveprimaria));
     };
-    TABELA_BENEFICIOS.addFunctons_Eventos("SELECT_AFTER",async function(n,p,a){
+    TABELA_LISTAS.addFunctons_Eventos("SELECT_AFTER",async function(n,p,a){
         a.ResultSet.Botoes[0].Inserir = false;
         
     });
     
-    TABELA_BENEFICIOS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
+    TABELA_LISTAS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
 
         $(".SELECTD2_" + n.ResultSet.Indexador).select2({
+                maximumSelectionLength: 30,
                 ajax: {
                     data: function (params) {
                         let o = this;
@@ -838,20 +844,6 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS").click(async function(e){
     });
     
 
-    await TABELA_BENEFICIOS.show();
+    await TABELA_LISTAS.show();
 });
 
-$("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_BENEFICIOS").click(function(e){
-    $("#__CONTENT_WRAPPER_HEADER").hide();
-    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto"></div>');
-    
-    if(TABELA_LISTA_BENEFICIOS === null){
-        TABELA_LISTA_BENEFICIOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
-    }
-    TABELA_LISTA_BENEFICIOS.setTabela = "1da2e27139c86c663da5b5c5935406d1";
-    TABELA_LISTA_BENEFICIOS.setRecipiente = "T_CONTEUDO";
-    TABELA_LISTA_BENEFICIOS.Name = "TABELA_LISTA_BENEFICIOS";
-        
-    TABELA_LISTA_BENEFICIOS.show();
-    
-});

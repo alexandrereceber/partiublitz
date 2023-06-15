@@ -4134,7 +4134,7 @@ class adm_tipo_listas extends ModeloTabelas{
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"select",
                                         "Multiple"=>false, 
-                                        "TypeConteudo"=> ["Aniversários", "Eventos"], 
+                                        "TypeConteudo"=> ["Aniversário", "Evento"], 
                                         "Name" => "PTipo",
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
                                         "Patterns"=> "", 

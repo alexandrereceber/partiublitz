@@ -70,6 +70,7 @@ class FormHTML extends JSController{
             }
         };
         
+        this.FUNCAO_GERARCAMPOS = false;
         
         
         /**
@@ -413,24 +414,26 @@ class FormHTML extends JSController{
         let BaseGROUPS = "", Count = 0;;
         
         for(let i of CAMPOS){
-            let Keys          = i[3]
+            let Keys          = i[3] //Chave primária
             , Label           = i[1]
             , Placeholder     = i[8].Placeholder
             , FNome           = i[8].Name
             , Groups          = i[8].Grupos
             , Componente      = i[8].TypeComponente
             , Tipo_Conteudo   = i[8].TypeConteudo
-            , Multiple        = i[8].Multiple == true ? "multiple='multiple'" : ""
-            , Required        = i[8].Required == true ? "required='true'" : ""
-            , Title           = i[8].Titles
-            , Patterns        = i[8].Patterns != "" ? "pattern='"+ i[8].Patterns + "'" : ""
-            , Leitura         = i[8].readonly == true ? "readonly" : ""
+            , Multiple        = i[8].Multiple === true ? "multiple='multiple'" : ""
+            , Required        = i[8].Required === true ? "required='true'" : ""
+            , Visible         = i[6]
+            , Patterns        = i[8].Patterns !== "" ? "pattern='"+ i[8].Patterns + "'" : ""
+            , Leitura         = i[8].readonly === true ? "readonly" : ""
             , Maxlength       = i[8].maxlength
             , Max             = i[8].max
             , Min             = i[8].min
             , Size            = i[8].size
             , Style           = i[8].style
             , Opcoes          = null;
+            
+            if(Visible === false) continue;
             
             if(i[3][0] !== false){
                 if(i[3][0] === true || i[3][1] === false){
@@ -551,6 +554,14 @@ class FormHTML extends JSController{
                 }
                 
             }
+            else if(i[8].TypeComponente === "funcao"){
+                if(this.FUNCAO_GERARCAMPOS !== false){
+                    BaseGROUPS += this.FUNCAO_GERARCAMPOS(i);
+                }else{
+                    BaseGROUPS += "<div>Esse campo é gerado por funções anônima que não foi definida.</div>";
+                }
+                
+            }
             else{
                 throw "Não há campo correspondente a esse tipo de dados";
             }
@@ -659,6 +670,7 @@ class FormHTML extends JSController{
 
                 if(TratarResposta.Error != false){
                     this.TratarErros(TratarResposta);
+                    this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, TratarResposta);
                     return false;
                 }else{
 
@@ -701,6 +713,7 @@ class FormHTML extends JSController{
 
                 if(TratarResposta.Error != false){
                     this.TratarErros(TratarResposta);
+                    this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, TratarResposta);
                     return false;
                 }else{
                     this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, null);
@@ -800,6 +813,8 @@ class FormHTML extends JSController{
                             let SELECT =  $("#SELECT_" + this.ResultSet.Indexador + "_" + CAMPOS[i][8].Name);
                             SELECT[0].dataset["Campo"] = CAMPOS[i][8].Name;
                             SELECT[0].dataset["IDX"] = CAMPOS[i][0];                        
+                        }else if(CAMPOS[i][8].TypeComponente === "select"){
+                                                  
                         }
 
                     }
@@ -894,15 +909,16 @@ class FormHTML extends JSController{
         if(_FUNC !== false){
             this.FUNCOES_FOREIGN[_FUNC](options);
         }
-        let Tabela_Original = null, ModoOperacao_Original = null;
+        let Tabela_Original = null, ModoOperacao_Original = null, Ordem_Original = null;
        /*
         * Tabelas e modo de operação originais, pois usa-se o mesmo controle para mais de uma funcionalidade
         */ 
         Tabela_Original = this.DadosEnvio.sendTabelas;
         ModoOperacao_Original = this.DadosEnvio.sendModoOperacao;
+        Ordem_Original = this.DadosEnvio.sendOrdemBY;
         
         this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
-        
+        this.DadosEnvio.sendOrdemBY = null;
         
         if(_TERM !== true){
             this.DadosEnvio.sendFiltros[0]  = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM]];            
@@ -919,6 +935,7 @@ class FormHTML extends JSController{
         
         this.DadosEnvio.sendTabelas =  Tabela_Original;
         this.DadosEnvio.sendModoOperacao = ModoOperacao_Original;
+        this.DadosEnvio.sendOrdemBY = Ordem_Original;
         
         if(TratarResposta.Error != false){
             this.TratarErros(TratarResposta);
@@ -1306,7 +1323,7 @@ class FormHTML extends JSController{
                         return p;
                       }
                 },
-                maximumSelectionLength: 2
+                maximumSelectionLength: 30
 
               });
     }
