@@ -37,6 +37,17 @@ class FormHTML extends JSController{
         };
          
         this.DadosEnvio.sendFiltros = [false, false, false];
+        /**
+         * Realiza o filtro, por funções externas, dos dados de select2 dos campos;
+         * Dentro da função getValor_CHV_FOREIGN() obtém as informações de qual tabela buscar informações.
+         * dentro dessa função ocorre a verificação por includes(Nome do campo)
+         * E dentro dessa função é averiguado essa variável para saber se existem filtros para aquele campo
+         * DadosEnvioFilter_Selected2[0];
+         * 
+         * Ex. de configuração:
+         * DadosEnvioFilter_Selected2[0] = [false, false, false];
+         */
+        this.Filter_Selected2 = [];
         
         /*Configuração das partes do formulário*/
         this.Configuracoes = {
@@ -69,9 +80,14 @@ class FormHTML extends JSController{
                 alert(9);
             }
         };
-        
+        /**
+         * Função que gera os campos do formulários através desta função definida no código e habilitada no tipo de conteúdo da tabela, typeComponente = funcao
+         */
         this.FUNCAO_GERARCAMPOS = false;
-        
+        /**
+         * Função que será chamada, após os eventos de alteração do select, terá que ter o parâmetro
+         */
+        this.FUNCAO_EVENTS_SELECTED2 = false;
         
         /**
          * Funções executadas aopós carregar os dados;
@@ -358,6 +374,7 @@ class FormHTML extends JSController{
                                       '<select class="form-control {ROTULO_SELECTD2} " \n\
                                             {ROTULO_MULTIPLE} \n\
                                             style="{ROTULO_style}" \n\
+                                            {ROTULO_leitura} \n\
                                             id="SELECT_'+ this.ResultSet.Indexador +'_{ROTULO_id}"\n\
                                             name="{ROTULO_id}" \n\
                                             aria-hidden="true">'+
@@ -433,7 +450,6 @@ class FormHTML extends JSController{
             , Style           = i[8].style
             , Opcoes          = null;
             
-            if(Visible === false) continue;
             
             if(i[3][0] !== false){
                 if(i[3][0] === true || i[3][1] === false){
@@ -813,8 +829,6 @@ class FormHTML extends JSController{
                             let SELECT =  $("#SELECT_" + this.ResultSet.Indexador + "_" + CAMPOS[i][8].Name);
                             SELECT[0].dataset["Campo"] = CAMPOS[i][8].Name;
                             SELECT[0].dataset["IDX"] = CAMPOS[i][0];                        
-                        }else if(CAMPOS[i][8].TypeComponente === "select"){
-                                                  
                         }
 
                     }
@@ -896,7 +910,9 @@ class FormHTML extends JSController{
         let TratarResposta = null
            ,Config_FOREGIN = null
            ,_TERM = null
-           , _FUNC = null;
+           , _FUNC = null,
+             _Filtro = null,
+             _Filtro_Selected2 = null;
            try{
                Config_FOREGIN = await this.obter_FOREING(options.data);
            }catch(e){
@@ -919,11 +935,45 @@ class FormHTML extends JSController{
         
         this.DadosEnvio.sendTabelas = Config_FOREGIN.Tabela;
         this.DadosEnvio.sendOrdemBY = null;
+        _Filtro = Object.create(this.DadosEnvio.sendFiltros);
+        _Filtro[0] = this.DadosEnvio.sendFiltros[0];
+        _Filtro[1] = this.DadosEnvio.sendFiltros[1];
+        _Filtro[2] = this.DadosEnvio.sendFiltros[2];
+        //this.DadosEnvio.sendFiltros = [false, false, false];
         
         if(_TERM !== true){
-            this.DadosEnvio.sendFiltros[0]  = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM]];            
+            
+            let FILTER = [[Config_FOREGIN.CamposTblExtrangeira[1],"like",_TERM,1]];
+            if(this.Filter_Selected2.length === 0){
+                this.DadosEnvio.sendFiltros[0]  = FILTER;
+            }else{
+                let NomeFiltro = parseInt(options.data.objecto[0].dataset.IDX);
+                for(let i in this.Filter_Selected2){
+                    if(i != NomeFiltro) continue;
+                    let QualFiltro = this.Filter_Selected2[NomeFiltro];
+                    if(Array.isArray(QualFiltro)){
+                        FILTER.push(QualFiltro);
+                    }                    
+                }
+                this.DadosEnvio.sendFiltros[0] = FILTER;
+            }
+            
         }else{
-            this.DadosEnvio.sendFiltros[0]  = false;
+            let FILTER = [];
+            if(this.Filter_Selected2.length === 0){
+                this.DadosEnvio.sendFiltros[0]  = false;
+            }else{
+                let NomeFiltro = parseInt(options.data.objecto[0].dataset.IDX);
+                for(let i in this.Filter_Selected2){
+                    if(i != NomeFiltro) continue;
+                    let QualFiltro = this.Filter_Selected2[NomeFiltro];
+                    if(Array.isArray(QualFiltro)){
+                        FILTER.push(QualFiltro);
+                        this.DadosEnvio.sendFiltros[0] = FILTER;
+                    }                    
+                }
+            }
+            
         }
 
         this.DadosEnvio.sendPagina = options.data.Prox_pagina;
@@ -936,7 +986,9 @@ class FormHTML extends JSController{
         this.DadosEnvio.sendTabelas =  Tabela_Original;
         this.DadosEnvio.sendModoOperacao = ModoOperacao_Original;
         this.DadosEnvio.sendOrdemBY = Ordem_Original;
+        this.DadosEnvio.sendFiltros = _Filtro;
         
+       
         if(TratarResposta.Error != false){
             this.TratarErros(TratarResposta);
             return false;
@@ -1231,17 +1283,6 @@ class FormHTML extends JSController{
     selecForeingKey(){
         let o = this;
         $(".SELECTD2").select2({
-                templateSelection: function (data) {
-                  if (data.id === '') { // adjust for custom placeholder values
-                    return 'Custom styled placeholder text';
-                  }
-
-                  return data.text;
-                },
-                matcher: function(params, data){
-                    let g = params;
-                    return data.text;
-                },
                 ajax: {
                     data: function (params) {
                         let o = this;
@@ -1254,7 +1295,10 @@ class FormHTML extends JSController{
                         return params;
                       },
                     transport: function (params, success, failure) {
-                      
+                        /**
+                         * Impede do sistema de realizar outras pesquisas enquanto está executando outras;
+                         */
+                        if(Padrao.getAjax() === 1) {/*console.log("ajax");*/return false};
                         let BDados = new Promise(function(Resolve, Reject) {
                         // Busca os dados no banco de dados e utiliza das configurações da tabela .php para obter os dados de foreign
                             async function buscarDados() {
@@ -1266,6 +1310,7 @@ class FormHTML extends JSController{
                                     Resolve(rst); // when successful
                                 }
                             }
+                            
                             //Chama a função async e libera o código.
                             buscarDados();
 
@@ -1285,7 +1330,7 @@ class FormHTML extends JSController{
 
                   },
                     processResults: function (data, params) {
-                        
+                        let aqui = this;
                         let Pagina_Atual = parseInt(data.InfoPaginacao.PaginaAtual);
                         let Total_Pagina = data.InfoPaginacao.TotaldePaginas;
                         let Mais_Pagina = false;
@@ -1325,6 +1370,21 @@ class FormHTML extends JSController{
                 },
                 maximumSelectionLength: 30
 
-              });
+              }).on("select2:select", function(e){
+                    if(o.FUNCAO_EVENTS_SELECTED2 !== false)
+                       o.FUNCAO_EVENTS_SELECTED2(e);
+            });
+        
+        let SELECTD2 = $(".SELECTD2");
+        for(let i of SELECTD2){
+            let Name = i.name;
+            for(let c of this.ResultSet.Campos){
+                if(Name === c[8].Name){
+                    if(c[8].readonly === true){
+                        $(i).prop("disabled", true);
+                    }
+                }
+            }
+        }
     }
 }

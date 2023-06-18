@@ -211,7 +211,7 @@ echo "<script>var Chave='$sendChave'</script>"
                     </li>
                     <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS">
                       <a href="#" class="nav-link">
-                        <i class="fa-solid fa-rectangles-mixed"></i>
+                        <i class="fa-solid fa-clipboard-list"></i>
                         <p style="margin-left: 5px">Listas</p>
                       </a>
                     </li>
@@ -239,13 +239,18 @@ echo "<script>var Chave='$sendChave'</script>"
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_GERENCIAR">
                       <a href="#" class="nav-link">
                         <i class="fa-solid fa-rectangles-mixed"></i>
                         <p style="margin-left: 5px">Gerenciar</p>
                       </a>
                     </li>
-
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_TIPOEVENTO">
+                      <a href="#" class="nav-link">
+                        <i class="fa-brands fa-stack-overflow"></i>
+                        <p style="margin-left: 5px">Tipos Eventos</p>
+                      </a>
+                    </li>
                     
                   </ul>
                 </li>
@@ -388,9 +393,9 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=56" defer="defer"></script> 
+<script  src="/blitz/Componentes/Formularios.js?q=77" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=115"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=139"></script>
 
         
 <!-- The Modal -->

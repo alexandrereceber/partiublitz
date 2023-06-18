@@ -236,6 +236,7 @@ class TabelaBancoDadosMD5{
                                 ["abda7fb4369ce84c67c12e0e98e59e75",["adm_imagens_eventos", true]],
                                 ["624c6fd80de356ec39f31f3d36bdbfa4",["adm_tipo_listas", true]],
                                 ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
+                                ["153a59adeab5516e9a0ee9369a14b374",["adm_tipo_evento", true]], 
                             ];
     
     /**

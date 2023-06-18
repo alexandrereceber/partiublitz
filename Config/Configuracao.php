@@ -190,10 +190,10 @@ class ConfigSystema {
  */
 class AcessoBancoDados {
     private static $EngineSQL = "mysql"; //Banco de dados MYSQL|PostgreSQL|ORACLE
-    private static $Host = "localhost";
-    private static $NomeBancoDados = "blitz";
-    private static $Usuario = "root";
-    private static $Senha = "";
+    private static $Host = "srv556.hstgr.io";
+    private static $NomeBancoDados = "u363389093_BDBlitz";
+    private static $Usuario = "u363389093_partiublitz";
+    private static $Senha = "Al$#2810";
     private static $UTF = "utf8";
 
     
@@ -237,7 +237,9 @@ class TabelaBancoDadosMD5{
                                 ["abda7fb4369ce84c67c12e0e98e59e75",["adm_imagens_eventos", true]],
                                 ["624c6fd80de356ec39f31f3d36bdbfa4",["adm_tipo_listas", true]],
                                 ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
-        
+                                ["153a59adeab5516e9a0ee9369a14b374",["adm_tipo_evento", true]],
+                                ["9021dbc259ddcc6f4caa3df638e0edd5",["adm_select_listas_eventos", true]],
+                                ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]],
                             ];
     
     /**

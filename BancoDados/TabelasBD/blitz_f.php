@@ -3392,7 +3392,7 @@ class adm_eventos extends ModeloTabelas{
      * Informa o nome da tabela na qual as operações de INSERT, UPDATE, e DELETE vão atuar
      */
     public function getNomeReal() {
-        return "adm_cadastro";
+        return "";
     }
     /*
      * Nome da tabela para a instrução SELECT
@@ -3473,7 +3473,7 @@ class adm_eventos extends ModeloTabelas{
 
                     case "AfterInsert":
                         $IDEvento = $this->lastInsertId();
-                        $Listas = $this->query("SELECT id", pdo::FETCH_ASSOC);
+                        $Listas_Evento = $this->query("SELECT id", pdo::FETCH_ASSOC);
                         break;
                     default:
                         break;

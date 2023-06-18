@@ -40,6 +40,10 @@ let TABELA_LISTAS = null;
 
 let TABELA_LISTA_BENEFICIOS = null;
 let TABELA_BENEFICIOS = null;
+let TABELA_TIPOSEVENTOS = null;
+
+let FORMULARIO_EVENTOS_LISTAS = null;
+let TABELA_EVENTOS_LISTAS = null;
 
 $("#__INICIO, #__LOGO").click(function(){
     window.location.reload();
@@ -677,7 +681,7 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_VIEW").click(function(e){
 
 });
 
-$("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS").click(async function(e){
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_GERENCIAR").click(async function(e){
     $("#__CONTENT_WRAPPER_HEADER").show();
     $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar Listas");
     $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
@@ -847,3 +851,134 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS").click(async function(e){
     await TABELA_LISTAS.show();
 });
 
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_TIPOEVENTO").click(function(e){
+    $("#__CONTENT_WRAPPER_HEADER").hide();
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html('<div class="col-lg-12 col-12" id="T_CONTEUDO" style="height: 100%;overflow: auto"></div>');
+    
+    if(TABELA_TIPOSEVENTOS === null){
+        TABELA_TIPOSEVENTOS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }
+    TABELA_TIPOSEVENTOS.setTabela = "153a59adeab5516e9a0ee9369a14b374";
+    TABELA_TIPOSEVENTOS.setRecipiente = "T_CONTEUDO";
+    TABELA_TIPOSEVENTOS.Name = "TABELA_TIPOSEVENTOS";
+    
+    TABELA_TIPOSEVENTOS.Funcoes.Conteudo = function(a,n,c, linha){
+        if(!a.isPhone){
+            /**
+             * Visualização para computador
+             */
+            switch (n) {
+                case "4":
+                    let Data = new Date(c);
+                    return Data.toLocaleDateString();
+                    break;
+
+                default:
+                    return c;
+                    break;
+            }
+        }else{
+            /**
+             * Visualização para celular
+             */
+            let NomeCampo = a.ResultSet.Campos[n][1];
+            let Campo = null;
+            switch (n) {
+                default:
+                    return c;
+                    break;
+            }
+        }
+        
+    };
+    TABELA_TIPOSEVENTOS.CSSTableGeral.GeralTableClass = "table";
+    TABELA_TIPOSEVENTOS.show();
+    
+});
+
+$("#__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS").click(async function(e){
+    $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar listas dos eventos");
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+        `<div class="card card-primary card-tabs" style="width:100%">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Escolha</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-gerenciar-tab" data-toggle="pill" href="#custom-tabs-one-gerenciar" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Membros</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-gerenciar" role="tabpanel" aria-labelledby="custom-tabs-one-gerenciar-tab">
+
+                  </div>
+                </div>
+              </div>
+            </div>`);
+    
+    if(FORMULARIO_EVENTOS_LISTAS === null){
+        FORMULARIO_EVENTOS_LISTAS = new FormHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }    
+
+    $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_FORMULARIO" style="height: 100%;overflow: auto"></div>');
+
+    FORMULARIO_EVENTOS_LISTAS.setTabela = "9021dbc259ddcc6f4caa3df638e0edd5";
+    FORMULARIO_EVENTOS_LISTAS.setRecipiente = "T_CONTEUDO_FORMULARIO";
+    FORMULARIO_EVENTOS_LISTAS.setNome_BtSubmit = "Enviar";
+    FORMULARIO_EVENTOS_LISTAS.Modo_Operacao = "V";
+    /**
+     * O nome que será informado como parâmetro não altera em nada, pois o nome que será tratada vem da função chamadora.
+     * Ex.:
+     * let s = this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this, Campos);
+     * a = UPDATE
+     * B = BEFORE
+     * C = OBJETO DATASET
+     * D = CAMPOS OU NULL
+     * Ob.: O retorno true ou false é muito importante para a continuidade das funcionalidades.
+     */
+    FORMULARIO_EVENTOS_LISTAS.addFunctons_Eventos("FUNCAO_ALL",function(a,b,c,d){
+        return true;
+    });
+    
+    let g = {
+                Groups: true,
+                N_Grupos: 1,
+                Columns:  0,
+                Titulos: ["Selecione um evento", "Selecione um tipo de lista do evento selecionado"], //Cada índice representa o nome de cada grupo
+                Rodapes: ["Serão exibidos, somente eventos que estejam ativos.", "Serão exibidos, somente listas que estejam ativas."], //Cada índice representa o rodapé de cada grupo
+                Styles:  [
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                        ]
+            };
+    FORMULARIO_EVENTOS_LISTAS.setGrupos = g;
+    FORMULARIO_EVENTOS_LISTAS.visible_Title = true;
+    
+    
+    FORMULARIO_EVENTOS_LISTAS.FUNCAO_EVENTS_SELECTED2 = function(e){
+        let ix = this.ResultSet.Indexador;
+        $("#INPUT_" + ix +"_PNome").removeAttr('readonly');
+        
+        let SELECTD2 = $(".SELECTD2");
+        for(let i of SELECTD2){
+            let Name = i.name;
+            if(Name === "PTipoEvento"){
+                $(i).prop("disabled", false);
+            }
+        }
+        FORMULARIO_EVENTOS_LISTAS.Filter_Selected2[1] = [0,"=",e.params.data.id,1];
+    };
+    await FORMULARIO_EVENTOS_LISTAS.show();
+
+    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+    
+    
+});
