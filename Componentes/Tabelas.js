@@ -1618,6 +1618,11 @@ class TabelaHTML extends JSController{
                     if(this.ChavesPrimarias.length > 0){
                         var FormsCampos = await this.getCamposAtualizar();
                         $(".modal-body").html(FormsCampos);
+                        /**
+                         * Após a atualização do primeiro registro é executado novamente, para os campos gerados, as funções da funcion Atualizar
+                         */
+                         this.FUNCOES_ONLOAD.__Exec(this.ADDSET_FUNCTION_ONLOAD["ATUALIZAR"], this);
+                         
                     }else{
                         $("#ButtonEditar_" + this.ResultSet.Indexador).prop("disabled","true");
                         $("#ButtonExcluir_" + this.ResultSet.Indexador).prop("disabled","true");

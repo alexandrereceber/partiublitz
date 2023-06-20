@@ -4661,7 +4661,7 @@ class adm_tipo_listas extends ModeloTabelas{
     }
 
     public function getTituloTabela() {
-        return "Listas dos eventos";
+        return "Configuração das listas dos eventos";
     }
 
     public function getLimite() {

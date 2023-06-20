@@ -768,6 +768,16 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_GERENCIAR").click(async function(e){
         a.ResultSet.Botoes[0].Inserir = false;
         
     });
+    TABELA_LISTAS.addFunctons_Eventos("UPDATE_BEFORE",async function(n,p,a,b){
+       let Linha = a.getObterLinhaInteira(a.getBreakChaves(a.ChavesPrimarias[0]));
+       let isNumeric = parseInt(b[2].value);
+       if(Number.isNaN(isNumeric)){
+           b[2].value = Linha[3];
+       }
+       
+       return true;
+    });
+    
     
     TABELA_LISTAS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
 
