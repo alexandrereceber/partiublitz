@@ -626,6 +626,9 @@ abstract class ModeloTabelas extends BDSQL{
         }else{
             $Limite = "limit " . $this->getLimite() . " offset $this->Deslocamento"; //Deslocamento ocorre em função da página.
         }
+        if($this->getVirtual()){
+            $this->NomeTabela = $this->getNomeReal();
+        }
         $StringSQL = "Select $SqlCampos from $this->NomeTabela  ". 
                                                                             $Filtro  . //{Filtros vindo do sistema}
                                                                             $FiltrosPadroes .
@@ -1289,12 +1292,12 @@ abstract class ModeloTabelas extends BDSQL{
         switch ($Numero) {
             case "HY093":
                 throw new Exception("Inválido o número de parâmetros.");
-
                 break;
 
             case 23000:
                 throw new Exception("Violação de integridade - " . $Descricao);
                 break;
+            
             default:
                 throw new Exception("Ocorreram erros que não foram tratador, favor verificar o arquivo ModelosTabela.php para tratá-los. - " . $Descricao);
                 break;

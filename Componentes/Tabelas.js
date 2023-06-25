@@ -1518,8 +1518,14 @@ class TabelaHTML extends JSController{
             TratarResposta = await this.inserir();
             
             if(TratarResposta.Error !== false){
-                this.TratarErros(TratarResposta, "Inserir");
-                await this.FUNCOES_EVENT.__Exec("INSERIR","AFTER", this, TratarResposta);
+                /**
+                 * SERÁ UTILIZADO QUANDO QUISER TRATAR O ERRO DE FORMA PERSONALIZADA POR UMA DETERMINADA TABELA
+                 * TEM QUE HAVER UM RETORNO "TRUE" PARA NÃO SER TRATADA PELA FUNÇÃO GERAL DENTRO DA INSTÂNCIA TABELAS.JS 
+                 */
+                let S = await this.FUNCOES_EVENT.__Exec("INSERIR","ERROR", this, TratarResposta);
+                if(!S)
+                    this.TratarErros(TratarResposta, "Inserir");
+                
                 return false;
             }else{
                 F.reset();
@@ -1603,9 +1609,11 @@ class TabelaHTML extends JSController{
                 TratarResposta =  await this.atualizar();
                 
                 if(TratarResposta.Error !== false){
-                    this.TratarErros(TratarResposta);
+                    let S = await this.FUNCOES_EVENT.__Exec("UPDATE","ERROR", this, TratarResposta);
+                    if(!S)
+                        this.TratarErros(TratarResposta);
                     
-                    await this.FUNCOES_EVENT.__Exec("UPDATE","AFTER", this, TratarResposta);
+                    
                     return false;
                 }else{
                     
@@ -1719,7 +1727,9 @@ class TabelaHTML extends JSController{
         await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, null);
         
         if(TratarResposta.Error !== false){
-            this.TratarErros(TratarResposta);
+            let S = await this.FUNCOES_EVENT.__Exec("SELECT","ERROR", this, TratarResposta);
+            if(!S)
+                this.TratarErros(TratarResposta);
             return false;
         }
         
@@ -1815,8 +1825,10 @@ class TabelaHTML extends JSController{
             TratarResposta = await this.Atualizar();
         
             if(TratarResposta.Error != false){
-                this.TratarErros(TratarResposta, "Excluir");
-                await this.FUNCOES_EVENT.__Exec("SELECT","AFTER", this, TratarResposta);
+                let S = await this.FUNCOES_EVENT.__Exec("EXCLUIR","ERROR", this, TratarResposta);
+                if(!S)
+                    this.TratarErros(TratarResposta, "Excluir");
+                
                 return false;
             }else{
                 await this.FUNCOES_EVENT.__Exec("DELETE","AFTER", this, true);

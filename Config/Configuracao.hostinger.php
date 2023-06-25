@@ -33,7 +33,7 @@ class ConfigSystema {
                             ],
             $Email = true,
             $Mensagem = true,
-            $LoginSimultaneos = 2; /* 0 -> O mesmo usuário loga somente em um equipamento
+            $LoginSimultaneos = 1; /* 0 -> O mesmo usuário loga somente em um equipamento
              *                        1 -> Loga sem restrições, mas derruba a última(Usuário loga em qualquer lugar, mas somente uma delas continua)
                                       2 -> sem restrição(loga sem verificar sessõa, nem derruba as outras)
              *                      */
@@ -42,7 +42,6 @@ class ConfigSystema {
     public static function getLoginsSimultaneos(){
         return self::$LoginSimultaneos;
     }
-    
     
     /**
      * Retorna o caminho da pasta "BancoDados" dentro da estrutura de diretório atual.
@@ -190,7 +189,7 @@ class ConfigSystema {
  */
 class AcessoBancoDados {
     private static $EngineSQL = "mysql"; //Banco de dados MYSQL|PostgreSQL|ORACLE
-    private static $Host = "srv556.hstgr.io";
+    private static $Host = "localhost";
     private static $NomeBancoDados = "u363389093_BDBlitz";
     private static $Usuario = "u363389093_partiublitz";
     private static $Senha = "Al$#2810";
@@ -239,7 +238,8 @@ class TabelaBancoDadosMD5{
                                 ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
                                 ["153a59adeab5516e9a0ee9369a14b374",["adm_tipo_evento", true]],
                                 ["9021dbc259ddcc6f4caa3df638e0edd5",["adm_select_listas_eventos", true]],
-                                ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]],
+                                ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]], 
+                                ["2cff8c903c0bc5a44ebec8860e7925d9",["adm_eventos_listas_eventos", true]],
                             ];
     
     /**
