@@ -349,7 +349,23 @@ try {
          $ResultRequest["Error"] = false;
          $ResultRequest["Modo"] = "Login";
          $ResultRequest["Chave"] = $Chave;
-         $ResultRequest["TipoUsuario"] = "Gerente";
+         $ResultRequest["TipoUsuario"] = "Comum";
+         $ResultRequest["Tentativas"] = $SDados["Tentativas"];
+         $ResultRequest["Header"] = ConfigSystema::getHttp_Systema(). $Saida[3] ."?s=" . $Chave;
+         $ResultRequest["Apelido"] = $Saida[6];
+         $ResultRequest["Imagem"] = $Saida[7];
+         $ResultRequest["Habilitado"] = $Saida[4] == 1 ? true : false;
+
+
+         
+         echo json_encode($ResultRequest);
+         break;
+
+        case "Membros":
+         $ResultRequest["Error"] = false;
+         $ResultRequest["Modo"] = "Login";
+         $ResultRequest["Chave"] = $Chave;
+         $ResultRequest["TipoUsuario"] = "Membros";
          $ResultRequest["Tentativas"] = $SDados["Tentativas"];
          $ResultRequest["Header"] = ConfigSystema::getHttp_Systema(). $Saida[3] ."?s=" . $Chave;
          $ResultRequest["Apelido"] = $Saida[6];

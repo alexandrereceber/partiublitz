@@ -689,10 +689,8 @@ class FormHTML extends JSController{
                     this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, TratarResposta);
                     return false;
                 }else{
-
+                    this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, true);
                     return true;
-                    this.FUNCOES_ONLOAD.__Exec("UPDATE","AFTER", this, null);
-
                 }
             }else{
                 Toast.fire({
@@ -732,7 +730,7 @@ class FormHTML extends JSController{
                     this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, TratarResposta);
                     return false;
                 }else{
-                    this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, null);
+                    this.FUNCOES_ONLOAD.__Exec("INSERT","AFTER", this, true);
                     return true;
                 }    
             }else{

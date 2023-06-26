@@ -92,6 +92,7 @@ try {
     $InserirDados = new login();
     
     $InserirDados->setUsuario("blitz");
+    $InserirDados->setTipoUsuario("Administrador");
     
     $Dados = [
                 [name=>"username",value=> $Usuario],
@@ -109,7 +110,7 @@ try {
     $ResultRequest["Modo"]             = "Cadastro";
     $ResultRequest["Error"] = false;
     $ResultRequest["lastId"] = $InserirDados->lastInsertId();
-    $ResultRequest["Mensagem"] = "Usuário cadastrado com sucesso!. Favor requisitar habilitação.";
+    $ResultRequest["Mensagem"] = "Usuário cadastrado com sucesso!";
 
     /**
     * Armazena o tempo gasto com o processamento até esse ponto. Inserir dados

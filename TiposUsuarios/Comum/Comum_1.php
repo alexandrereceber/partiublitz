@@ -33,11 +33,12 @@ if(@!include_once ConfigSystema::get_Path_Systema() .  "/Controller/SegurityPage
 
 echo "<script>var Chave='$sendChave'</script>"
 ?>
+
 <!DOCTYPE html>
 <html lang="en" style="height: auto;" class=""><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Adminstrador | Dashboard</title>
+  <title>Usuárop | Dashboard</title>
   <!-- Logo da blitz -->
   <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?3" type="image/jpg">
   
@@ -52,9 +53,7 @@ echo "<script>var Chave='$sendChave'</script>"
 
   <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
 
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?3">
-  
-  
+  <link rel="stylesheet" href="/blitz/Recursos/dist/css/usuariolte.min.css?3">
   
   <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?47">
   
@@ -115,15 +114,15 @@ echo "<script>var Chave='$sendChave'</script>"
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-user-primary-usuario elevation-4">
       <div class="Camada_cor">
     <!-- Brand Logo -->
     <div class="Administrar">
         <a href="#" class="brand-link" id="__LOGO">
             <div id="Logo_BLIZ">
-                <img id="IMG_ADMIN" src="/blitz/Imagens/Logo/Logo_blitz_2.png?3" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img id="IMG_ADMIN" src="/blitz/Imagens/Logo/Logo_blitz_2.png?3" alt="Usuário" class="brand-image img-circle elevation-3" style="opacity: .8">
             </div>
-            <div id="Logo_DESC"><span class="brand-text font-weight-light">Administrador</span></div>    
+            <div id="Logo_DESC"><span class="brand-text font-weight-light">Usuário</span></div>    
         </a>
 
     </div>
@@ -171,89 +170,7 @@ echo "<script>var Chave='$sendChave'</script>"
                         
                     </ul>
                   </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="nav-icon fa-solid fa-party-horn"></i>
-                    <p style="margin-left: 5px">
-                       Festas 
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_FESTAS_VIEW">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-eye"></i>
-                        <p style="margin-left: 5px">Visualizar</p>
-                      </a>
-                    </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_FESTAS_UPLOAD">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-upload"></i>
-                        <p  style="margin-left: 5px">Upload</p>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="nav-icon far fa-calendar-plus"></i>
-                    <p style="margin-left: 5px">
-                       Eventos 
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS_GERENCIAR">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-rectangles-mixed"></i>
-                        <p style="margin-left: 5px">Gerenciar</p>
-                      </a>
-                    </li>
-                    <li class="nav-item" id="__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        <p style="margin-left: 5px">Listas</p>
-                      </a>
-                    </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_VIEW">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-eye"></i>
-                        <p  style="margin-left: 5px">Visualizar</p>
-                      </a>
-                    </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_IMG">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-upload"></i>
-                        <p  style="margin-left: 5px">Imagens</p>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="nav-icon fa-regular fa-list-dropdown"></i>
-                    <p style="margin-left: 5px">
-                       Listas 
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_GERENCIAR">
-                      <a href="#" class="nav-link">
-                        <i class="fa-solid fa-rectangles-mixed"></i>
-                        <p style="margin-left: 5px">Gerenciar</p>
-                      </a>
-                    </li>
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_LISTAS_TIPOEVENTO">
-                      <a href="#" class="nav-link">
-                        <i class="fa-brands fa-stack-overflow"></i>
-                        <p style="margin-left: 5px">Tipos Eventos</p>
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
+
                 
 
             </ul>
@@ -285,66 +202,7 @@ echo "<script>var Chave='$sendChave'</script>"
       <div class="container-fluid" id="CONTENT_WRAPPER_MAIN_CONTAINER_FLUID" style="height: 100%">
         <!-- Small boxes (Stat box) -->
         <div class="row" id="__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW" style="height: 100%">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
 
-                <p>New Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Bounce Rate</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
         </div>
         <!-- /.row -->
 
@@ -395,7 +253,7 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
 <script  src="/blitz/Componentes/Formularios.js?q=89" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=164"></script>
+<script src="/blitz/Recursos/dist/js/comum/Comum.js?s=0"></script>
 
         
 <!-- The Modal -->

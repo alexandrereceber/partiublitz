@@ -35,13 +35,9 @@ RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
 RewriteRule (.*) TiposUsuarios/Gerente/Gerente.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
 
 #Redireciona página para o perfil de sistema comum.
-RewriteCond %{REQUEST_URI} /Usuario
+RewriteCond %{REQUEST_URI} /Membros
 RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
 RewriteRule (.*) TiposUsuarios/Comum/Comum.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
-
-RewriteCond %{REQUEST_URI} /Teste
-RewriteCond %{QUERY_STRING} ^s=[a-z|A-z]+
-RewriteRule (.*) TiposUsuarios/Comum/Comum_1.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS}&sendChaves=%{QUERY_STRING} [L]
 
 #----------------------------------------------------------
 
@@ -56,6 +52,11 @@ RewriteRule (.*) Login/logoff.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_ME
 
 RewriteCond %{REQUEST_URI} /Cadastrar/$
 RewriteRule (.*) CadastrarUsuario/cadastrar.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /blitz/Logar [L]
 
 </IfModule>
 

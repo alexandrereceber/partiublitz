@@ -997,6 +997,86 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS").click(async function(e){
 
         if(e.currentTarget.dataset.Campo === "PTipoEvento"){
             TABELA_EL.IDTL = e.params.data.id;
+            
+            //TABELA_MEMBORS_DAS_LISTAS
+    
+            if(TABELA_MEMBORS_DAS_LISTAS === null){
+                TABELA_MEMBORS_DAS_LISTAS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+            }
+            TABELA_MEMBORS_DAS_LISTAS.setTabela = "d557c3d5f36eef6a65b4d323462486fc";
+            TABELA_MEMBORS_DAS_LISTAS.setRecipiente = "T_CONTEUDO_TABELA";
+            TABELA_MEMBORS_DAS_LISTAS.Name = "TABELA_MEMBORS_DAS_LISTAS";
+
+            TABELA_MEMBORS_DAS_LISTAS.Funcoes.Conteudo = function(a,n,c, linha){
+                if(!a.isPhone){
+                    /**
+                     * Visualização para computador
+                     */
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }else{
+                    /**
+                     * Visualização para celular
+                     */
+                    let NomeCampo = a.ResultSet.Campos[n][1];
+                    let Campo = null;
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }
+
+            };
+            TABELA_MEMBORS_DAS_LISTAS.CSSTableGeral.GeralTableClass = "table";
+            TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_BEFORE",async function(n,p,a,c){
+                let IDE = {name: null, value: null};
+                IDE.name = "Pide";
+                IDE.value = TABELA_EL.IDE;
+
+                let IDTL = {name: null, value: null};
+                IDTL.name = "Pidtl";
+                IDTL.value = TABELA_EL.IDTL;
+
+                c.unshift(IDTL);
+                c.unshift(IDE);
+
+                return true;
+
+            });
+            TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_ERROR",async function(n,p,a,c){
+                if(c.Error){
+                    let isDuplicate = c.Mensagem.indexOf("1062") === -1 ? false : true;
+                    if(isDuplicate){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Esse convidado, já existe nesta lista!",
+                            //footer: '<a href="">Why do I have this issue?</a>'
+                        });
+
+                        return true;
+                    }
+                    let isCadastro = c.Mensagem.indexOf("1452") === -1 ? false : true;
+                    if(isCadastro){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Esse convidado não está cadastrado no sistema!",
+                            //footer: '<a href="">Why do I have this issue?</a>'
+                        });
+
+                        return true;
+                    }
+                }else{
+
+                }
+            });
+            TABELA_MEMBORS_DAS_LISTAS
+            TABELA_MEMBORS_DAS_LISTAS.show();
         }
         
     };
@@ -1004,83 +1084,6 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS").click(async function(e){
 
     $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
     
-    //TABELA_MEMBORS_DAS_LISTAS
     
-    if(TABELA_MEMBORS_DAS_LISTAS === null){
-        TABELA_MEMBORS_DAS_LISTAS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
-    }
-    TABELA_MEMBORS_DAS_LISTAS.setTabela = "d557c3d5f36eef6a65b4d323462486fc";
-    TABELA_MEMBORS_DAS_LISTAS.setRecipiente = "T_CONTEUDO_TABELA";
-    TABELA_MEMBORS_DAS_LISTAS.Name = "TABELA_MEMBORS_DAS_LISTAS";
-    
-    TABELA_MEMBORS_DAS_LISTAS.Funcoes.Conteudo = function(a,n,c, linha){
-        if(!a.isPhone){
-            /**
-             * Visualização para computador
-             */
-            switch (n) {
-                default:
-                    return c;
-                    break;
-            }
-        }else{
-            /**
-             * Visualização para celular
-             */
-            let NomeCampo = a.ResultSet.Campos[n][1];
-            let Campo = null;
-            switch (n) {
-                default:
-                    return c;
-                    break;
-            }
-        }
-        
-    };
-    TABELA_MEMBORS_DAS_LISTAS.CSSTableGeral.GeralTableClass = "table";
-    TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_BEFORE",async function(n,p,a,c){
-        let IDE = {name: null, value: null};
-        IDE.name = "Pide";
-        IDE.value = TABELA_EL.IDE;
-        
-        let IDTL = {name: null, value: null};
-        IDTL.name = "Pidtl";
-        IDTL.value = TABELA_EL.IDTL;
-        
-        c.unshift(IDTL);
-        c.unshift(IDE);
-        
-        return true;
-        
-    });
-    TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_ERROR",async function(n,p,a,c){
-        if(c.Error){
-            let isDuplicate = c.Mensagem.indexOf("1062") === -1 ? false : true;
-            if(isDuplicate){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "Esse convidado, já existe nesta lista!",
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                });
-                
-                return true;
-            }
-            let isCadastro = c.Mensagem.indexOf("1452") === -1 ? false : true;
-            if(isCadastro){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "Esse convidado não está cadastrado no sistema!",
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                });
-                
-                return true;
-            }
-        }else{
-            
-        }
-    });
-    TABELA_MEMBORS_DAS_LISTAS.show();
     
 });

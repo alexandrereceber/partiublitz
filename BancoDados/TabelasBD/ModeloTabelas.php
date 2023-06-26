@@ -532,6 +532,7 @@ abstract class ModeloTabelas extends BDSQL{
          * Pois se existir algum usuário com nome do usuário que foi enviado pela tabela, o mesmo terá acesso total.
          */
         if($this->Usuario === $this->UsuarioLogin){ return true;}
+        $PRV = false;
         
         if(($this->Usuario != null) && ($this->TipoUsuario != null)){
             foreach ($this->Privilegios as $Chave => $Valor) {

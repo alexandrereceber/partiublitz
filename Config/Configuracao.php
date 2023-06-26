@@ -242,6 +242,7 @@ class TabelaBancoDadosMD5{
                                 ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]],
                                 ["2cff8c903c0bc5a44ebec8860e7925d9",["adm_eventos_listas_eventos", true]],
                                 ["d557c3d5f36eef6a65b4d323462486fc",["adm_membros_das_listas", true]],
+                                ["8216d97b8d8abc50d16c6a1a910ea57d",["user_profile", true]],
                             ];
     
     /**

@@ -238,8 +238,9 @@ class TabelaBancoDadosMD5{
                                 ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
                                 ["153a59adeab5516e9a0ee9369a14b374",["adm_tipo_evento", true]],
                                 ["9021dbc259ddcc6f4caa3df638e0edd5",["adm_select_listas_eventos", true]],
-                                ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]], 
+                                ["2cff8c903c0bc5a44ebec8860e7925d8",["adm_listas_dos_eventos", true]],
                                 ["2cff8c903c0bc5a44ebec8860e7925d9",["adm_eventos_listas_eventos", true]],
+                                ["d557c3d5f36eef6a65b4d323462486fc",["adm_membros_das_listas", true]],
                             ];
     
     /**

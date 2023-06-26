@@ -4,7 +4,7 @@
  * Busca as informações relativas à máquina que está sendo requisitada.
  */
 
-$myfile = fopen("rastros.txt", "w");
+$myfile = fopen("rastros.txt", "a");
 fwrite($myfile, $_SERVER["REMOTE_ADDR"]);
 fclose($myfile);
 
