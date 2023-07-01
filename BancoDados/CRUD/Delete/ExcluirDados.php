@@ -22,9 +22,17 @@ try{
     $ExcluirDados->StartClock();
     
     $ExcluirDados->setUsuario("blitz");
-    $ExcluirDados->setUsuarioLogado($SystemUsuario);
-    $ExcluirDados->setIDUsuario($IDUserName);
-    $ExcluirDados->setTipoUsuario($TipoUsuario);
+    
+    if($Sessao && $SessaoTabela){
+        $ExcluirDados->setUsuarioLogado($SystemUsuario);
+        $ExcluirDados->setIDUsuario($IDUserName);
+        $ExcluirDados->setTipoUsuario($TipoUsuario);        
+    }else{
+        $ExcluirDados->setUsuarioLogado("blitz");
+        $ExcluirDados->setIDUsuario("blitz");
+        $ExcluirDados->setTipoUsuario("blitz");
+    }
+
 
     /*
     * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.

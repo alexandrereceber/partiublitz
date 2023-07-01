@@ -139,7 +139,7 @@ async function EnviarDados(obj){
         
     }else{
         if(Result.Modo == "Login")
-            window.location = Result.Header;
+            window.location = window.location.origin + Result.Header;
         else if(Result.Modo == "Cadastro"){
             Swal.fire({
                 icon: 'error',

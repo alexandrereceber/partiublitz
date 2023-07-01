@@ -31,9 +31,19 @@ try{
      * da variável privilegios em cada classe que representa a tabela.
      */
     $InserirDados->setUsuario("blitz");
-    $InserirDados->setUsuarioLogado($SystemUsuario);
-    $InserirDados->setIDUsuario($IDUserName);
-    $InserirDados->setTipoUsuario($TipoUsuario);
+    /**
+     * Verifica se a tabela está em modo público.
+     */
+    if($Sessao && $SessaoTabela){
+        $InserirDados->setUsuarioLogado($SystemUsuario);
+        $InserirDados->setIDUsuario($IDUserName);
+        $InserirDados->setTipoUsuario($TipoUsuario);        
+    }else{
+        $InserirDados->setUsuarioLogado("blitz");
+        $InserirDados->setIDUsuario("blitz");
+        $InserirDados->setTipoUsuario("blitz");
+    }
+
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

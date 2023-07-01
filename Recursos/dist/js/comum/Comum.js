@@ -24,4 +24,3 @@ const swalWithBootstrapButtons = Swal.mixin({
  * Implementação personalizada do módulo administrador.
  */
 
-alert(9)

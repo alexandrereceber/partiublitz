@@ -36,11 +36,9 @@ try{
             if($Cm){
                 $Saida = $upFiles->moverImagens(); //Move os arquivos da pasta temporária para a pasta permanente.
                 if($Saida[0]){
-                    $CaminhoHTML = $Saida[2];
-                    /**
-                     * Cadas domínio terá que ser avaliado o tamanho
-                     */
-                    $CaminhoHTML = substr($CaminhoHTML, 21, strlen($CaminhoHTML));
+                    $Origem = filter_input(INPUT_SERVER, "HTTP_ORIGIN");
+                    $CaminhoHTML = $Origem . "/blitz/Imagens" . $upFiles->getRepositorio() . "/" .  $Saida[1];
+
                     
                     if(!$upFiles->get_Storeg_tabela()) continue;
                     /**

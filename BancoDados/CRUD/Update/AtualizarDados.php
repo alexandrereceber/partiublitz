@@ -25,9 +25,18 @@ try{
     $AtualizarDados = new $Tabela();
     $AtualizarDados->StartClock();
     $AtualizarDados->setUsuario("blitz");
-    $AtualizarDados->setUsuarioLogado($SystemUsuario);
-    $AtualizarDados->setIDUsuario($IDUserName);
-    $AtualizarDados->setTipoUsuario($TipoUsuario);
+    
+    if($Sessao && $SessaoTabela){
+        $AtualizarDados->setUsuarioLogado($SystemUsuario);
+        $AtualizarDados->setIDUsuario($IDUserName);
+        $AtualizarDados->setTipoUsuario($TipoUsuario);        
+    }else{
+        $AtualizarDados->setUsuarioLogado("blitz");
+        $AtualizarDados->setIDUsuario("blitz");
+        $AtualizarDados->setTipoUsuario("blitz");
+    }
+    
+
     /*
      * Inicia um bloco de transação que é atômico, caso alguma instrução retorne false ou um thrown tudo será desfeito.
      */

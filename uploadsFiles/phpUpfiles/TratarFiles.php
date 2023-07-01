@@ -100,7 +100,7 @@ class uploadsImg {
     
     public function moverImagens() {
 
-        $Destino = $this->Destino . "//". $this->File["name"];
+        $Destino = $this->Destino . "/". $this->File["name"];
         $retorno = move_uploaded_file($this->File["tmp_name"], $Destino);
 
         $Inf[0] = $retorno;

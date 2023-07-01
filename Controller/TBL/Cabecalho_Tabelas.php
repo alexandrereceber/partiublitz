@@ -1,4 +1,5 @@
 <?php
+
 if(@!include_once __DIR__ . "/../../Config/Configuracao.php"){ //Include que contém configurações padrões do sistema.
     $ResultRequest["Modo"]        = "Include";
     $ResultRequest["Error"]    = true;

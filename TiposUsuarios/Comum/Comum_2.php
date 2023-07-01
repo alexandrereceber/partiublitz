@@ -91,7 +91,7 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
   
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
-<?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
+<?php if($Preencheu_Campos[0] === true){ ?>
     <div class="wrapper" style="height: fit-content;">
 
       <!-- Navbar -->
@@ -195,71 +195,47 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
         <!-- Content Header (Page header) -->
         <div class="content-header" id="__CONTENT_WRAPPER_HEADER">
             <div class="container-fluid" idCONTENT_WRAPPER_HEADER="__CONTENT_WRAPPER_HEADER_FLUID">
-            <?php 
-            if($Preencheu_Campos["Perfil_Concluido"] === false){
-            ?>
-                <!-- comment -->
-            <?php }else{ ?>
-                <div class="col-md-8" style="display: flow-root;margin: auto;">
+            <?php if($Preencheu_Campos[1] === false){
+                //Não existem eventos;
+            }else{ ?>
+                <div class="col-md-8" style="
+                    display: flow-root;
+                    margin: auto;
+                ">
                     <!-- Widget: user widget style 1 -->
                     <div class="card card-widget widget-user">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <!-- Verifica se o evento possue uma imagem como capa -->
-                        <?php
-                            $isNULL = $Preencheu_Campos["Eventos"]["Capa"];
-                            if($isNULL == "null"){
-                        ?>
-                            <div class="widget-user-header text-white">
-                        <?php }else{ ?>
-                            <div class="widget-user-header text-white" style="background: url('<?php echo $Preencheu_Campos["Eventos"]["Capa"] ?>') center center; height: 420px">
-                        <?php } ?>
-
-                            <h3 class="widget-user-username text-right"><?php echo $Preencheu_Campos["Eventos"]["Nome"] ?></h3>
-                            </div>
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-sm-6 border-right">
-                                        <div class="description-block">
-                                          <h5 class="description-header">3,200</h5>
-                                          <span class="description-text">SALES</span>
-                                        </div>
-                                        <!-- /.description-block -->
-                                    </div>
-                                    <!-- /.col -->
-                                    <div class="col-sm-6 border-right">
-                                        <div class="description-block">
-                                          <h5 class="description-header">13,000</h5>
-                                          <span class="description-text">FOLLOWERS</span>
-                                        </div>
-                                      <!-- /.description-block -->
-                                    </div>
-                                </div>
-                              <!-- /.row -->
-                            </div>
+                        <div class="widget-user-header text-white" style="background: url('<?php echo $Preencheu_Campos[1]["Capa"] ?>') center center; height: 420px">
+                          <h3 class="widget-user-username text-right"><?php echo $Preencheu_Campos[1]["Nome"] ?></h3>
                         </div>
-                    <!-- /.widget-user -->
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                      <h5 class="description-header">3,200</h5>
+                                      <span class="description-text">SALES</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                      <h5 class="description-header">13,000</h5>
+                                      <span class="description-text">FOLLOWERS</span>
+                                    </div>
+                                  <!-- /.description-block -->
+                                </div>
+                            </div>
+                          <!-- /.row -->
+                        </div>
                     </div>
-                    <!-- Verifica se o usuário está cadastrado em alguma lista -->
-                    <?php
-                    if($Preencheu_Campos["Lista_no_Nivel"] === false){ ?>
-                        <script>
-                            <?php 
-                                echo "let IDE = '" . $Preencheu_Campos["Listas_Eventos"]["ide"] . "';";
-                                echo "let IDTL = '" . $Preencheu_Campos["Listas_Eventos"]["idtl"] . "';";
-                             ?>
-                        </script>
-                        <script src="/blitz/Recursos/dist/js/comum/Cadastro_Lista.js?s=4" defer></script>  
-                    <?php }else{ ?>
-                        
-                    <?php } ?>
+                    <!-- /.widget-user -->
+                </div>
+             <?php } ?>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
 
-                    ?>
-                    
-                <?php } ?>
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-        
         
         <!-- Main content -->
         <section class="content" id="CONTENT_WRAPPER_MAIN_CONTENT">
@@ -356,7 +332,7 @@ else{ ?>
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
 <script  src="/blitz/Componentes/Formularios.js?q=92" defer="defer"></script> 
 
-<?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
+<?php if($Preencheu_Campos[0] === true){ ?>
 <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=1"></script>
 <?php } else{ ?>  
 <script src="/blitz/Recursos/dist/js/comum/Preencher.js?s=4" defer></script>

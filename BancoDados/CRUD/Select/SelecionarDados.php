@@ -19,9 +19,17 @@ try{
     $SelecionarDados->StartClock();
 
     $SelecionarDados->setUsuario("blitz");
-    $SelecionarDados->setUsuarioLogado($SystemUsuario);
-    $SelecionarDados->setIDUsuario($IDUserName);
-    $SelecionarDados->setTipoUsuario($TipoUsuario);
+    
+    if($Sessao && $SessaoTabela){
+        $SelecionarDados->setUsuarioLogado($SystemUsuario);
+        $SelecionarDados->setIDUsuario($IDUserName);
+        $SelecionarDados->setTipoUsuario($TipoUsuario);        
+    }else{
+        $SelecionarDados->setUsuarioLogado("blitz");
+        $SelecionarDados->setIDUsuario("blitz");
+        $SelecionarDados->setTipoUsuario("blitz");
+    }
+
     $SelecionarDados->setFiltros($FiltroCampos);
     $SelecionarDados->setOrderBy($Ordem);
     $SelecionarDados->setPagina($Pagina);

@@ -302,7 +302,7 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_FESTAS_VIEW").click(function(e){
         switch (n) {
         case "4":
             let Servidor = Padrao.getHostServer();
-            return `<img src="${Servidor + "/blitz/" + c}" style="width: 150px"/>`;
+            return `<img src="${c}" style="width: 150px"/>`;
             break;
         default:
             return c;
@@ -487,7 +487,7 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS_GERENCIAR").click(async function(e){
     TABELA_EVENTOS.setTabela = "e1f550bec98a7e0f4a256579fbe333ee";
     TABELA_EVENTOS.setRecipiente = "T_CONTEUDO_TABELA";
     TABELA_EVENTOS.Name = "TABELA_EVENTOS";
-    TABELA_EVENTOS.setDefaultOrderBy(9,"DESC");
+    TABELA_EVENTOS.setDefaultOrderBy(11,"DESC");
     TABELA_EVENTOS.FuncoesIcones[0] = function(a,b,c){
         debugger;
         let Linha = a.getObterLinhaInteira(a.getBreakChaves(b.dataset.chaveprimaria));
@@ -597,7 +597,7 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_EVENTOS_VIEW").click(function(e){
         switch (n) {
         case "3":
             let Servidor = Padrao.getHostServer();
-            return `<img src="${Servidor + "/blitz/" + c}" style="width: 150px"/>`;
+            return `<img src="${c}" style="width: 150px"/>`;
             break;
         default:
             return c;

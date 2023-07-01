@@ -54,6 +54,11 @@ RewriteCond %{REQUEST_URI} /Cadastrar/$
 RewriteRule (.*) CadastrarUsuario/cadastrar.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
 
 
+#Realiza a verificação dos aniversariantes do próximos dias.
+RewriteCond %{REQUEST_URI} /Aniversariantes/$
+RewriteRule (.*) Recursos/Aniversariantes/index.php?URL=$1&Req=%{HTTP_REFERER}&Metodo=%{REQUEST_METHOD}&SSL=%{HTTPS} [L]
+
+
 RewriteCond %{REQUEST_FILENAME} !-f 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /blitz/Logar [L]
