@@ -375,7 +375,7 @@ else{ ?>
 <script  src="/blitz/Componentes/Formularios.js?q=92" defer="defer"></script> 
 
 <?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
-    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=5" defer></script>
+    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=6" defer></script>
     <?php if($Preencheu_Campos["Aniversario"] !== false){ ?>
         <script src="/blitz/Recursos/dist/js/comum/Aniversario.js?s=0" defer></script>
     <?php } ?>

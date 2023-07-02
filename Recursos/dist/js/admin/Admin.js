@@ -48,6 +48,8 @@ let TABELA_EL = {IDE:null, IDTL:null};
 
 let TABELA_MEMBORS_DAS_LISTAS = null;
 
+let FORMULARIO_ANIVERSARIOS_MEMBROS = null;
+
 $("#__INICIO, #__LOGO").click(function(){
     window.location.reload();
 });
@@ -1081,6 +1083,185 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS").click(async function(e){
         
     };
     await FORMULARIO_EVENTOS_LISTAS.show();
+
+    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+    
+    
+    
+});
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS").click(async function(e){
+    $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar aniversariantes");
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+        `<div class="card card-primary card-tabs" style="width:100%">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Escolha</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-gerenciar-tab" data-toggle="pill" href="#custom-tabs-one-gerenciar" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Membros</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-gerenciar" role="tabpanel" aria-labelledby="custom-tabs-one-gerenciar-tab">
+
+                  </div>
+                </div>
+              </div>
+            </div>`);
+    
+    if(FORMULARIO_ANIVERSARIOS_MEMBROS === null){
+        FORMULARIO_ANIVERSARIOS_MEMBROS = new FormHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }    
+
+    $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_FORMULARIO" style="height: 100%;overflow: auto"></div>');
+
+    FORMULARIO_ANIVERSARIOS_MEMBROS.setTabela = "9021dbc259ddcc6f4caa3df638e0edd5";
+    FORMULARIO_ANIVERSARIOS_MEMBROS.setRecipiente = "T_CONTEUDO_FORMULARIO";
+    FORMULARIO_ANIVERSARIOS_MEMBROS.setNome_BtSubmit = "Enviar";
+    FORMULARIO_ANIVERSARIOS_MEMBROS.Modo_Operacao = "V";
+    /**
+     * O nome que será informado como parâmetro não altera em nada, pois o nome que será tratada vem da função chamadora.
+     * Ex.:
+     * let s = this.FUNCOES_ONLOAD.__Exec("UPDATE","BEFORE", this, Campos);
+     * a = UPDATE
+     * B = BEFORE
+     * C = OBJETO DATASET
+     * D = CAMPOS OU NULL
+     * Ob.: O retorno true ou false é muito importante para a continuidade das funcionalidades.
+     */
+    FORMULARIO_ANIVERSARIOS_MEMBROS.addFunctons_Eventos("FUNCAO_ALL",function(a,b,c,d){
+        return true;
+    });
+    
+    let g = {
+                Groups: true,
+                N_Grupos: 1,
+                Columns:  0,
+                Titulos: ["Selecione um evento", "Selecione um tipo de lista do evento selecionado"], //Cada índice representa o nome de cada grupo
+                Rodapes: ["Serão exibidos, somente eventos que estejam ativos.", "Serão exibidos, somente listas que estejam ativas."], //Cada índice representa o rodapé de cada grupo
+                Styles:  [
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                            {Style_card_header:"", Style_card_body:"", Style_Rodape:""},
+                        ]
+            };
+    FORMULARIO_ANIVERSARIOS_MEMBROS.setGrupos = g;
+    FORMULARIO_ANIVERSARIOS_MEMBROS.visible_Title = true;
+    
+    
+    FORMULARIO_ANIVERSARIOS_MEMBROS.FUNCAO_EVENTS_SELECTED2 = function(e){
+        let ix = this.ResultSet.Indexador;
+        $("#INPUT_" + ix +"_PNome").removeAttr('readonly');
+        
+        
+        if(e.currentTarget.dataset.Campo === "PEvento"){
+            TABELA_EL.IDE = e.params.data.id;
+            let SELECTD2 = $(".SELECTD2");
+            for(let i of SELECTD2){
+                let Name = i.name;
+                if(Name === "PTipoEvento"){
+                    $(i).prop("disabled", false);
+                    break;
+                }
+                FORMULARIO_ANIVERSARIOS_MEMBROS.Filter_Selected2[1] = [0,"=",e.params.data.id,1];
+            }
+            return true;
+        }
+
+        if(e.currentTarget.dataset.Campo === "PTipoEvento"){
+            TABELA_EL.IDTL = e.params.data.id;
+            
+            //TABELA_MEMBORS_DAS_LISTAS
+    
+            if(TABELA_MEMBORS_DAS_LISTAS === null){
+                TABELA_MEMBORS_DAS_LISTAS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+            }
+            TABELA_MEMBORS_DAS_LISTAS.setTabela = "d557c3d5f36eef6a65b4d323462486fc";
+            TABELA_MEMBORS_DAS_LISTAS.setRecipiente = "T_CONTEUDO_TABELA";
+            TABELA_MEMBORS_DAS_LISTAS.Name = "TABELA_MEMBORS_DAS_LISTAS";
+
+            TABELA_MEMBORS_DAS_LISTAS.Funcoes.Conteudo = function(a,n,c, linha){
+                if(!a.isPhone){
+                    /**
+                     * Visualização para computador
+                     */
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }else{
+                    /**
+                     * Visualização para celular
+                     */
+                    let NomeCampo = a.ResultSet.Campos[n][1];
+                    let Campo = null;
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }
+
+            };
+            TABELA_MEMBORS_DAS_LISTAS.CSSTableGeral.GeralTableClass = "table";
+            TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_BEFORE",async function(n,p,a,c){
+                let IDE = {name: null, value: null};
+                IDE.name = "Pide";
+                IDE.value = TABELA_EL.IDE;
+
+                let IDTL = {name: null, value: null};
+                IDTL.name = "Pidtl";
+                IDTL.value = TABELA_EL.IDTL;
+
+                c.unshift(IDTL);
+                c.unshift(IDE);
+
+                return true;
+
+            });
+            TABELA_MEMBORS_DAS_LISTAS.addFunctons_Eventos("INSERIR_ERROR",async function(n,p,a,c){
+                if(c.Error){
+                    let isDuplicate = c.Mensagem.indexOf("1062") === -1 ? false : true;
+                    if(isDuplicate){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Esse convidado, já existe nesta lista!",
+                            //footer: '<a href="">Why do I have this issue?</a>'
+                        });
+
+                        return true;
+                    }
+                    let isCadastro = c.Mensagem.indexOf("1452") === -1 ? false : true;
+                    if(isCadastro){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Esse convidado não está cadastrado no sistema!",
+                            //footer: '<a href="">Why do I have this issue?</a>'
+                        });
+
+                        return true;
+                    }
+                }else{
+
+                }
+            });
+            
+            TABELA_MEMBORS_DAS_LISTAS.show();
+        }
+        
+    };
+    await FORMULARIO_ANIVERSARIOS_MEMBROS.show();
 
     $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
     

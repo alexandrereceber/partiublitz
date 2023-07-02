@@ -8049,7 +8049,9 @@ class user_add_list_evento extends ModeloTabelas{
     }
 
 }
-
+/**
+ * CLASSE QUE É EXECUTADA VIA CRON PARA CADASTRAR OS ANIVERSARIANTES E CADASTRA AS LISTAS PARA OS NIVERSARIANTES
+ */
 class system_aniver_semana extends ModeloTabelas{
     /**
      * Mapeia os campos da tabela - Muito importante caso se queira visualizar somente campo necessários
@@ -8498,7 +8500,7 @@ class system_aniver_semana extends ModeloTabelas{
                 $LISTA = null;
                 foreach ($ConjuntoDados as $value) {
                     if($Action === "AfterSelect"){
-                        $PRX_Evento = $this->query("select ide from `eventos` where `eventos`.`Ativo` = 'Sim'");
+                        $PRX_Evento = $this->query("select ide, data from `eventos` where `eventos`.`Ativo` = 'Sim'");
                         $PRX_Evento = $PRX_Evento->fetch(self::FETCH_ASSOC);
                         if($PRX_Evento){
                             try{
@@ -8515,11 +8517,49 @@ class system_aniver_semana extends ModeloTabelas{
                                     $IDTE = $T_Lista_FREE["idtl"];
                                     $CPF = $value[0];
                                     $QUERY_ANIVERSARIANTE = "INSERT INTO membros_das_listas (ide, idtl,cpf) values($IDE, $IDTE, $CPF)";
-                                    $RST = $this->query($QUERY_ANIVERSARIANTE);
-                                    $ConjuntoDados[0][6] = "INSERIDO";
+                                    $this->query($QUERY_ANIVERSARIANTE);
+                                    
+                                    /**
+                                     * [0] => array(6) (
+                                            [0] => (string) 04338735660
+                                            [1] => (string) 1980-06-28
+                                            [2] => (string) -5
+                                            [3] => (string) 32988516050
+                                            [4] => (string) alexandrereceber@gmail.com
+                                            [5] => (string) 5
+                                     */
+                                    $QUERY_FIND_TE = $this->query("SELECT idte FROM tipo_evento where Nome = 'Aniversários'");
+                                    $QUERY_FIND_TE = $QUERY_FIND_TE->fetch(self::FETCH_ASSOC); 
+                                    $LE_ANIVER = $QUERY_FIND_TE["idte"];
+                                    $NIVEL = $ConjuntoDados[0][5];
+                                    
+                                    $QUERY_FIND_LE = $this->query("SELECT idtl FROM tipo_listas where Tipo = $LE_ANIVER AND Nivel = $NIVEL");
+                                    $QUERY_FIND_LE = $QUERY_FIND_LE->fetch(self::FETCH_ASSOC);                                     
+                                    
+                                    if($QUERY_FIND_LE){
+                                        
+                                        foreach ($QUERY_FIND_LE as $LE) {
+                                            $LE = $QUERY_FIND_LE["idtl"];
+                                            /**
+                                             * LINK QUE SERÁ ENVIADO PARA OS CONVIDADOS
+                                             */
+                                            $LINK = 0;
+                                            /**
+                                             * TEMPO ATÉ A DATA DO EVENTO
+                                             */
+                                            $EXPIRA = 0;
+
+                                            $QUERY_INSERIR_LISTAS_ANIVERSARIOS = $this->query("INSERT INTO listas_aniver(idLogin, idtl) VALUES($CPF, $LE)");
+                                        }
+                                        
+                                        $ConjuntoDados[0][6] = "INSERIDO";
+                                    }else{
+                                        throw new Exception("Não existem listas de anivirsário. Erro!");
+                                    }
                                 }
                             }catch(Exception $e){
                                 $ConjuntoDados[0][6] = "EXISTE";
+                                $ConjuntoDados[0][7] = $e->getMessage();
                             }
                         }
                     }   

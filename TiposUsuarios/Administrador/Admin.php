@@ -229,7 +229,25 @@ echo "<script>var Chave='$sendChave'</script>"
                     </li>
                   </ul>
                 </li>
-                
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fa-light fa-cake-candles fa-list-dropdown"></i>
+                    <p style="margin-left: 5px">
+                       Aniversários 
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-people-group"></i>
+                        <p style="margin-left: 5px">Usuários</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fa-regular fa-list-dropdown"></i>
@@ -254,7 +272,6 @@ echo "<script>var Chave='$sendChave'</script>"
                     
                   </ul>
                 </li>
-                
 
             </ul>
           </nav>
