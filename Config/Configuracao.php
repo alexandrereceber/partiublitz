@@ -233,7 +233,7 @@ class TabelaBancoDadosMD5{
                                 ["7095e737a19ed11f0df0f07b7ec84131",["adm_perfil", true]],
                                 ["4812b51890682745102213bd785eb5c0",["adm_blitzimagens", true]],
                                 ["0cdfc60825ce8e9cb6e78f0cb28a3f61",["adm_Eblitzimagens", true]],
-                                ["e1f550bec98a7e0f4a256579fbe333ee",["adm_eventos", false]],
+                                ["e1f550bec98a7e0f4a256579fbe333ee",["adm_eventos", true]],
                                 ["abda7fb4369ce84c67c12e0e98e59e75",["adm_imagens_eventos", true]],
                                 ["624c6fd80de356ec39f31f3d36bdbfa4",["adm_tipo_listas", true]],
                                 ["1da2e27139c86c663da5b5c5935406d1",["adm_beneficios", true]],
@@ -244,6 +244,8 @@ class TabelaBancoDadosMD5{
                                 ["d557c3d5f36eef6a65b4d323462486fc",["adm_membros_das_listas", true]],
                                 ["8216d97b8d8abc50d16c6a1a910ea57d",["user_profile", true]],
                                 ["6afc6a962eb3b39b1b14cf3436c3d23f",["user_add_list_evento", true]],
+                                ["6fa996b30e72b07d1a84794ba2437a26",["system_aniver_semana", false]],
+                                ["423dd8a74c145403d331c48ac0cb53de",["user_aniver_semana", true]],
                             ];
     
     /**

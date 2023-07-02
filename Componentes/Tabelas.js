@@ -1566,7 +1566,7 @@ class TabelaHTML extends JSController{
         var FormsCampos = await this.getCamposInserir();
         let o = this;
         var Janela = {
-                                    Janela: {Nome: "myJanelas", Tipo: "modal-lg", Tamanho: "30vw"},
+                                    Janela: {Nome: "myJanelas", Tipo: "modal-lg", Tamanho: "48em"},
                                     Header: {Title: "Inserir", CorTexto: "white", backgroundcolor: "#007bff"}, 
                                     Body: {Conteudo: FormsCampos, Scroll: true}, 
                                     Footer: {

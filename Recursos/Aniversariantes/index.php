@@ -1,17 +1,19 @@
 <?php
-$myfile = fopen("Chamadas.txt", "a");
+echo "Iniciando... - " . time();
+$myfile = fopen("/home/u363389093/domains/partiublitz.com.br/public_html/blitz/Recursos/Aniversariantes/Chamadas.txt", "w");
 $Hrs = date_create();
 $Hrs = $Hrs->format("d/m/Y");
-$Text = `Endereço ip: ${_SERVER["REMOTE_ADDR"]} - hora da última chamada: ${Hrs}`;
+$Text = "Endereço ip: ${_SERVER["REMOTE_ADDR"]} - hora da última chamada: ${Hrs}\n";
 fwrite($myfile, $Text);
-fclose($myfile);
+
 
 /**
  * cron responsável por selecionar todos os aniversariantes da semana que antecedem o próximo evento.
  * 
  */
-$data = ["sendModoOperacao"=>"ab58b01839a6d92154c615db22ea4b8f","sendTabelas"=>"e1f550bec98a7e0f4a256579fbe333ee"];
+$data = ["sendModoOperacao"=>"ab58b01839a6d92154c615db22ea4b8f","sendTabelas"=>"6fa996b30e72b07d1a84794ba2437a26"];
 $postdata = http_build_query($data);
+$SERVER = "partiublitz.com.br";
 
 $opts = array('http' =>
     array(
@@ -23,5 +25,10 @@ $opts = array('http' =>
 
 
 $context = stream_context_create($opts);
-echo file_get_contents("http://192.168.15.10/blitz/ControladorTabelas/", false, $context);
+$LOCAL = "https://".$SERVER."/blitz/ControladorTabelas/";
+$Execucao = file_get_contents($LOCAL, false, $context);
 
+fwrite($myfile, $Execucao . " - " . $LOCAL);
+
+echo "Terminou!";
+fclose($myfile);

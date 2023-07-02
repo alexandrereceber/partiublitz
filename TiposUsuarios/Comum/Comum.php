@@ -213,7 +213,25 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
                         <?php }else{ ?>
                             <div class="widget-user-header text-white" style="background: url('<?php echo $Preencheu_Campos["Eventos"]["Capa"] ?>') center center; height: 420px">
                         <?php } ?>
+                                
+                            <?php 
+                                if($Preencheu_Campos["Lista_no_Nivel"] !== false || $Preencheu_Campos["Aniversario"] !== false){?>
+                                <div class="ribbon-wrapper ribbon-xl">
+                                        <?php if($Preencheu_Campos["Aniversario"] !== false){?>
+                                            <div class="ribbon bg-success text-lg">
+                                        <?php
+                                            echo $Preencheu_Campos["Aniversario"]["text"];
+                                        }else{ ?>
+                                            <div class="ribbon bg-warning text-lg">
+                                        <?php
+                                            echo $Preencheu_Campos["Lista_no_Nivel"]["text"];
+                                        }?>
 
+
+                                    </div>
+                                </div>
+                            <?php } ?>
+                                
                             <h3 class="widget-user-username text-right"><?php echo $Preencheu_Campos["Eventos"]["Nome"] ?></h3>
                             </div>
                             <div class="card-footer">
@@ -357,9 +375,13 @@ else{ ?>
 <script  src="/blitz/Componentes/Formularios.js?q=92" defer="defer"></script> 
 
 <?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
-<script src="/blitz/Recursos/dist/js/comum/Comum.js?s=1"></script>
+    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=5" defer></script>
+    <?php if($Preencheu_Campos["Aniversario"] !== false){ ?>
+        <script src="/blitz/Recursos/dist/js/comum/Aniversario.js?s=0" defer></script>
+    <?php } ?>
+    
 <?php } else{ ?>  
-<script src="/blitz/Recursos/dist/js/comum/Preencher.js?s=4" defer></script>
+    <script src="/blitz/Recursos/dist/js/comum/Preencher.js?s=5" defer></script>
 <?php } ?>
 
 <!-- The Modal -->
