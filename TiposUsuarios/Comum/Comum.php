@@ -79,7 +79,7 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
 
   <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
 
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/usuariolte.min.css?3">
+  <link rel="stylesheet" href="/blitz/Recursos/dist/css/usuariolte.min.css?6">
   
   <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?47">
   
@@ -141,7 +141,7 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
       <!-- /.navbar -->
 
       <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-user-primary-usuario elevation-4">
+      <aside class="main-sidebar sidebar-dark-primary elevation-4">
           <div class="Camada_cor">
         <!-- Brand Logo -->
         <div class="Administrar">
@@ -271,8 +271,7 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
                         
                     <?php } ?>
 
-                    ?>
-                    
+                   
                 <?php } ?>
                 </div><!-- /.container-fluid -->
             </div>
@@ -375,13 +374,13 @@ else{ ?>
 <script  src="/blitz/Componentes/Formularios.js?q=92" defer="defer"></script> 
 
 <?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
-    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=6" defer></script>
+    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=8" defer></script>
     <?php if($Preencheu_Campos["Aniversario"] !== false){ ?>
-        <script src="/blitz/Recursos/dist/js/comum/Aniversario.js?s=0" defer></script>
+        <script src="/blitz/Recursos/dist/js/comum/Aniversario.js?s=1" defer></script>
     <?php } ?>
     
 <?php } else{ ?>  
-    <script src="/blitz/Recursos/dist/js/comum/Preencher.js?s=5" defer></script>
+    <script src="/blitz/Recursos/dist/js/comum/Preencher.js?s=6" defer></script>
 <?php } ?>
 
 <!-- The Modal -->
