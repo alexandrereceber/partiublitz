@@ -1,48 +1,5 @@
 
-var Padrao = function(){
-    var Operacao= {readyState: 0}; //Armazena o status da operação de XMLRequest. Verifica se o sistema já esta realizando outra tarefa.
-    return{
-        addload: function(Recipente, Descricao){
-            var Scroll = window.scrollY,
-                Description = Descricao || "";
-                
-                $(Recipente).append('<center><div \n\
-                                        class="" \n\
-                                        id="myLoader" \n\
-                                        style="z-index: 9999;top:'+ Scroll +'px;background-color: #efeef2b3;text-align: -webkit-center;position: absolute;left: 0px;width: 100%;height: 100%;"><div style="display: table-cell;vertical-align: middle;height: 50vw;"> \n\
-                                        <div style="height: 40vw;display: table-cell;vertical-align: middle;">\n\
-                                            <figure><img src="'+ this.getHostServer() +'/blitz/Imagens/loads/loaders.gif" style="width: 50%;"><figcaption>'+ Description +'</figcaption></figure>\n\
-                                        </div>\n\
-                                    </div></center>\n\
-                                </div>').addClass("modal-open");
-            $(".fecharAjax").unbind();
-            $(".fecharAjax").click(function(){
-                Operacao.abort();
-            });
-            
-        },
-        removeLoad: function(){
-            $("#myLoader").remove();
-            $("body").removeClass('modal-open');
-            
-        },
-        
-        setAjax: function(obj){
-            Operacao = obj;
-        },
-        getAjax: function(){
-            return Operacao.readyState;
-        },
-        getProtocolo: function(){ /// deprecate
-            return "http://";
-        }
-        ,
-        getHostServer: function(){
-            let host = window.location.origin;
-            return host;
-        }
-    };
-}();
+
 class JSController{
     constructor(Caminho){
         /**
@@ -216,10 +173,7 @@ class JSController{
         }
     
     }
-    
-    show(){
-        
-    }
+
 }
 JSController.prototype.Chaves = function(){
     try {
@@ -229,3 +183,5 @@ JSController.prototype.Chaves = function(){
     }
 
 }
+
+export default JSController;

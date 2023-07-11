@@ -1386,3 +1386,5 @@ class FormHTML extends JSController{
         }
     }
 }
+
+export default FormHTML;

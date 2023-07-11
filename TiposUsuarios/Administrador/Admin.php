@@ -53,7 +53,7 @@ echo "<script>var Chave='$sendChave'</script>"
 
       <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
 
-      <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?3">
+      <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?s=4">
 
 
 
@@ -63,8 +63,31 @@ echo "<script>var Chave='$sendChave'</script>"
       <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 
       <!<!-- UPLOADFILES -->
-      <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04"> 
-  
+      <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04">
+
+    <script type="module">
+        import Padroes from "/blitz/Componentes/Padroes.js";
+        //Padroes.addload();
+        Padroes.addJanela();
+        window.Padrao = Padroes;
+    </script> 
+    
+    <script type="module">
+        import JSController from "/blitz/Componentes/jsController.js";
+        window.JSController = JSController;
+        debugger;
+    </script>
+    
+    <script type="module">
+        import Tabelas from "/blitz/Componentes/Tabelas.js";
+        window.TabelaHTML = Tabelas;
+    </script>     
+
+    <script type="module">
+        import Formularios from "/blitz/Componentes/Formularios.js";
+        window.FormHTML = Formularios;
+    </script>      
+    
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
 <div class="wrapper">
@@ -428,8 +451,8 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="/blitz/Componentes/viewPopover.js?1"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script  src="/blitz/Scripts/jsControlador/jsConstroller.js?1"></script>     
-<script  src="/blitz/Componentes/Tabelas.js?s=<?php echo time()?>"></script>  
+   
+ 
 <script  src="/blitz/Login/Sair.js?q=9"></script>
 
 <!-- Ações personalizadas para o administrador -->
@@ -438,38 +461,11 @@ echo "<script>var Chave='$sendChave'</script>"
 
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
-<script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
-<script  src="/blitz/Componentes/Formularios.js?q=89" defer="defer"></script> 
+<script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
 
 <script src="/blitz/Recursos/dist/js/admin/Admin.js?s=175"></script>
 
-        
-<!-- The Modal -->
-  <div class="modal fade" id="myJanelas">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Título</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-          
-        </div>
-        <div class="modal-footer status-footer">
-          
-        </div>        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn  cancelar" data-dismiss="modal"></button><button type="button" class="btn  ok" data-dismiss="modal"></button>
-        </div>
-        
-      </div>
-    </div>
-  </div>
+  
 
 </body>
 </html>

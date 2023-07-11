@@ -12,11 +12,22 @@
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="/blitz/Recursos/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?s=1">
   <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte_login.min.css">
     <!-- Logo da blitz -->
   <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
   <link rel="manifest" href="/blitz/app.webmanifest.json">
+  
+    <script type="module">
+        import JSController from "/blitz/Componentes/jsController.js?s=1";
+        window.JSController = JSController;
+    </script>
+    
+    <script type="module">
+        import Padroes from "/blitz/Componentes/Padroes.js?s=1";
+        window.Padrao = Padroes;
+    </script>  
+    
 </head>
 <body class="hold-transition login-page" style="display: block;background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
 <div class="wrapper" style="position: absolute;width: 100%;margin: auto;display: flex;background-image: linear-gradient(#1000fffa, #b400ffa8); ">
@@ -77,9 +88,9 @@
 <script src="/blitz/Recursos/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/blitz/Recursos/dist/js/adminlte.min.js"></script>
-        <script  src="/blitz/Scripts/bootbox/bootbox.js?5s" defer="defer"></script>
-        <script src="/blitz/Scripts/jsControlador/jsConstroller.js?<?php echo time();?>" defer="defer"></script>     
-        <script src="/blitz/Login/verificarLogin.js?<?php echo time();?>" defer></script>
-        
+<script  src="/blitz/Scripts/bootbox/bootbox.js?5s" defer="defer"></script>
+
+<script src="/blitz/Login/verificarLogin.js?<?php echo time();?>" defer></script>
+    
 </body>
 </html>

@@ -4,6 +4,7 @@
  * 
  * Arrays definidos CGeral[15] - Pesquisa gerada pelo campo localizar da tabela
  */
+
 class TabelaHTML extends JSController{
     
     constructor(Caminho){
@@ -1990,3 +1991,4 @@ class TabelaHTML extends JSController{
     }
 }
 
+export default TabelaHTML;
