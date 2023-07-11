@@ -49,6 +49,9 @@ let TABELA_EL = {IDE:null, IDTL:null};
 let TABELA_MEMBORS_DAS_LISTAS = null;
 
 let TABELA_ANIVERSARIOS_MEMBROS = null;
+let TABELA_ANIVERSARIOS_HOJE = null;
+let TABELA_ROTINA_ANIVER = null;
+
 
 $("#__INICIO, #__LOGO").click(function(){
     window.location.reload();
@@ -1083,7 +1086,7 @@ $("#__SIDEBAR_NAV_ITEM_EVENTOS_LISTAS").click(async function(e){
 
 $("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS").click(async function(e){
     $("#__CONTENT_WRAPPER_HEADER").show();
-    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Lista dos aniversariantes");
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Lista dos aniversariantes da semana que antecede ao próximo evento");
     $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
         `<div class="card card-primary card-tabs" style="width:100%">
               <div class="card-header p-0 pt-1">
@@ -1096,7 +1099,6 @@ $("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS").click(async function(e){
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-one-tabContent">
                   <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
-aa
                   </div>
 
                 </div>
@@ -1104,7 +1106,7 @@ aa
             </div>`);
             //TABELA_MEMBORS_DAS_LISTAS
             
-        $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto">ola</div>');
+        $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
 
             if(TABELA_ANIVERSARIOS_MEMBROS === null){
                 TABELA_ANIVERSARIOS_MEMBROS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
@@ -1151,5 +1153,226 @@ aa
            await TABELA_ANIVERSARIOS_MEMBROS.show();    
    
     
+    
+});
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_HOJE").click(async function(e){
+    $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Lista dos aniversariantes de hoje");
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+        `<div class="card card-primary card-tabs" style="width:100%">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Aniversariantes</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+
+                  </div>
+
+                </div>
+              </div>
+            </div>`);
+            //TABELA_MEMBORS_DAS_LISTAS
+            
+        $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+
+            if(TABELA_ANIVERSARIOS_HOJE === null){
+                TABELA_ANIVERSARIOS_HOJE = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+            }
+            TABELA_ANIVERSARIOS_HOJE.setTabela = "5c2f4f601f3ac102cc8f9cc0d0f52c09";
+            TABELA_ANIVERSARIOS_HOJE.setRecipiente = "T_CONTEUDO_TABELA";
+            TABELA_ANIVERSARIOS_HOJE.Name = "TABELA_ANIVERSARIOS_HOJE";
+
+            TABELA_ANIVERSARIOS_HOJE.Funcoes.Conteudo = function(a,n,c, linha){
+                if(!a.isPhone){
+                    /**
+                     * Visualização para computador
+                     */
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }else{
+                    /**
+                     * Visualização para celular
+                     */
+                    let NomeCampo = a.ResultSet.Campos[n][1];
+                    let Campo = null;
+                    switch (n) {
+                        default:
+                            return c;
+                            break;
+                    }
+                }
+
+            };
+            TABELA_ANIVERSARIOS_HOJE.CSSTableGeral.GeralTableClass = "table";
+            TABELA_ANIVERSARIOS_HOJE.addFunctons_Eventos("SELECT_ERROR",async function(n,p,a,c){
+                return false;
+            });
+            TABELA_ANIVERSARIOS_HOJE.addFunctons_Eventos("INSERIR_BEFORE",async function(n,p,a,c){
+                return false;
+            });
+            TABELA_ANIVERSARIOS_HOJE.addFunctons_Eventos("INSERIR_ERROR",async function(n,p,a,c){
+                return false;
+            });
+            
+           await TABELA_ANIVERSARIOS_HOJE.show();    
+   
+    
+    
+});
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_EXEC_ROT").click(async function(e){
+    Swal.fire({
+                title: 'Tem certeza que deseja executar essa ação?',
+                showCancelButton: true,
+                confirmButtonText: 'Executar',
+              }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $("#__CONTENT_WRAPPER_HEADER").show();
+                        $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Executar rotina de aniversariantes.");
+                        $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+                            `<div class="card card-primary card-tabs" style="width:100%">
+                                  <div class="card-header p-0 pt-1">
+                                    <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                      <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Rotina</a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div class="card-body">
+                                    <div class="tab-content" id="custom-tabs-one-tabContent">
+                                      <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>`);
+                                //TABELA_MEMBORS_DAS_LISTAS
+
+                            $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+
+                                if(TABELA_ROTINA_ANIVER === null){
+                                    TABELA_ROTINA_ANIVER = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+                                }
+                                TABELA_ROTINA_ANIVER.setTabela = "6fa996b30e72b07d1a84794ba2437a26";
+                                TABELA_ROTINA_ANIVER.setRecipiente = "T_CONTEUDO_TABELA";
+                                TABELA_ROTINA_ANIVER.Name = "TABELA_ROTINA_ANIVER";
+
+                                TABELA_ROTINA_ANIVER.Funcoes.Conteudo = function(a,n,c, linha){
+                                    if(!a.isPhone){
+                                        /**
+                                         * Visualização para computador
+                                         */
+                                        switch (n) {
+                                            default:
+                                                return c;
+                                                break;
+                                        }
+                                    }else{
+                                        /**
+                                         * Visualização para celular
+                                         */
+                                        let NomeCampo = a.ResultSet.Campos[n][1];
+                                        let Campo = null;
+                                        switch (n) {
+                                            default:
+                                                return c;
+                                                break;
+                                        }
+                                    }
+
+                                };
+                                TABELA_ROTINA_ANIVER.CSSTableGeral.GeralTableClass = "table";
+                                TABELA_ROTINA_ANIVER.addFunctons_Eventos("SELECT_ERROR",async function(n,p,a,c){
+                                    return false;
+                                });
+                                TABELA_ROTINA_ANIVER.addFunctons_Eventos("INSERIR_BEFORE",async function(n,p,a,c){
+                                    return false;
+                                });
+                                TABELA_ROTINA_ANIVER.addFunctons_Eventos("INSERIR_ERROR",async function(n,p,a,c){
+                                    return false;
+                                });
+
+                               await TABELA_ROTINA_ANIVER.show();   
+                }
+              });
+
+     
+   
+    
+    
+});
+
+$("#__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_GLISTAS").click(async function(e){
+      $("#__CONTENT_WRAPPER_HEADER").show();
+    $("#__CONTENT_WRAPPER_HEADER_FLUID_TITULO").html("Gerenciar Listas");
+    $("#__CONTENT_WRAPPER_MAIN_CONTAINER_FLUID_ROW").html(
+        `<div class="card card-primary card-tabs" style="width:100%">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-criar-tab" data-toggle="pill" href="#custom-tabs-one-criar" role="tab" aria-controls="custom-tabs-one-criar" aria-selected="false">Criar listas</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-gerenciar-tab" data-toggle="pill" href="#custom-tabs-one-gerenciar" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Gerenciar</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-one-criar" role="tabpanel" aria-labelledby="custom-tabs-one-criar-tab">
+                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-gerenciar" role="tabpanel" aria-labelledby="custom-tabs-one-gerenciar-tab">
+
+                  </div>
+                </div>
+              </div>
+            </div>`);
+    
+    $("#custom-tabs-one-criar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_FORMULARIO" style="height: 100%;overflow: auto"></div>');
+
+
+    $("#custom-tabs-one-gerenciar").html('<div class="col-lg-12 col-12" id="T_CONTEUDO_TABELA" style="height: 100%;overflow: auto"></div>');
+    
+    if(TABELA_LISTAS === null){
+        TABELA_LISTAS = new TabelaHTML(Padrao.getHostServer() +"/blitz/ControladorTabelas/");
+    }
+    TABELA_LISTAS.setTabela = "624c6fd80de356ec39f31f3d36bdbfa4";
+    TABELA_LISTAS.setRecipiente = "T_CONTEUDO_TABELA";
+    TABELA_LISTAS.Name = "TABELA_LISTAS";
+    TABELA_LISTAS.setDefaultOrderBy(8,"DESC");
+    
+    TABELA_LISTAS.FuncoesIcones[0] = function(a,b,c){
+        debugger;
+        let Linha = a.getObterLinhaInteira(a.getBreakChaves(b.dataset.chaveprimaria));
+    };
+    TABELA_LISTAS.addFunctons_Eventos("SELECT_AFTER",async function(n,p,a){
+
+        
+    });
+    TABELA_LISTAS.addFunctons_Eventos("UPDATE_BEFORE",async function(n,p,a,b){
+       let Linha = a.getObterLinhaInteira(a.getBreakChaves(a.ChavesPrimarias[0]));
+
+       return true;
+    });
+    
+    
+    TABELA_LISTAS.addFunctons_LOAD("ATUALIZAR","MUDARFOR_SELECT2",async function(n,p){
+        return true;
+    });
+    
+
+    await TABELA_LISTAS.show();    
     
 });

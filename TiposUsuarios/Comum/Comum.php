@@ -46,6 +46,7 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/BancoDados/TabelasBD/'. 
     echo json_encode($ResultRequest); 
     exit;
 }
+
 $Nome = "user_profile";
 $PERFIL = new $Nome();
 $Filtro = [false, false, false];
@@ -293,8 +294,8 @@ $Preencheu_Campos = $PERFIL->getFuncoesGenericas();
       </div>
       <!-- /.content-wrapper -->
       <footer class="main-footer" id="CONTENT_WRAPPER_MAIN_FOOTER">
-        <strong>Copyright © 2014-2023 <a href="#">Alexandre Marques</a>.</strong>
-        Todos os direitos reservados.
+        <strong>Copyright © 2022-2023 ALGM</strong>
+            Todos os direitos reservados.
         <div class="float-right d-none d-sm-inline-block">
           <b>Versão</b> 1.0.0
         </div>
@@ -374,7 +375,7 @@ else{ ?>
 <script  src="/blitz/Componentes/Formularios.js?q=92" defer="defer"></script> 
 
 <?php if($Preencheu_Campos["Perfil_Concluido"] === true){ ?>
-    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=8" defer></script>
+    <script src="/blitz/Recursos/dist/js/comum/Comum.js?s=12" defer></script>
     <?php if($Preencheu_Campos["Aniversario"] !== false){ ?>
         <script src="/blitz/Recursos/dist/js/comum/Aniversario.js?s=1" defer></script>
     <?php } ?>

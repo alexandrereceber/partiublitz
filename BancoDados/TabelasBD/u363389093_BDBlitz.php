@@ -1489,7 +1489,7 @@ class adm_perfil extends ModeloTabelas{
             [
                "Index"          => 3,                                   //Ordem dos campos
                "Field"          => "Nasc",                       //Nome original do campo (String)
-               "FieldFunc"      => [true,("DATE_FORMAT(dtCriado,'%d/%m/%Y - %H:%i') as Nasc")],
+               "FieldFunc"      => [true,("DATE_FORMAT(Nasc,'%d/%m/%Y') as Nasc")],
                "CodNome"        => "Nasc",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
@@ -7693,7 +7693,7 @@ class user_profile extends ModeloTabelas{
                 return $PERF;
             }else{
                 
-                $query_0 = "select * FROM user_aniver_semana;";
+                $query_0 = "select * FROM user_aniver_semana where idp = '$this->UsuarioLogin' ;";
                 $ANIVERSARIO = $this->query($query_0);
                 $PERF["Aniversario"] = $ANIVERSARIO->fetch(PDO::FETCH_ASSOC);
                 
@@ -7723,7 +7723,7 @@ class user_profile extends ModeloTabelas{
                         //----------------------------------------
                         //Verifica se o usuário já está cadastrado na lista com o seu nível.
                         $IDTL = $PERF["Listas_Eventos"]["idtl"];
-                        $query_3 = "SELECT ide, idtl, (SELECT Valor from tipo_listas where tipo_listas.idtl = membros_das_listas.idtl) as Valor FROM membros_das_listas WHERE ide = '$IDE' and  idtl = '$IDTL';";
+                        $query_3 = "SELECT ide, idtl, (SELECT Valor from tipo_listas where tipo_listas.idtl = membros_das_listas.idtl) as Valor FROM membros_das_listas WHERE ide = '$IDE' and  idtl = '$IDTL' and cpf = '$this->UsuarioLogin';";
                         $REGISTRADO = $this->query($query_3);
 
                         $PERF["Lista_no_Nivel"] = $REGISTRADO->fetch(PDO::FETCH_ASSOC); 
@@ -8173,9 +8173,9 @@ class system_aniver_semana extends ModeloTabelas{
            ],
             [
                "Index"          => 2,                                   //Ordem dos campos
-               "Field"          => "ft",                       //Nome original do campo (String)
+               "Field"          => "Nasc",                       //Nome original do campo (String)
                "FieldFunc"      => [false,null],
-               "CodNome"        => "FT",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "CodNome"        => "Nasc",                       //Codnome do campo, o que será visualizado pelo usuário (String)
                "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
                "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
                "Key"            => [false, false],                       //Chave primária (boolean)
@@ -8201,7 +8201,7 @@ class system_aniver_semana extends ModeloTabelas{
                                         "Placeholder"=> "", 
                                         "TypeComponente"=>"inputbox", 
                                         "TypeConteudo"=> ["text"], 
-                                        "Name" => "PFT",
+                                        "Name" => "PNasc",
                                         "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
                                         "Patterns"=> "", 
                                         "Titles" => "",
@@ -8410,8 +8410,8 @@ class system_aniver_semana extends ModeloTabelas{
 
         ];
 
-    private $Privilegios = [["blitz","Select"]];
-    private $TipoPaginacao = ["Simples"=>false, "SaltoPagina"=> true, "Filtros"=>true, "BRefresh"=>true];
+    private $Privilegios = [["blitz","Select"], ["Administrador","Select"]];
+    private $TipoPaginacao = ["Simples"=>true, "SaltoPagina"=> false, "Filtros"=>false, "BRefresh"=>false];
     
     public function ModoPaginacao() {
         return $this->TipoPaginacao;
@@ -8448,7 +8448,7 @@ class system_aniver_semana extends ModeloTabelas{
     }
 
     public function getLimite() {
-        return 1;
+        return 1000;
     }
 
     public function getMostrarContador() {
@@ -8497,73 +8497,138 @@ class system_aniver_semana extends ModeloTabelas{
     public function Jobs($Tipo, &$ConjuntoDados, $Action, $Resultado) {
         switch ($Tipo) {
             case "getArrayDados":
-                $LISTA = null;
-                foreach ($ConjuntoDados as $value) {
-                    if($Action === "AfterSelect"){
-                        $PRX_Evento = $this->query("select ide, data from `eventos` where `eventos`.`Ativo` = 'Sim'");
-                        $PRX_Evento = $PRX_Evento->fetch(self::FETCH_ASSOC);
-                        if($PRX_Evento){
-                            try{
-                                //Tipo de evento
-                                $T_Evento_FREE = $this->query("SELECT idte FROM tipo_evento where Nome = 'FREE'");
-                                $T_Evento_FREE = $T_Evento_FREE->fetch(self::FETCH_ASSOC);
-                                $T_EFREE = $T_Evento_FREE["idte"];
-                                //chave do tipo de lista
-                                $T_Lista_FREE = $this->query("SELECT idtl FROM tipo_listas where Tipo = '$T_EFREE'");
-                                $T_Lista_FREE = $T_Lista_FREE->fetch(self::FETCH_ASSOC);                                
-                                
-                                if($T_Lista_FREE){
-                                    $IDE = $PRX_Evento["ide"];
-                                    $IDTE = $T_Lista_FREE["idtl"];
-                                    $CPF = $value[0];
-                                    $QUERY_ANIVERSARIANTE = "INSERT INTO membros_das_listas (ide, idtl,cpf) values($IDE, $IDTE, $CPF)";
+
+                if($Action === "AfterSelect"){
+                    /**
+                     * Busca o próximo evento
+                     */
+                    $PRX_Evento = $this->query("select ide, data from `eventos` where `eventos`.`Ativo` = 'Sim'");
+                    $PRX_Evento = $PRX_Evento->fetch(self::FETCH_ASSOC);
+                    
+                    /*
+                     * Verifise se foi encontrado algum evento.
+                     */
+                    if($PRX_Evento){
+                        
+                        /*
+                         * Busca o código do evento FREE;
+                         */
+                        $T_Evento_FREE = $this->query("SELECT idte FROM tipo_evento where Nome = 'FREE'");
+                        $T_Evento_FREE = $T_Evento_FREE->fetch(self::FETCH_ASSOC);
+                        $T_EFREE = $T_Evento_FREE["idte"];
+                        
+                        /*
+                         * Busca os tipos de listas que existem para esse evento.
+                         */
+                        $T_Lista_FREE = $this->query("SELECT idtl FROM tipo_listas where Tipo = '$T_EFREE'");
+                        $T_Lista_FREE = $T_Lista_FREE->fetch(self::FETCH_ASSOC);    
+                        
+                        /*
+                         * Verifica foi encontrado algum lista
+                         */
+                        if($T_Lista_FREE){
+                            $IDE = $PRX_Evento["ide"];
+                            $IDTE = $T_Lista_FREE["idtl"];
+                            $COUNT = 0;
+                            
+                            /*
+                             * Executa o cadastro dos aniversariantes na tabela membros_das_listas
+                             */
+                            foreach ($ConjuntoDados as $value) {
+                                $CPF = $value[0];
+                                try{
+                                    $QUERY_ANIVERSARIANTE = "INSERT INTO membros_das_listas (ide, idtl,cpf) values($IDE, $IDTE, $CPF)";                                
                                     $this->query($QUERY_ANIVERSARIANTE);
-                                    
-                                    /**
-                                     * [0] => array(6) (
-                                            [0] => (string) 04338735660
-                                            [1] => (string) 1980-06-28
-                                            [2] => (string) -5
-                                            [3] => (string) 32988516050
-                                            [4] => (string) alexandrereceber@gmail.com
-                                            [5] => (string) 5
-                                     */
-                                    $QUERY_FIND_TE = $this->query("SELECT idte FROM tipo_evento where Nome = 'Aniversários'");
-                                    $QUERY_FIND_TE = $QUERY_FIND_TE->fetch(self::FETCH_ASSOC); 
-                                    $LE_ANIVER = $QUERY_FIND_TE["idte"];
-                                    $NIVEL = $ConjuntoDados[0][5];
-                                    
-                                    $QUERY_FIND_LE = $this->query("SELECT idtl FROM tipo_listas where Tipo = $LE_ANIVER AND Nivel = $NIVEL");
-                                    $QUERY_FIND_LE = $QUERY_FIND_LE->fetch(self::FETCH_ASSOC);                                     
-                                    
-                                    if($QUERY_FIND_LE){
+                                    $ConjuntoDados[$COUNT][6] = false;
+                                    $ConjuntoDados[$COUNT][7] = "";
+                                } catch (Exception $e){
+                                    $ConjuntoDados[$COUNT][6] = true;
+                                    $ConjuntoDados[$COUNT][7] = $e->getMessage();
+                                }
+                                $COUNT++;
+                            }
+                            
+                                /**
+                                 * [0] => array(6) (
+                                        [0] => (string) 04338735660
+                                        [1] => (string) 1980-06-28
+                                        [2] => (string) -5
+                                        [3] => (string) 32988516050
+                                        [4] => (string) alexandrereceber@gmail.com
+                                        [5] => (string) 5
+                                 */
+                            /*
+                             * Busca as listas de aniversariantes
+                             */
+                            $QUERY_FIND_TE = $this->query("SELECT idte FROM tipo_evento where Nome = 'Aniversários'");
+                            $QUERY_FIND_TE = $QUERY_FIND_TE->fetch(self::FETCH_ASSOC); 
+
+                            $LE_ANIVER = $QUERY_FIND_TE["idte"];
+                            $COUNT = 0;
+
+                                /*
+                                 * Busca as listas de aniversariantes, não se pode associar à nível, pois as listas são dos aniversariantes
+                                 */
+                                $QUERY_FIND_LE = $this->query("SELECT idtl FROM tipo_listas where Tipo = $LE_ANIVER");
+                                $QUERY_FIND_LE = $QUERY_FIND_LE->fetch(self::FETCH_ASSOC);                                     
+
+                                if($QUERY_FIND_LE){
+
+                                    foreach ($QUERY_FIND_LE as $LE) {
+
+                                        $LE = $QUERY_FIND_LE["idtl"];
+
+                                        /**
+                                         * TEMPO ATÉ A DATA DO EVENTO
+                                         */
+                                        $EXPIRA = $PRX_Evento["data"];   
                                         
-                                        foreach ($QUERY_FIND_LE as $LE) {
-                                            $LE = $QUERY_FIND_LE["idtl"];
+                                        foreach ($ConjuntoDados as $value) {
+                                            
+                                            $CPF = $value[0];
+                                            
                                             /**
                                              * LINK QUE SERÁ ENVIADO PARA OS CONVIDADOS
                                              */
-                                            $LINK = 0;
-                                            /**
-                                             * TEMPO ATÉ A DATA DO EVENTO
-                                             */
-                                            $EXPIRA = 0;
+                                            $LINK = md5($CPF);
 
-                                            $QUERY_INSERIR_LISTAS_ANIVERSARIOS = $this->query("INSERT INTO listas_aniver(idLogin, idtl) VALUES($CPF, $LE)");
+
+                                            try{
+                                                $QUERY_INSERIR_LISTAS_ANIVERSARIOS = $this->query("INSERT INTO listas_aniver(idLogin, idtl, Link, Expira) VALUES($CPF, $LE, '$LINK', '$EXPIRA')");
+                                                $ConjuntoDados[$COUNT][8] = false;
+                                                $ConjuntoDados[$COUNT][9] = "";
+                                                $ConjuntoDados[$COUNT][10] = "INSERIDO";
+                                                $COUNT++;
+
+
+                                            }catch (Exception $e){
+                                                $ConjuntoDados[$COUNT][8] = true;
+                                                $ConjuntoDados[$COUNT][9] = $e->getMessage();
+                                                $ConjuntoDados[$COUNT][10] = "ERROR";
+                                                $COUNT++;
+
+                                            }                                                
                                         }
-                                        
-                                        $ConjuntoDados[0][6] = "INSERIDO";
-                                    }else{
-                                        throw new Exception("Não existem listas de anivirsário. Erro!");
+
+
                                     }
+                                }else{
+                                    $ConjuntoDados[$COUNT][8] = false;
+                                    $ConjuntoDados[$COUNT][9] = false;
+                                    $ConjuntoDados[$COUNT][10] = "Não existem listas para o nível desse aniversariante";
+
+                                    $COUNT++;
                                 }
-                            }catch(Exception $e){
-                                $ConjuntoDados[0][6] = "EXISTE";
-                                $ConjuntoDados[0][7] = $e->getMessage();
-                            }
+                                
+                                
+                                
+                            
                         }
-                    }   
-                }
+                    }else{
+                        throw new Exception("Nenhum evento foi programado. Favor verificar!");
+                    }
+                }   
+                
                 
                 break;
 
@@ -9072,8 +9137,7 @@ class user_aniver_semana extends ModeloTabelas{
 
 }
 
-
-class admin_aniver_semana extends ModeloTabelas{
+class adm_aniver_semana extends ModeloTabelas{
     /**
      * Mapeia os campos da tabela - Muito importante caso se queira visualizar somente campo necessários
      */
@@ -9194,65 +9258,6 @@ class admin_aniver_semana extends ModeloTabelas{
            ],
             [
                "Index"          => 2,                                   //Ordem dos campos
-               "Field"          => "ft",                       //Nome original do campo (String)
-               "FieldFunc"      => [false,null],
-               "CodNome"        => "FT",                       //Codnome do campo, o que será visualizado pelo usuário (String)
-               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
-               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
-               "Key"            => [false, false],                       //Chave primária (boolean)
-               "ChvExt"         => [        
-                                        "TExt" => false,
-                                        "Tabela"=> null,
-                                        "IdxCampoVinculado"=> 0, 
-                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
-                                        "NomeBotao"=> "",
-                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
-                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
-                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
-                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
-                                         */
-                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
-                                    ],   //Chave estrangeira
-               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
-               "Editar"         => false,                               //Editável - (boolean)  
-               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
-               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
-               "Formulario"     => [
-                                        "Exibir"=> false,
-                                        "Placeholder"=> "", 
-                                        "TypeComponente"=>"inputbox", 
-                                        "TypeConteudo"=> ["text"], 
-                                        "Name" => "PFT",
-                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
-                                        "Patterns"=> "", 
-                                        "Titles" => "",
-                                        "Required" => true,
-                                        "width" => "",
-                                        "height"=>"",
-                                        "step"=>"",
-                                        "size"=>"",
-                                        "min"=>"",
-                                        "max"=>"",
-                                        "maxlength"=>"",
-                                        "form"=>"",
-                                        "formaction"=>"",
-                                        "formenctype"=>"",
-                                        "formmethod"=>"",
-                                        "formnovalidate"=>"",
-                                        "formtarget"=>"",
-                                        "align"=>"",
-                                        "alt"=>"",
-                                        "autocomplete"=>"",
-                                        "autofocus"=>"",
-                                        "checked"=>"",
-                                        "dirname"=>"",
-                                        "readonly"=>"",
-                                        "style"=>""
-                                    ],                                  //Informa se o campo fará parte do formulários
-               "OrdemBY"        => true
-           ],
-            [
-               "Index"          => 3,                                   //Ordem dos campos
                "Field"          => "Cel",                       //Nome original do campo (String)
                "FieldFunc"      => [false,null],
                "CodNome"        => "Celular",                       //Codnome do campo, o que será visualizado pelo usuário (String)
@@ -9311,7 +9316,7 @@ class admin_aniver_semana extends ModeloTabelas{
                "OrdemBY"        => true
            ],
             [
-               "Index"          => 4,                                   //Ordem dos campos
+               "Index"          => 3,                                   //Ordem dos campos
                "Field"          => "Email",                       //Nome original do campo (String)
                "FieldFunc"      => [false,null],
                "CodNome"        => "e-Mail",                       //Codnome do campo, o que será visualizado pelo usuário (String)
@@ -9370,7 +9375,542 @@ class admin_aniver_semana extends ModeloTabelas{
                "OrdemBY"        => true
            ],
             [
+               "Index"          => 4,                                   //Ordem dos campos
+               "Field"          => "Nivel",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Nível",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PNIVEL",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+
+        ];
+
+    private $Privilegios = [["Administrador","Select///"]];
+    private $TipoPaginacao = ["Simples"=>false, "SaltoPagina"=> true, "Filtros"=>true, "BRefresh"=>true];
+    
+    public function ModoPaginacao() {
+        return $this->TipoPaginacao;
+    }
+    /*
+     * Informa que a tabela que está sendo trabalhada é uma view
+     */
+    public function getVirtual() {
+        return false;
+    }
+    /*
+     * Informa o nome da tabela na qual as operações de INSERT, UPDATE, e DELETE vão atuar
+     */
+    public function getNomeReal() {
+        return "";
+    }
+    /*
+     * Nome da tabela para a instrução SELECT
+     */
+    public function setNomeTabela() {
+        $this->NomeTabela = __CLASS__;   
+    }
+
+    public function getCampos() {
+        return $this->Campos;
+    }
+
+    public function getPrivilegios() {
+        return $this->Privilegios;
+    }
+
+    public function getTituloTabela() {
+        return "";
+    }
+
+    public function getLimite() {
+        return 20;
+    }
+
+    public function getMostrarContador() {
+        return true;
+    }
+
+    public function showColumnsIcones() {
+        $Habilitar = false;
+        $Icones = [
+                        //["NomeColuna"=> "<i class='fa fa-bluetooth' style='font-size:20px'></i>","NomeBotao"=>"Localizar", "Icone" => "fa fa-search", "Func" => 0, "Tipo" => "Bootstrap", "tooltip"=> "busca"]
+                    ];
+        $ShowColumns[0] = $Habilitar;
+        $ShowColumns[1] = $Icones;
+        
+        return $ShowColumns;
+        
+    }
+    /**
+     * A idéia do método é possibilitar o retorno de valor padrão baseado em qualquer outro método.
+     * @param int $idx
+     * @return boolean
+     */
+    public function getValorPadrao($idx) {
+        $ValorPadraoCampos[0] = ["Exist"=>false, Valor=>"sim"];
+        $ValorPadraoCampos[1] = ["Exist"=>false, Valor=>"sim"];
+        $ValorPadraoCampos[2] = ["Exist"=>false, Valor=>"sim"];
+        $ValorPadraoCampos[3] = ["Exist"=>false, Valor=>"sim"];
+        $ValorPadraoCampos[4] = ["Exist"=>false, Valor=>"sim"];
+        $ValorPadraoCampos[5] = ["Exist"=>false, Valor=>"sim"];
+        
+        return $ValorPadraoCampos[$idx];
+    }
+
+    public function getPrivBD() {
+        
+    }
+    /**
+     * Método muito importante para o sistema. 
+     * Através deste método, podemos criar os filtros padrões de cada campo.
+     * O método foi criado com o intuito de se poder criar qualquer tipo de filtro padrão.
+     */
+    public function getFiltrosCampo() {
+
+    }
+
+    public function Jobs($Tipo, &$ConjuntoDados, $Action, $Resultado) {
+        switch ($Tipo) {
+            case "getArrayDados":
+                
+                break;
+
+            default:
+                break;
+        }
+        
+        return true;
+    }
+
+    public function getTotalPageVisible() {
+       return 10;
+    }
+
+    public function validarConteudoCampoRegex(&$Dados) {
+        return true;
+    }
+
+    public function NormalizarFiltro($Tipo) {
+        
+    }
+    /*
+     * Função que é executada que poderá ter retornos variados como: array, boolean, json, etc...
+     */
+    public function getFuncoesGenericas() {
+
+        
+    }
+
+}
+
+class adm_aniver_hj extends ModeloTabelas{
+    /**
+     * Mapeia os campos da tabela - Muito importante caso se queira visualizar somente campo necessários
+     */
+    private $Campos =  [
+           
+            [
+               "Index"          => 0,                                   //Ordem dos campos
+               "Field"          => "idp",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "idp",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => false,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [true, true],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PIDP",
+                                        "Grupos" =>["N_Grupo" => 1, "Divisao" => 1],
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => "",
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 1,                                   //Ordem dos campos
+               "Field"          => "Nome",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Nome",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PNOME",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 2,                                   //Ordem dos campos
+               "Field"          => "Sobrenome",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Sobrenome",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PSobrenome",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 3,                                   //Ordem dos campos
+               "Field"          => "Nasc",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Nasc",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PNASC",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 4,                                   //Ordem dos campos
+               "Field"          => "Cel",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "Celular",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PCEL",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
                "Index"          => 5,                                   //Ordem dos campos
+               "Field"          => "Email",                       //Nome original do campo (String)
+               "FieldFunc"      => [false,null],
+               "CodNome"        => "e-Mail",                       //Codnome do campo, o que será visualizado pelo usuário (String)
+               "TypeConteudo"   => ["text"],                           //Tipo de conteudo exibido na tabela HTML
+               "Filter"         => true,                               //Habilita a visualização da caixa popv para filtro e classificação
+               "Key"            => [false, false],                       //Chave primária (boolean)
+               "ChvExt"         => [        
+                                        "TExt" => false,
+                                        "Tabela"=> null,
+                                        "IdxCampoVinculado"=> 0, 
+                                        "Funcao"=> false,  //"null" ou "0" número da função representanda no componente.
+                                        "NomeBotao"=> "",
+                                        /* O primeiro é utilizado pelo componente select como id da chave primária  da tabela estrangeira.
+                                         * O segundo é utilizado pelo componente select como a informação que será mostrada no componente referente à chave
+                                         * o terceiro é utilizado pelo componente como id da tabela real para mostrar o elemente que está armazenado.
+                                         * o quarto é a informação que será apresentada, quando da subquery, que mostra o valor representado pela chave estrangeira, uma vez que a mesma é uma valor mais abstrato.
+                                         */
+                                        "CamposTblExtrangeira"=>null //Define os campos, pelo index deles onde o primeiro a chave e o segundo qual será visualizado
+                                    ],   //Chave estrangeira
+               "Mask"           => false,                               // Máscara (String) Contém a máscara que será utilizada pelo campo
+               "Editar"         => false,                               //Editável - (boolean)  
+               "Visible"        => true,                                //Mostrar na tabela HTML (boolean)
+               "Regex"          => ["Exist"=> false, "Regx"=> ""],                               //Regex que será utilizada.
+               "Formulario"     => [
+                                        "Exibir"=> false,
+                                        "Placeholder"=> "", 
+                                        "TypeComponente"=>"inputbox", 
+                                        "TypeConteudo"=> ["text"], 
+                                        "Name" => "PEMAIL",
+                                        "Grupos" =>["N_Grupo" => 0, "Divisao" => 1], 
+                                        "Patterns"=> "", 
+                                        "Titles" => "",
+                                        "Required" => true,
+                                        "width" => "",
+                                        "height"=>"",
+                                        "step"=>"",
+                                        "size"=>"",
+                                        "min"=>"",
+                                        "max"=>"",
+                                        "maxlength"=>"",
+                                        "form"=>"",
+                                        "formaction"=>"",
+                                        "formenctype"=>"",
+                                        "formmethod"=>"",
+                                        "formnovalidate"=>"",
+                                        "formtarget"=>"",
+                                        "align"=>"",
+                                        "alt"=>"",
+                                        "autocomplete"=>"",
+                                        "autofocus"=>"",
+                                        "checked"=>"",
+                                        "dirname"=>"",
+                                        "readonly"=>"",
+                                        "style"=>""
+                                    ],                                  //Informa se o campo fará parte do formulários
+               "OrdemBY"        => true
+           ],
+            [
+               "Index"          => 6,                                   //Ordem dos campos
                "Field"          => "Nivel",                       //Nome original do campo (String)
                "FieldFunc"      => [false,null],
                "CodNome"        => "Nível",                       //Codnome do campo, o que será visualizado pelo usuário (String)

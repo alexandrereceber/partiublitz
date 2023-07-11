@@ -34,35 +34,36 @@ if(@!include_once ConfigSystema::get_Path_Systema() .  "/Controller/SegurityPage
 echo "<script>var Chave='$sendChave'</script>"
 ?>
 <!DOCTYPE html>
-<html lang="en" style="height: auto;" class=""><head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Adminstrador | Dashboard</title>
-  <!-- Logo da blitz -->
-  <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?3" type="image/jpg">
-  
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  
+<html lang="en" style="height: auto;" class="">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Adminstrador | Dashboard</title>
+      <!-- Logo da blitz -->
+      <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_blitz.png?3" type="image/jpg">
 
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
+      <!-- Google Font: Source Sans Pro -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+      <!-- Font Awesome -->
+      <link rel="stylesheet" href="/blitz/Recursos/plugins/fontawesome-free/css/all.min.css">
+      <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
+      <!-- Ionicons -->
+      <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-  <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?3">
-  
-  
-  
-  <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?47">
-  
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-  
-  <!<!-- UPLOADFILES -->
-  <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04"> 
+
+      <link rel="stylesheet" href="/blitz/Recursos/plugins/select2/css/select2.css?s=2">
+
+      <link rel="stylesheet" href="/blitz/Recursos/dist/css/adminlte.min.css?3">
+
+
+
+      <link rel="stylesheet" href="/blitz/CSS/Componentes/TabelaHTML.css?47">
+
+      <!-- overlayScrollbars -->
+      <link rel="stylesheet" href="/blitz/Recursos/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+      <!<!-- UPLOADFILES -->
+      <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04"> 
   
 </head>
 <body class="sidebar-mini layout-fixed" style="height: auto;">
@@ -234,19 +235,47 @@ echo "<script>var Chave='$sendChave'</script>"
                   <a href="#" class="nav-link">
                     <i class="nav-icon fa-light fa-cake-candles fa-list-dropdown"></i>
                     <p style="margin-left: 5px">
-                       Aniversários 
+                       Aniversariantes 
                       <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
-                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_GLISTAS">
                       <a href="#" class="nav-link">
-                        <i class="fa-solid fa-people-group"></i>
-                        <p style="margin-left: 5px">Usuários</p>
+                        <i class="fa-solid fa-clipboard-list-check"></i>
+                        <p style="margin-left: 5px">Gerenciar</p>
                       </a>
                     </li>
                     
                   </ul>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_MEMBROS">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-people-group"></i>
+                        <p style="margin-left: 5px">Semana</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_HOJE">
+                      <a href="#" class="nav-link">
+                        <i class="fa-duotone fa-balloons"></i>
+                        <p style="margin-left: 5px">Hoje</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <ul class="nav nav-treeview" style="display: none; margin-left: 20px">
+                    <li class="nav-item" id="__SIDEBAR_SUBMENU_NAV_ITEM_ANIVERSARIOS_EXEC_ROT">
+                      <a href="#" class="nav-link">
+                        <i class="fa-solid fa-gears"></i>
+                        <p style="margin-left: 5px">Rotina</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                    
                 </li>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
@@ -288,7 +317,7 @@ echo "<script>var Chave='$sendChave'</script>"
     <div class="content-header" id="__CONTENT_WRAPPER_HEADER">
       <div class="container-fluid" idCONTENT_WRAPPER_HEADER="__CONTENT_WRAPPER_HEADER_FLUID">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          <div class="col-sm-12">
             <h1 class="m-0" id="__CONTENT_WRAPPER_HEADER_FLUID_TITULO">Dashboard</h1>
           </div><!-- /.col -->
           <!-- /.col -->
@@ -412,7 +441,7 @@ echo "<script>var Chave='$sendChave'</script>"
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js" defer ></script>
 <script  src="/blitz/Componentes/Formularios.js?q=89" defer="defer"></script> 
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=171"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=175"></script>
 
         
 <!-- The Modal -->
