@@ -56,18 +56,26 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/BancoDados/TabelasBD/'. 
  */
 ConfigSystema::getStartTimeTotal();
 
-$URL            = filter_input(INPUT_GET, "URL");
-$Requisicao     = filter_input(INPUT_GET, "Req");
-$Metodo         = filter_input(INPUT_GET, "URL");
-$SSL            = filter_input(INPUT_GET, "Metodo");
-$Usuario        = filter_input(INPUT_POST, "sendUsuario");
-$Senha          = md5(filter_input(INPUT_POST, "sendSenha"));
-$Dispositivo    = filter_input(INPUT_POST, "sendDispositivo");
-
 //$IP = $_SERVER;
 //$myfile = fopen("rastro.txt", "w");
 //fwrite($myfile, $_SERVER["REMOTE_ADDR"]);
 try {
+    
+    $DADOS_RECEBIDOS = filter_input(INPUT_POST,"DADOS_BUSCA");
+    if($DADOS_RECEBIDOS == null){
+        throw new Exception("Error de entrada!", 14008);
+    }
+
+    $DADOS_RECEBIDOS = json_decode($DADOS_RECEBIDOS, true);
+
+    $URL            = filter_input(INPUT_GET, "URL");
+    $Requisicao     = filter_input(INPUT_GET, "Req");
+    $Metodo         = filter_input(INPUT_GET, "URL");
+    $SSL            = filter_input(INPUT_GET, "Metodo");
+    $Usuario        = $DADOS_RECEBIDOS["sendUsuario"];
+    $Senha          = md5($DADOS_RECEBIDOS["sendSenha"]);
+    $Dispositivo    = $DADOS_RECEBIDOS["sendDispositivo"];    
+    
     if(ConfigSystema::getValidarDispositivo()){
         if(!$Dispositivo){
             throw new Exception("O dispositivo utilidado não foi informado.", 14002);

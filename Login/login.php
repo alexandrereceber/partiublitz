@@ -18,15 +18,22 @@
   <link rel="shortcut icon" href="/blitz/Imagens/Logo/Logo_Blitz.png?2" type="image/jpg">
   <link rel="manifest" href="/blitz/app.webmanifest.json">
   
+  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module">
-        import JSController from "/blitz/Componentes/jsController.js?s=1";
+        import Padroes from "/blitz/Componentes/Padroes.js";
+        //Padroes.addload();
+        Padroes.addJanela();
+        window.Toast = Padroes.addToast();
+        window.Swal = Padroes.addswalWithBootstrapButtons();
+        window.Padrao = Padroes;
+    </script> 
+    <script type="module">
+        import JSController from "/blitz/Componentes/jsController.js?s=5";
         window.JSController = JSController;
     </script>
     
-    <script type="module">
-        import Padroes from "/blitz/Componentes/Padroes.js?s=1";
-        window.Padrao = Padroes;
-    </script>  
+ 
     
 </head>
 <body class="hold-transition login-page" style="display: block;background-image: url('/blitz/Imagens/Fundo/Show.avif'); background-size: 100%;background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
@@ -81,14 +88,13 @@
 </div>
 
 <!-- /.login-box -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- jQuery -->
 <script src="/blitz/Recursos/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/blitz/Recursos/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/blitz/Recursos/dist/js/adminlte.min.js"></script>
-<script  src="/blitz/Scripts/bootbox/bootbox.js?5s" defer="defer"></script>
 
 <script src="/blitz/Login/verificarLogin.js?<?php echo time();?>" defer></script>
     

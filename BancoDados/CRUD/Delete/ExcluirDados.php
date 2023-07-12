@@ -9,7 +9,7 @@
 
         
 try{
-    $ChavesPrimarias    = $_REQUEST["sendChavesPrimarias"];
+    $ChavesPrimarias    = $DADOS_RECEBIDOS["sendChavesPrimarias"];
 
     if(!is_array($ChavesPrimarias)){
         throw new Exception("Nenhum dado foi avaliado!");

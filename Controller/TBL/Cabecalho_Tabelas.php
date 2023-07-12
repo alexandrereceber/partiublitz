@@ -22,27 +22,35 @@ if(!@include_once ConfigSystema::get_Path_Systema() . '/BancoDados/TabelasBD/'. 
     echo json_encode($ResultRequest); 
     exit;
 }
-/**
- * Armazena o tempo inicial do processamento.
- */
-ConfigSystema::getStartTimeTotal();
-$URL            = filter_input(INPUT_GET, "URL");
-$Requisicao     = filter_input(INPUT_GET, "Req");
-$Metodo         = filter_input(INPUT_GET, "Metodo");
-$ESQUEMA        = filter_input(INPUT_SERVER, "REQUEST_SCHEME");
-$TabelaMD5      = filter_input(INPUT_POST, "sendTabelas");
-$Formato        = filter_input(INPUT_POST, "sendRetorno")  == "" ? "JSON" : filter_input(INPUT_POST, "sendRetorno"); //Atribui um formato padrão
-$Dispositivo    = filter_input(INPUT_POST, "sendDispositivo");
-$IPCliente      = filter_input(INPUT_SERVER, "REMOTE_ADDR");
-$Tabela         = TabelaBancoDadosMD5::getMD5ForTabela($TabelaMD5);    //Nome da tabela no banco de dados
-$Operacao       = OperacaoTable::getMD5ForOperacao(filter_input(INPUT_POST, "sendModoOperacao"));      //CRUD
 
-/**
- * Verifica se foi enviado, via post, a operação quer será realizada dentro do controllers. 
- * Ex: select, insert, delete, update
- */
 try{
+    
+    $DADOS_RECEBIDOS = filter_input(INPUT_POST, "DADOS_BUSCA");
+    if($DADOS_RECEBIDOS == null){
+        throw new Exception("Error de entrada!", 14008);
+    }
 
+    $DADOS_RECEBIDOS = json_decode($DADOS_RECEBIDOS, true);
+    /**
+     * Armazena o tempo inicial do processamento.
+     */
+    ConfigSystema::getStartTimeTotal();
+
+    /**
+     * Verifica se foi enviado, via post, a operação quer será realizada dentro do controllers. 
+     * Ex: select, insert, delete, update
+     */
+    $URL            = filter_input(INPUT_GET, "URL");
+    $Requisicao     = filter_input(INPUT_GET, "Req");
+    $Metodo         = filter_input(INPUT_GET, "Metodo");
+    $ESQUEMA        = filter_input(INPUT_SERVER, "REQUEST_SCHEME");
+    $TabelaMD5      = $DADOS_RECEBIDOS["sendTabelas"];
+    $Formato        = $DADOS_RECEBIDOS["sendRetorno"]  == "" ? "JSON" : $DADOS_RECEBIDOS["sendRetorno"]; //Atribui um formato padrão
+    $Dispositivo    = $DADOS_RECEBIDOS["sendDispositivo"];
+    $IPCliente      = filter_input(INPUT_SERVER, "REMOTE_ADDR");
+    $Tabela         = TabelaBancoDadosMD5::getMD5ForTabela($TabelaMD5);    //Nome da tabela no banco de dados
+    $Operacao       = OperacaoTable::getMD5ForOperacao($DADOS_RECEBIDOS["sendModoOperacao"]);      //CRUD
+    
     if(ConfigSystema::getValidarDispositivo()){
         if(!$Dispositivo){
             throw new Exception("O dispositivo utilidado não foi informado.", 14002);
@@ -97,8 +105,8 @@ if($Sessao && $SessaoTabela){
         exit;
     }
     //obtém a chave que foi enviado pelo cliente.
-    $_KEYS_GET = filter_input(INPUT_POST, "sendChaves");
-    $_KEYS_POST = filter_input(INPUT_POST, "enviarChaves");
+    $_KEYS_GET = $DADOS_RECEBIDOS["sendChaves"];
+    $_KEYS_POST = $DADOS_RECEBIDOS["enviarChaves"];
     $sendChave = empty($_KEYS_GET) == true ? $_KEYS_POST : substr($_KEYS_GET, 2);
 
     /**

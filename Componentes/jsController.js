@@ -64,95 +64,32 @@ class JSController{
         this.data_Type = n;
     }
     
-    BuscarDados(F, E){
-        /**
-         * Objeto do javascript que representa uma função assíncrona para buscar dados no servidor.
-         * por ser promisse as funções async com await é esperado por seus términos.
-         * @param function resolve
-         * @param function errors
-         * @returns {undefined}
-         */
-        return new Promise((resolve, errors) => 
-        {
-            if(this.Config.Background == false){
-                if(Padrao.getAjax() == 1 ){
-                    bootbox.alert("Já existe outro processo em andamento. Favor aguarde...");
-                    return false;
-                };
-                this.Config.Load = true;
-            }else{
-                this.Config.Load = false;
-            }
-                       
-            var op = $.ajax({
-                        cache: false,
-                        url: this.URL,
-                        type: this.TypeEnvio,
-                        async: this.Modo_Async,
-                        dataType: this.data_Type,
-                        enctype: this.Modo_enctype,
-                        contentType: this.TipoConteudo,
-                        processData: this.ProcessarDados,
-                        Config: this.Config,
-                        beforeSend: function(Antes){
-                            if(this.Config.Load == true)
-                                Padrao.addload("body", "Aguarde...");
-                        },
-                        complete: function(Completo){ //Método é chamado automaticamento pelo objeto ajax.
-                            if(this.Config.Load == true)
-                                Padrao.removeLoad();
-                        },
-                        data: this.DadosEnvio,
-                        success: function(Resultado, status, xhr){
-                            resolve(F(Resultado, status, xhr));
-                        },
-                        error: function(xhr,status,error){
-                            errors(E(xhr, status, error));
-                        },
-                        xhr: function() {
-                            let ConfigInfo = this.Config;
-                                var myXhr = $.ajaxSettings.xhr();
-                                if(myXhr.upload){
-                                    myXhr.upload.onprogress = function(e){
-                                        let perct = parseInt((e.loaded / e.total) * 100);
-                                        $(ConfigInfo.Componente).css("width", perct + "%");
-                                    }
-                                }
-                                return myXhr;
-        }
-            });
-            Padrao.setAjax(op);
-        });
-    }
     
     async Atualizar(p = true){ //p -> persistência = significa que os dados que foram buscandos no servidor não ficará na variável ResultSet, podendo ser usada para buscar informações temporárias, não é para usar com componentes que irão fazer interação com o banco de dados. essa solução foi utilizada para os campos select2
-       var Dados = await this.BuscarDados(
-            function(s, status, xhr){
-                var Saida = [];
-                Saida[0] = s;
-                Saida[1] = status;
-                Saida[2] = xhr;
-                return Saida;
-            }, 
-            function(xhr,status, e){
-                var Saida = [];
-                Saida[0] = e;
-                Saida[1] = status;
-                Saida[2] = xhr;            
-                //bootbox.alert("<h4 style='color: red'>Status: "+ status +" - Connection.</h4>");
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Status: '+ status +' - Connection.'
-                  });
-                return Saida;
-            });
-        try {
-            var ResultadoDados = JSON.parse(Dados[0]);
-
-            if(ResultadoDados.Error != false){
+       try{
+            const Dados_Brutos = new FormData();
+            let DADOS = JSON.stringify(this.DadosEnvio);
+            Dados_Brutos.append("DADOS_BUSCA",DADOS);
+            
+             const VAR_DADOS = {
+                 method: 'POST',
+                 body: Dados_Brutos,
+             };
+            Padrao.addload();
+            const Pull_Server = await fetch(this.URL, VAR_DADOS)
+                    .then(Saida => {
+                            return Saida.text();
+                        })
+                    .then(DADOS => {
+                        Padrao.removeLoad();
+                        return DADOS;
+                    });
+                    
+            let ResultadoDados = JSON.parse(Pull_Server);
+            if(ResultadoDados.Error !== false){
                 return ResultadoDados;
             }else{
-                if(ResultadoDados.Modo == "S"){
+                if(ResultadoDados.Modo === "S"){
                     if(p){
                         this.ResultSet = ResultadoDados;
                     }
@@ -161,17 +98,11 @@ class JSController{
                                          //a instruÃ§Ã£o que chamou e esta esperando podera ter acesso aos dados do eros
                                          //pela variÃ¡vel glocal this.ResultSet
             }
-        } catch (e) {
-            //bootbox.alert("<h3 style='color: red'><i class='fas fa-exchange-alt'/> Ocorreu algum erro no servidor! Favor contatar o administrador.</h3>")
-            Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "Ocorreu algum erro no servidor! Favor contatar o administrador.",
-                    //footer: '<a href="">Why do I have this issue?</a>'
-                  });
-                console.log(e, Dados[0]);
-        }
-    
+       }catch(e){
+           
+       }
+       
+       
     }
 
 }

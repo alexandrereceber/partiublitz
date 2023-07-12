@@ -64,27 +64,30 @@ echo "<script>var Chave='$sendChave'</script>"
 
       <!<!-- UPLOADFILES -->
       <link rel="stylesheet" href="/blitz/uploadsFiles/css/uploadsCSS.css?04">
-
+      
+      
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module">
         import Padroes from "/blitz/Componentes/Padroes.js";
         //Padroes.addload();
         Padroes.addJanela();
+        window.Toast = Padroes.addToast();
+        window.Swal = Padroes.addswalWithBootstrapButtons();
         window.Padrao = Padroes;
     </script> 
     
     <script type="module">
         import JSController from "/blitz/Componentes/jsController.js";
         window.JSController = JSController;
-        debugger;
     </script>
     
     <script type="module">
-        import Tabelas from "/blitz/Componentes/Tabelas.js";
+        import Tabelas from "/blitz/Componentes/Tabelas.js?s=1";
         window.TabelaHTML = Tabelas;
     </script>     
 
     <script type="module">
-        import Formularios from "/blitz/Componentes/Formularios.js";
+        import Formularios from "/blitz/Componentes/Formularios.js?s=1";
         window.FormHTML = Formularios;
     </script>      
     
@@ -456,14 +459,14 @@ echo "<script>var Chave='$sendChave'</script>"
 <script  src="/blitz/Login/Sair.js?q=9"></script>
 
 <!-- Ações personalizadas para o administrador -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script  src="/blitz/uploadsFiles/js/tratarFiles.js?56"></script> 
 
 <script src="/blitz/Recursos/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
 
-<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=175"></script>
+<script src="/blitz/Recursos/dist/js/admin/Admin.js?s=185"></script>
 
   
 

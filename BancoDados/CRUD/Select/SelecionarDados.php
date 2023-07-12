@@ -7,9 +7,9 @@
  * 
  */
 
-$Pagina = $_REQUEST["sendPagina"];
-$FiltroCampos = $_REQUEST["sendFiltros"];
-$Ordem = $_REQUEST["sendOrdemBY"];
+$Pagina = $DADOS_RECEBIDOS["sendPagina"];
+$FiltroCampos = $DADOS_RECEBIDOS["sendFiltros"];
+$Ordem = $DADOS_RECEBIDOS["sendOrdemBY"];
 try{
 
     if(empty($Tabela)) throw new Exception("Nenhuma tabela foi definida, favor entrar em contato com o administrador.", 3000);

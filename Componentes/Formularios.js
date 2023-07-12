@@ -622,31 +622,31 @@ class FormHTML extends JSController{
     }    
     confirme_Atualizacao(F){
         let o = this;
-        swalWithBootstrapButtons.fire({
-        title: 'Salvar..',
-        text: "Deseja salvar esses dados?!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-            
-          o.update(F, o);
-           
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        Swal.fire({
+                title: 'Salvar..',
+                text: "Deseja salvar esses dados?!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
 
-        }
-      })
+              o.update(F, o);
+
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+
+            }
+          });
 
     }
     confirme_Insercao(F){
         let o = this;
-        swalWithBootstrapButtons.fire({
+        Swal.fire({
             title: 'Inserir..',
             text: "Deseja inserir esses dados?!",
             icon: 'question',

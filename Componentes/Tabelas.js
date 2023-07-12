@@ -714,7 +714,7 @@ class TabelaHTML extends JSController{
                  * TabelaBD -> nome do banco de dados -> class
                  */
                 
-                if(GetCabecalho.Filtros[2] != "false"){
+                if(GetCabecalho.Filtros[2] !== false){
                     if(Array.isArray(GetCabecalho.Filtros[2])){
                         var exist = this.getCampoExistFiltro(GetCabecalho.Filtros[2], GetCabecalho.Campos[indx][0])
                         if(exist[1]){
@@ -827,7 +827,7 @@ class TabelaHTML extends JSController{
          */
         if(InfPag.ModoPaginacao.Filtros){
             var getFilter = this.ResultSet.Filtros[1], BFlt = ""
-            if(getFilter != "false"){
+            if(getFilter !== false){
                 BFlt = '<button \n\
                                                 id="FiltroPequisa" \n\
                                                 type="button" \n\

@@ -389,7 +389,7 @@ abstract class ModeloTabelas extends BDSQL{
             $Count = 0; //Inicia o contador
             
             foreach ($Filtros as $key => $value) {
-                if(($value) == "false") continue;
+                if(($value) == false) continue;
                 foreach ($value as $Chave => $Valores) {
                         $NomeCampo = $this->idx_NomeCampo($Valores[0]);
                         if($Count == 0){

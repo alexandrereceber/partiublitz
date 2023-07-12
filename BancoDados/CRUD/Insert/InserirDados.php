@@ -10,11 +10,11 @@
  */
 
 try{
-    $Dados = $_REQUEST["sendCamposAndValores"];  
+    $Dados = $DADOS_RECEBIDOS["sendCamposAndValores"];  
     /*
      * Informa que não será executado a instrução de inserir pré-construída e sim por uma função anônima
      */
-    $NG = $_REQUEST["sendInserir1N"] == "" ? 1 : "N";  
+    $NG = $DADOS_RECEBIDOS["sendInserir1N"] == "" ? 1 : "N";  
     
     if(!is_array($Dados)){
         throw new Exception("Falta Campos");

@@ -1,18 +1,6 @@
 /* 
  * Envia os dados para verificar se o usuário esta ou não cadastrado no sistema.
  */
-const Toast = Swal.mixin({
-  toast: true,
-  position: 'top-end',
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener('mouseenter', Swal.stopTimer);
-    toast.addEventListener('mouseleave', Swal.resumeTimer);
-  }
-});
-
 
     
 async function EnviarDados(obj){
@@ -108,7 +96,10 @@ async function EnviarDados(obj){
 
             case 14007:
                 break;
-
+                
+            case 14008:
+                break;
+                
             case 23000:
                 Result.Mensagem = "Usuário já existe no sistema.";
                 break;
